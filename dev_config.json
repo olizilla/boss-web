@@ -1,0 +1,30 @@
+{
+  "isDev": true,
+  "server": {
+    "isSecure": false,
+    "session": {
+      "host": "localhost",
+      "port": 6379,
+      "db": 1,
+      "secret": "bang!",
+      "secure": false
+    },
+    "http": {
+      "listen": "localhost",
+      "port": 3000
+    }
+  },
+  "client": {
+    "debugMode": true,
+    "minVersion": "1.0.0",
+    "timeout": 10000,
+    "frequency": 1000,
+    "hosts": [
+      {
+        "name": "localhost",
+        "url": "http://localhost:57483",
+        "key": "/var/foo/bar"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+<body>
+  <nav class="navbar navbar-default navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a href="/" class="navbar-brand" title="Boss Web">Boss Web</a>
+      </div>
+      <ul class="nav navbar-nav">
+      {{#each hosts}}
+        <li class="active">
+          <a href="/host/{{name}}">{{name}}</a>
+        </li>
+      {{/each}}
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <main data-hook="page-container"></main>
+  </div>
+</body>

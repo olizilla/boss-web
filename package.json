@@ -1,0 +1,43 @@
+{
+  "name": "boss-web",
+  "author": "Alex Potsides",
+  "version": "0.0.0",
+  "dependencies": {
+    "ampersand-dom": "^1.0",
+    "ampersand-form-view": "^2.0",
+    "ampersand-input-view": "^3.0",
+    "ampersand-model": "^4.0",
+    "ampersand-collection": "^1.0",
+    "ampersand-router": "^1.0",
+    "ampersand-view": "^7.0",
+    "ampersand-view-switcher": "^1.0",
+    "andlog": "^1.0",
+    "async": "^0.9",
+    "clientconfig": "^1.0",
+    "domify": "^1.0",
+    "domready": "^1.0",
+    "favicon-setter": "^0.1",
+    "getconfig": "^0.3",
+    "hapi": "^7.0",
+    "moonboots_hapi": "^3.0",
+    "stylizer": "^2.0",
+    "templatizer-hbs": "^0.0",
+    "underscore": "^1.0",
+    "handlebars": "^2.0",
+    "semver": "^4.0",
+    "node-inspector": "^0.7"
+  },
+  "devDependencies": {},
+  "jshintConfig": {
+    "asi": false,
+    "browser": true,
+    "curly": false,
+    "expr": true,
+    "indent": 4,
+    "loopfunc": true,
+    "node": true,
+    "trailing": true,
+    "undef": true,
+    "white": true
+  }
+}
