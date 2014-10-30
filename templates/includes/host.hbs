@@ -2,17 +2,40 @@
   <div class="panel-heading" role="tab" id="headingOne">
     <h4 class="panel-title">System information</h4>
   </div>
-  <div class="panel-body">
-    <ul>
-      <li>Hostname: {{model.hostname}}</li>
-      <li>Type: {{model.type}}</li>
-      <li>Platform: {{model.platform}}</li>
-      <li>Arch: {{model.arch}}</li>
-      <li>Release: {{model.release}}</li>
-      <li>CPUs: {{model.cpus.length}}x {{model.cpuSpeed}}</li>
-      <li>Version: {{model.version}}</li>
-      <li>Uptime: <span data-hook="uptime">{{model.uptimeFormatted}}</span></li>
-      <li>Time: <span data-hook="time">{{model.timeFormatted}}</span></li>
-    </ul>
+  <div class="panel-body host-data">
+    <table class="table table-striped table-bordered table-condensed">
+      <tr>
+        <th>Hostname</th>
+        <td>{{model.hostname}}</td>
+      </tr>
+      <tr>
+        <th>Type</th>
+        <td>{{model.type}}</td>
+      </tr>
+      <tr>
+        <th>Platform</th>
+        <td>{{model.platform}}</td>
+      </tr>
+      <tr>
+        <th>Arch</th>
+        <td>{{model.arch}}</td>
+      </tr>
+      <tr>
+        <th>Release</th>
+        <td>{{model.release}}</td>
+      </tr>
+      <tr>
+        <th>CPUs</th>
+        <td>{{model.cpus.length}}x {{model.cpuSpeed}}</td>
+      </tr>
+      <tr>
+        <th>Version</th>
+        <td>{{model.version}}</td>
+      </tr>
+      <tr>
+        <th>Uptime</th>
+        <td><span data-hook="uptime">{{model.uptimeFormatted}}</span></td>
+      </tr>
+    </table>
   </div>
 </div>

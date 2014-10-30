@@ -5,7 +5,6 @@ var templatizer = require('templatizer-hbs');
 // for reuse
 var appDir = __dirname + '/client';
 var cssDir = __dirname + '/public/css';
-var imgDir = __dirname + '/public/img';
 
 module.exports = {
     // Tell the Hapi server what URLs the application should be served from.
@@ -40,15 +39,14 @@ module.exports = {
             // js file is requested. Which means you can seamlessly change jade and
             // refresh in your browser to get new templates.
             if (config.isDev) {
-                templatizer(__dirname + '/templates/**/*.hbs', appDir + '/templates.js');
+                templatizer(__dirname + '/templates/**/*.hbs', appDir + '/templates.js')
             }
         },
         beforeBuildCSS: function (done) {
             // We only want to do this in dev mode. If it's not in dev mode, this
             // function will only be run once.
             if (!config.isDev) {
-                done();
-                return;
+                return done()
             }
             // Re-compile stylus to css each time the app's main css file is requested.
             // In addition there's a "watch" option that will make stylizer also be able
@@ -62,7 +60,7 @@ module.exports = {
                 // Beware there's an issue with watch on OSX that causes issues with
                 // watch if you're not running node 0.10.25 or later.
                 watch: cssDir + '/**/*.styl'
-            }, done);
+            }, done)
         }
     }
-};
+}

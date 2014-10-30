@@ -58,7 +58,8 @@ module.exports = AmpersandModel.extend({
     uptimeFormatted: {
       deps: ['uptime'],
       fn: function () {
-        return moment.duration(this.uptime).humanize()
+        // uptime is reported in seconds
+        return moment.duration(this.uptime * 1000).humanize()
       }
     },
     cpuSpeed: {
