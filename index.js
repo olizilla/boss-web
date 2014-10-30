@@ -1,4 +1,5 @@
 var Hapi = require('hapi'),
+  DebugServer = require('./node_modules/node-inspector/lib/debug-server').DebugServer
   config = require('getconfig')
 
 var internals = {
@@ -26,7 +27,7 @@ server.ext('onPreResponse', function(request, reply) {
 })
 
 // require moonboots_hapi plugin
-server.pack.register({plugin: require('moonboots_hapi'), options: require('./moonbootsConfig')}, function (err) {
+server.pack.register({plugin: require('moonboots_hapi'), options: require('./moonboots')}, function (err) {
   if (err) throw err
 
   server.start(function (err) {
@@ -43,4 +44,14 @@ server.route({
       path: 'public/images'
     }
   }
+})
+
+var debugServer = new DebugServer()
+debugServer.start({
+  webPort: config.server.debugger.port,
+  webHost: config.server.debugger.listen
+})
+debugServer.once('listening', function(error) {
+  if (error) throw error
+  console.log("debugger is running at: http://localhost:%d/debug", config.server.debugger.port)
 })

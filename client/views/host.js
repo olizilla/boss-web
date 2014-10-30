@@ -4,13 +4,13 @@ var View = require('ampersand-view'),
 module.exports = View.extend({
   template: templates.includes.host,
   bindings: {
-    'model.name': {
+    'model.timeFormatted': {
       type: 'text',
-      hook: 'name'
+      hook: 'time'
     },
-    'model.url': {
+    'model.uptimeFormatted': {
       type: 'text',
-      hook: 'url'
+      hook: 'uptime'
     }
   }
 })

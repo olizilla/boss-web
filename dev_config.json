@@ -12,6 +12,10 @@
     "http": {
       "listen": "localhost",
       "port": 3000
+    },
+    "debugger": {
+      "listen": "localhost",
+      "port": 8594
     }
   },
   "client": {
@@ -19,6 +23,7 @@
     "minVersion": "1.0.0",
     "timeout": 10000,
     "frequency": 1000,
+    "debugger": "http://localhost:8594",
     "hosts": [
       {
         "name": "localhost",

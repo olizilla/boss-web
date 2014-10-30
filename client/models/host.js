@@ -2,22 +2,43 @@ var AmpersandModel = require('ampersand-model'),
   remote = require('boss-remote'),
   config = require('clientconfig'),
   semver = require('semver'),
-  async = require('async')
+  async = require('async'),
+  moment = require('moment')
 
 module.exports = AmpersandModel.extend({
   props: {
-    name: ['string', true, ''],
-    url: ['string', true, ''],
-    key: ['string', true, ''],
-    version: ['string', true, ''],
-    time: ['number', true, 0],
-    uptime: ['number', true, 0],
+    name: 'string',
+    url: 'string',
+    key: 'string',
+    time: 'number',
+    uptime: 'number',
     freeMemory: 'number',
     usedMemory: 'number',
     totalMemory: 'number',
     load: ['array', true, function() {
       return [0, 0, 0]
-    }]
+    }],
+    hostname: ['string', true, ''],
+    type: 'string',
+    platform: 'string',
+    arch: 'string',
+    release: 'string',
+    cpus: ['array', true, function() {
+      return {
+        model: 'string',
+        speed: 'number',
+        times: ['object', false, function () {
+          return {
+            idle: 'number',
+            irq: 'number',
+            nice: 'number',
+            sys: 'number',
+            user: 'number'
+          }
+        }]
+      }
+    }],
+    version: 'string'
   },
   session: {
     selected: ['boolean', true, false],
@@ -25,6 +46,26 @@ module.exports = AmpersandModel.extend({
     status: {
       type: 'string',
       values: ['connecting', 'connected', 'error', 'incompatible']
+    }
+  },
+  derived: {
+    timeFormatted: {
+      deps: ['time'],
+      fn: function () {
+        return moment(this.time).format("YYYY-MM-DD HH:mm:ss Z")
+      }
+    },
+    uptimeFormatted: {
+      deps: ['uptime'],
+      fn: function () {
+        return moment.duration(this.uptime).humanize()
+      }
+    },
+    cpuSpeed: {
+      deps: ['cpus'],
+      fn: function () {
+        return (this.cpus[0].speed/1000).toFixed(2) + 'GHz'
+      }
     }
   },
   initialize: function() {
@@ -36,13 +77,13 @@ module.exports = AmpersandModel.extend({
         key: this.key
       }),
       function(boss, callback) {
-        this.status = 'connected'
         this.remote = boss
-
         this.remote.getDetails(callback)
       }.bind(this),
       function(details, callback) {
-        this.version = details.version
+        for(var key in details) {
+          this[key] = details[key]
+        }
 
         if(!semver.satisfies(details.version, config.minVersion)) {
           var error = new Error('Incompatible')
@@ -70,6 +111,8 @@ module.exports = AmpersandModel.extend({
         console.warn(error)
         return
       }
+
+      this.status = 'connected'
     }.bind(this))
   },
 
