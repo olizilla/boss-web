@@ -7,15 +7,15 @@ h1 {
 #page-wrapper {
   padding-top: 0;
 }
-.selected {
-  border-left: 7px solid #444;
+li.active {
+  border-left: 7px solid #00609b;
 }
 .panel-primary {
-  border-color: #444;
+  border-color: #00609b;
 }
 .panel-primary > .panel-heading {
-  background-color: #444;
-  border-color: #444;
+  background-color: #00609b;
+  border-color: #00609b;
 }
 .navbar {
   border-color: #181818;

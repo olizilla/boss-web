@@ -186,7 +186,7 @@ module.exports = View.extend({
       },
       series: [{
         name: 'Memory',
-        data: [40],
+        data: [this.model.usedMemory ? this.model.usedMemory : 0],
         dataLabels: {
           format: '<div style="text-align:center;font-size:25px;color:#BDBDBD">{y}%</span></div>',
           borderColor: 'rgba(0, 0, 0, 0)',
@@ -203,6 +203,10 @@ module.exports = View.extend({
         }
 
         var chart = HighCharts.charts[el.getAttribute('data-highcharts-chart')]
+
+        if(!chart) {
+          return
+        }
 
         var data = [{
           name: 'user',

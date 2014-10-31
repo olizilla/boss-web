@@ -6,7 +6,7 @@ var PageView = require('./base'),
 
 module.exports = PageView.extend({
   pageTitle: 'Boss Web',
-  template: templates.pages.host,
+  template: templates.pages.system,
   render: function () {
     this.renderWithTemplate()
 

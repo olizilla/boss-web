@@ -1,0 +1,50 @@
+<section class="page host">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>{{model.name}} <small>Process information</small></h1>
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h4 class="panel-title">Processes</h4>
+        </div>
+        <div class="panel-body">
+          <ul class="information">
+            {{#each hosts}}
+              <li class="expand">
+                <h3>Hostname</h3>
+                <p>{{model.hostname}}</p>
+              </li>
+              <li>
+                <h3>Type</h3>
+                <p>{{model.type}}</p>
+              </li>
+              <li>
+                <h3>Platform</h3>
+                <p>{{model.platform}}</p>
+              </li>
+              <li>
+                <h3>Arch</h3>
+                <p>{{model.arch}}</p>
+              </li>
+              <li>
+                <h3>Release</h3>
+                <p>{{model.release}}</p>
+              </li>
+              <li>
+                <h3>CPU(s)</h3>
+                <p data-hook="cpuSpeed">{{model.cpus.length}}x {{model.cpuSpeed}}</p>
+              </li>
+              <li>
+                <h3>Boss</h3>
+                <p>{{model.version}}</p>
+              </li>
+              <li>
+                <h3>Uptime</h3>
+                <p data-hook="uptime">{{model.uptimeFormatted}}</p>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
