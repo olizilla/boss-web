@@ -1,14 +1,15 @@
 var View = require('ampersand-view'),
   templates = require('../templates'),
-  HighCharts = require('Highcharts')
+  HighCharts = require('Highcharts'),
+  HighchartsMore = require('HighchartsMore'),
+  HighchartsSolidGauge = require('HighchartsSolidGauge')
 
 module.exports = View.extend({
   template: templates.includes.cpu,
   render: function () {
     this.renderWithTemplate(this);
 
-    // cache an element for easy reference by other methods
-    var usage = this.query('[data-hook=cpu-usage]')
+    var cpuUsage = this.query('[data-hook=cpu-usage]')
 
     new Highcharts.Chart({
       colors: [
@@ -16,13 +17,19 @@ module.exports = View.extend({
       ],
       chart: {
         type: 'column',
-        renderTo: usage,
+        renderTo: cpuUsage,
         spacing: [0, 0, 5, 0],
         backgroundColor: 'rgba(0, 0, 0, 0)',
         borderColor: '#444'
       },
       title: {
-        text: null
+        text: 'CPU',
+        style: {
+          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+          fontSize: '14px',
+          fontWeight: 'normal',
+          color: '#BDBDBD'
+        }
       },
       legend: {
         itemStyle: {
@@ -88,6 +95,176 @@ module.exports = View.extend({
         data: []
       }]
     })
+
+    // cache an element for easy reference by other methods
+    var memoryUsage = this.query('[data-hook=memory-usage]')
+
+    new Highcharts.Chart(
+      /*{
+      "chart": {
+        "type": "solidgauge",
+        renderTo: memoryUsage
+      },
+      "title": null,
+      "pane": {
+        "center": ["50%", "85%"],
+        "size": "140%",
+        "startAngle": -90,
+        "endAngle": 90,
+        "background": {
+          "backgroundColor": "#EEE",
+          "innerRadius": "60%",
+          "outerRadius": "100%",
+          "shape": "arc"
+        }
+      },
+      "tooltip": {
+        "enabled": false
+      },
+      "yAxis": {
+        "stops": [
+          [0.1, "#55BF3B"],
+          [0.5, "#DDDF0D"],
+          [0.9, "#DF5353"]
+        ],
+        "lineWidth": 0,
+        "minorTickInterval": null,
+        "tickPixelInterval": 400,
+        "tickWidth": 0,
+        "title": {
+          "y": -70,
+          "text": "RPM"
+        },
+        "labels": {
+          "y": 16
+        },
+        "min": 0,
+        "max": 5
+      },
+      "plotOptions": {
+        "solidgauge": {
+          "dataLabels": {
+            "y": 5,
+            "borderWidth": 0,
+            "useHTML": true
+          }
+        }
+      },
+      "series": [{
+        "name": "RPM",
+        "data": [1],
+        "dataLabels": {
+          "format": "<div style=\"text-align:center\"><span style=\"font-size:25px;color:black\">{y:.1f}</span><br/><span style=\"font-size:12px;color:silver\">* 1000 / min</span></div>"},
+        "tooltip": {
+          "valueSuffix": " revolutions/min"
+        }
+      }]
+    }
+      */
+
+
+
+
+
+
+
+
+
+
+
+
+
+      {
+      chart: {
+        type: 'solidgauge',
+        renderTo: memoryUsage,
+        backgroundColor: 'rgba(0, 0, 0, 0)'
+      },
+      title: {
+        text: 'Memory',
+        style: {
+          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+          fontSize: '14px',
+          fontWeight: 'normal',
+          color: '#BDBDBD'
+        }
+      },
+      credits: {
+        enabled: false
+      },
+      pane: {
+        center: ['50%', '73%'],
+        size: '140%',
+        startAngle: -90,
+        endAngle: 90,
+        background: {
+          backgroundColor: '#181818',
+          innerRadius: '60%',
+          outerRadius: '100%',
+          shape: 'arc',
+          borderColor: '#444'
+        }
+      },
+      tooltip: {
+        enabled: false
+      },
+      yAxis: {
+        stops: [
+          [0.1, '#55BF3B'], // green
+          [0.6, '#DDDF0D'], // yellow
+          [0.8, '#DF5353'] // red
+        ],
+        lineWidth: 0,
+        minorTickInterval: null,
+        tickPixelInterval: 400,
+        tickWidth: 0,
+        labels: {
+          y: 16,
+          style: {
+            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+            fontSize: '14px',
+            fontWeight: 'normal',
+            color: '#BDBDBD'
+          }
+        },
+        min: 0,
+        max: 100,
+        title: {
+          text: null
+        }/*,
+        plotBands: [{
+          from: 0,
+          to: 60,
+          color: '#55BF3B' // green
+        }, {
+          from: 60,
+          to: 80,
+          color: '#DDDF0D' // yellow
+        }, {
+          from: 80,
+          to: 100,
+          color: '#DF5353' // red
+        }]*/
+      },
+      plotOptions: {
+        solidgauge: {
+          dataLabels: {
+            y: -5,
+            borderWidth: 0,
+            useHTML: true
+          }
+        }
+      },
+      series: [{
+        name: 'Memory',
+        data: [40],
+        dataLabels: {
+          format: '<div style="text-align:center;font-size:25px;color:#BDBDBD">{y}%</span></div>',
+          borderColor: 'rgba(0, 0, 0, 0)',
+          y: 50
+        }
+      }]
+    })
   },
   bindings: {
     'model.cpus': {
@@ -124,6 +301,24 @@ module.exports = View.extend({
         })
       },
       selector: '[data-hook=cpu-usage]'
+    },
+
+    'model.usedMemory': {
+      type: function (el, usedMemory) {
+        if(!usedMemory) {
+          return
+        }
+
+        var chart = HighCharts.charts[el.getAttribute('data-highcharts-chart')]
+
+        if(!chart) {
+          return
+        }
+
+        var point = chart.series[0].points[0]
+        point.update(usedMemory)
+      },
+      selector: '[data-hook=memory-usage]'
     }
   }
 })

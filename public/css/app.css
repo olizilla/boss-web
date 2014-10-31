@@ -35,8 +35,8 @@ h1 {
   width: 100%;
   background-color: #181818;
 }
-.host-data table {
-  margin: 0;
+.resource-data {
+  text-align: center;
 }
 .information {
   display: -webkit-flex;

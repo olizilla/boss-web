@@ -59,12 +59,22 @@
       "depends": ["HighchartsAdapter:HighchartsAdapter"],
       "exports": "Highcharts"
     },
+    "HighchartsMore": {
+      "depends": ["HighchartsAdapter:HighchartsAdapter", "Highcharts:Highcharts"],
+      "exports": "HighchartsMore"
+    },
     "HighchartsAdapter": {
       "exports":"HighchartsAdapter"
+    },
+    "HighchartsSolidGauge": {
+      "depends": ["HighchartsAdapter:HighchartsAdapter", "Highcharts:Highcharts", "HighchartsMore:HighchartsMore"],
+      "exports": "HighchartsSolidGauge"
     }
   },
   "browser": {
     "Highcharts": "./bower_components/highcharts-release/highcharts.src.js",
-    "HighchartsAdapter": "./bower_components/highcharts-release/adapters/standalone-framework.src.js"
+    "HighchartsMore": "./bower_components/highcharts-release/highcharts-more.src.js",
+    "HighchartsAdapter": "./bower_components/highcharts-release/adapters/standalone-framework.src.js",
+    "HighchartsSolidGauge": "./bower_components/highcharts-release/modules/solid-gauge.src.js"
   }
 }

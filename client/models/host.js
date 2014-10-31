@@ -13,7 +13,6 @@ module.exports = AmpersandModel.extend({
     time: 'number',
     uptime: 'number',
     freeMemory: 'number',
-    usedMemory: 'number',
     totalMemory: 'number',
     hostname: ['string', true, ''],
     type: 'string',
@@ -76,6 +75,12 @@ module.exports = AmpersandModel.extend({
         }
 
         return this.cpus.length + 'x ' + (this.cpus[0].speed/1000).toFixed(2) + 'GHz'
+      }
+    },
+    usedMemory: {
+      deps: ['freeMemory', 'totalMemory'],
+      fn: function() {
+        return ~~(((this.totalMemory - this.freeMemory) / this.totalMemory) * 100)
       }
     }
   },
