@@ -1,11 +1,12 @@
 var View = require('ampersand-view'),
   templates = require('../templates'),
-  HighCharts = require('Highcharts'),
-  HighchartsMore = require('HighchartsMore'),
-  HighchartsSolidGauge = require('HighchartsSolidGauge')
+  HighCharts = require('Highcharts')
+
+require('HighchartsMore')
+require('HighchartsSolidGauge')
 
 module.exports = View.extend({
-  template: templates.includes.cpu,
+  template: templates.includes.resources,
   render: function () {
     this.renderWithTemplate(this);
 
@@ -99,82 +100,7 @@ module.exports = View.extend({
     // cache an element for easy reference by other methods
     var memoryUsage = this.query('[data-hook=memory-usage]')
 
-    new Highcharts.Chart(
-      /*{
-      "chart": {
-        "type": "solidgauge",
-        renderTo: memoryUsage
-      },
-      "title": null,
-      "pane": {
-        "center": ["50%", "85%"],
-        "size": "140%",
-        "startAngle": -90,
-        "endAngle": 90,
-        "background": {
-          "backgroundColor": "#EEE",
-          "innerRadius": "60%",
-          "outerRadius": "100%",
-          "shape": "arc"
-        }
-      },
-      "tooltip": {
-        "enabled": false
-      },
-      "yAxis": {
-        "stops": [
-          [0.1, "#55BF3B"],
-          [0.5, "#DDDF0D"],
-          [0.9, "#DF5353"]
-        ],
-        "lineWidth": 0,
-        "minorTickInterval": null,
-        "tickPixelInterval": 400,
-        "tickWidth": 0,
-        "title": {
-          "y": -70,
-          "text": "RPM"
-        },
-        "labels": {
-          "y": 16
-        },
-        "min": 0,
-        "max": 5
-      },
-      "plotOptions": {
-        "solidgauge": {
-          "dataLabels": {
-            "y": 5,
-            "borderWidth": 0,
-            "useHTML": true
-          }
-        }
-      },
-      "series": [{
-        "name": "RPM",
-        "data": [1],
-        "dataLabels": {
-          "format": "<div style=\"text-align:center\"><span style=\"font-size:25px;color:black\">{y:.1f}</span><br/><span style=\"font-size:12px;color:silver\">* 1000 / min</span></div>"},
-        "tooltip": {
-          "valueSuffix": " revolutions/min"
-        }
-      }]
-    }
-      */
-
-
-
-
-
-
-
-
-
-
-
-
-
-      {
+    new Highcharts.Chart({
       chart: {
         type: 'solidgauge',
         renderTo: memoryUsage,
@@ -231,20 +157,23 @@ module.exports = View.extend({
         max: 100,
         title: {
           text: null
-        }/*,
+        },
         plotBands: [{
           from: 0,
           to: 60,
-          color: '#55BF3B' // green
+          color: '#55BF3B', // green
+          zIndex: 5
         }, {
           from: 60,
           to: 80,
-          color: '#DDDF0D' // yellow
+          color: '#DDDF0D', // yellow
+          zIndex: 5
         }, {
           from: 80,
           to: 100,
-          color: '#DF5353' // red
-        }]*/
+          color: '#DF5353', // red
+          zIndex: 5
+        }]
       },
       plotOptions: {
         solidgauge: {

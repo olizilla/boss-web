@@ -2,7 +2,7 @@ var PageView = require('./base'),
   templates = require('../templates'),
   config = require('clientconfig'),
   SystemDataView = require('../views/system'),
-  CPUDataView = require('../views/cpu')
+  ResourceDataView = require('../views/resources')
 
 module.exports = PageView.extend({
   pageTitle: 'Boss Web',
@@ -13,8 +13,8 @@ module.exports = PageView.extend({
     this.renderSubview(new SystemDataView({
       model: this.model
     }), '[data-hook=system-data]')
-    this.renderSubview(new CPUDataView({
+    this.renderSubview(new ResourceDataView({
       model: this.model
-    }), '[data-hook=cpu-data]')
+    }), '[data-hook=resource-data]')
   }
 })
