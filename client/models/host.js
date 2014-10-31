@@ -15,9 +15,6 @@ module.exports = AmpersandModel.extend({
     freeMemory: 'number',
     usedMemory: 'number',
     totalMemory: 'number',
-    load: ['array', true, function() {
-      return [0, 0, 0]
-    }],
     hostname: ['string', true, ''],
     type: 'string',
     platform: 'string',
@@ -28,6 +25,15 @@ module.exports = AmpersandModel.extend({
         model: 'string',
         speed: 'number',
         times: ['object', false, function () {
+          return {
+            idle: 'number',
+            irq: 'number',
+            nice: 'number',
+            sys: 'number',
+            user: 'number'
+          }
+        }],
+        load: ['object', false, function () {
           return {
             idle: 'number',
             irq: 'number',
@@ -65,6 +71,10 @@ module.exports = AmpersandModel.extend({
     cpuSpeed: {
       deps: ['cpus'],
       fn: function () {
+        if(!this.cpus[0]) {
+          return ''
+        }
+
         return (this.cpus[0].speed/1000).toFixed(2) + 'GHz'
       }
     }

@@ -26,7 +26,10 @@
     "handlebars": "^2.0",
     "semver": "^4.0",
     "boss-remote": "^1.0",
-    "moment": "^2.0"
+    "moment": "^2.0",
+    "browserify-zepto": "^1.1.4",
+    "highcharts-browserify": "^0.1.1-4.0.3",
+    "browserify-shim": "^3.0"
   },
   "devDependencies": {},
   "jshintConfig": {
@@ -40,5 +43,24 @@
     "trailing": true,
     "undef": true,
     "white": true
+  },
+
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "Highcharts": {
+      "depends": ["HighchartsAdapter:HighchartsAdapter"],
+      "exports": "Highcharts"
+    },
+    "HighchartsAdapter": {
+      "exports":"HighchartsAdapter"
+    }
+  },
+  "browser": {
+    "Highcharts": "./bower_components/highcharts-release/highcharts.src.js",
+    "HighchartsAdapter": "./bower_components/highcharts-release/adapters/standalone-framework.src.js"
   }
 }

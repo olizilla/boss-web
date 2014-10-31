@@ -1,0 +1,25 @@
+{
+  "name": "boss-web",
+  "main": "index.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/tableflip/boss-web",
+  "authors": [
+    "achingbrain <alex@achingbrain.net>"
+  ],
+  "description": "Web monitor",
+  "keywords": [
+    "foo",
+    "bar"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "tests"
+  ],
+  "dependencies": {
+    "highcharts-release": "~4.0.4"
+  }
+}

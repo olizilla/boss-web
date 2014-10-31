@@ -7,35 +7,29 @@
       <tr>
         <th>Hostname</th>
         <td>{{model.hostname}}</td>
-      </tr>
-      <tr>
         <th>Type</th>
         <td>{{model.type}}</td>
       </tr>
       <tr>
         <th>Platform</th>
         <td>{{model.platform}}</td>
-      </tr>
-      <tr>
         <th>Arch</th>
         <td>{{model.arch}}</td>
       </tr>
       <tr>
         <th>Release</th>
         <td>{{model.release}}</td>
-      </tr>
-      <tr>
         <th>CPUs</th>
-        <td>{{model.cpus.length}}x {{model.cpuSpeed}}</td>
+        <td data-hook="cpuSpeed">{{model.cpus.length}}x {{model.cpuSpeed}}</td>
       </tr>
       <tr>
-        <th>Version</th>
+        <th>Boss</th>
         <td>{{model.version}}</td>
-      </tr>
-      <tr>
         <th>Uptime</th>
-        <td><span data-hook="uptime">{{model.uptimeFormatted}}</span></td>
+        <td data-hook="uptime">{{model.uptimeFormatted}}</td>
       </tr>
     </table>
+    <div data-hook="cpu-usage" style="min-width: 310px; height: 100px; margin: 0 auto; display: inline-block"></div>
+    </svg>
   </div>
 </div>
