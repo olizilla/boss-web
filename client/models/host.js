@@ -75,7 +75,7 @@ module.exports = AmpersandModel.extend({
           return ''
         }
 
-        return (this.cpus[0].speed/1000).toFixed(2) + 'GHz'
+        return this.cpus.length + 'x ' + (this.cpus[0].speed/1000).toFixed(2) + 'GHz'
       }
     }
   },

@@ -1,20 +1,80 @@
 body {
-  background: #3d3d3d;
+  background: #181818;
 }
-.navbar-inverse {
-  border: none;
-  border-radius: 0;
+h1 {
+  margin-top: 0;
+}
+#page-wrapper {
+  padding-top: 0;
+}
+.selected {
+  border-left: 7px solid #444;
+}
+.panel-primary {
+  border-color: #444;
+}
+.panel-primary > .panel-heading {
+  background-color: #444;
+  border-color: #444;
+}
+.navbar {
+  border-color: #181818;
 }
 .navbar-brand {
   display: block;
   padding-left: 55px;
   background-repeat: no-repeat;
   background-image: url("/images/boss.png");
-}
-.navbar-inverse .navbar-brand:hover {
   color: #777;
 }
+.navbar-brand:hover {
+  color: #777;
+}
+.host-list .host-name {
+  padding: 15px;
+  width: 100%;
+  background-color: #181818;
+}
 .host-data table {
+  margin: 0;
+}
+.information {
+  display: -webkit-flex;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.information li.expand {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+}
+.information li:last-child {
+  border-right: 1px solid #444;
+}
+.information li {
+  display: inline-block;
+  margin: 0;
+  border: 1px solid #444;
+  border-right: none;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.information li h3,
+.information li p {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.information li h3 {
+  margin: 0;
+  padding: 5px;
+  font-size: 14px;
+  background-color: #222;
+  border-bottom: 1px solid #444;
+  color: #fff;
+}
+.information li p {
+  padding: 5px;
   margin: 0;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {

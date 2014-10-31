@@ -44,3 +44,12 @@ server.route({
     }
   }
 })
+server.route({
+  method: 'GET',
+  path: '/fonts/{param*}',
+  handler: {
+    directory: {
+      path: 'public/fonts'
+    }
+  }
+})

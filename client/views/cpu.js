@@ -1,25 +1,42 @@
 var View = require('ampersand-view'),
-  templates = require('../templates')//,
+  templates = require('../templates'),
   HighCharts = require('Highcharts')
 
 module.exports = View.extend({
-  template: templates.includes.host,
+  template: templates.includes.cpu,
   render: function () {
     this.renderWithTemplate(this);
 
     // cache an element for easy reference by other methods
     var usage = this.query('[data-hook=cpu-usage]')
 
-    this._cpuChart = new Highcharts.Chart({
+    new Highcharts.Chart({
+      colors: [
+        '#2A9FD6', '#0F0', '#FF5C5C', '#F5FF5C'
+      ],
       chart: {
         type: 'column',
-        renderTo: usage
+        renderTo: usage,
+        spacing: [0, 0, 5, 0],
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        borderColor: '#444'
       },
       title: {
         text: null
       },
       legend: {
-        enabled: false
+        itemStyle: {
+          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+          fontSize: '14px',
+          fontWeight: 'normal',
+          color: '#BDBDBD'
+        },
+        itemHiddenStyle: {
+          color: '#444'
+        },
+        itemHoverStyle: {
+          color: '#777'
+        }
       },
       xAxis: {
         title: {
@@ -27,7 +44,9 @@ module.exports = View.extend({
         },
         labels: {
           enabled: false
-        }
+        },
+        tickLength: 0,
+        lineColor: '#444'
       },
       yAxis: {
         min: 0,
@@ -51,7 +70,8 @@ module.exports = View.extend({
           stacking: 'normal',
           dataLabels: {
             enabled: false
-          }
+          },
+          borderColor: '#222'
         }
       },
       series: [{
@@ -70,14 +90,6 @@ module.exports = View.extend({
     })
   },
   bindings: {
-    'model.uptimeFormatted': {
-      type: 'text',
-      hook: 'uptime'
-    },
-    'model.cpuSpeed': {
-      type: 'text',
-      hook: 'cpuSpeed'
-    },
     'model.cpus': {
       type: function(el, cpus) {
         if(!cpus || !cpus.length) {

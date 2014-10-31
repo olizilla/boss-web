@@ -14,7 +14,8 @@ module.exports = View.extend({
     this.listenTo(app.router, 'page', this.handleNewPage)
   },
   events: {
-    'click a[href]': 'handleLinkClick'
+    'click a[href]': 'handleLinkClick',
+    "click [data-hook=toggle-nav]"         : "toggleNav"
   },
   render: function () {
     // some additional stuff we want to add to the document head
@@ -77,5 +78,32 @@ module.exports = View.extend({
         dom.removeClass(aTag.parentNode, 'active');
       }
     });
+  },
+
+  toggleNav: function(event) {
+    var sourceElement = event.srcElement
+
+    while(!sourceElement.hasAttribute('data-target')) {
+      if(!sourceElement.parentNode) {
+        return
+      }
+
+      sourceElement = sourceElement.parentNode
+    }
+
+    var targetElementClassName = sourceElement.getAttribute('data-target')
+    var toggleClassName = sourceElement.getAttribute('data-toggle')
+    var targetElement = this.query(targetElementClassName)
+    var classes = Array.prototype.slice.call(targetElement.classList)
+
+    if(classes.indexOf(toggleClassName) == -1) {
+      classes.push(toggleClassName)
+    } else {
+      classes = classes.filter(function(existingClassName) {
+        return existingClassName != toggleClassName
+      })
+    }
+
+    targetElement.className = classes.join(' ')
   }
 });

@@ -2,6 +2,9 @@
   "name": "boss-web",
   "author": "Alex Potsides",
   "version": "0.0.0",
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
+  },
   "dependencies": {
     "ampersand-dom": "^1.0",
     "ampersand-form-view": "^2.0",
@@ -29,7 +32,8 @@
     "moment": "^2.0",
     "browserify-zepto": "^1.1.4",
     "highcharts-browserify": "^0.1.1-4.0.3",
-    "browserify-shim": "^3.0"
+    "browserify-shim": "^3.0",
+    "bower": "^1.0"
   },
   "devDependencies": {},
   "jshintConfig": {

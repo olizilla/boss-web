@@ -31,7 +31,8 @@ module.exports = {
         ],
         // Specify the stylesheets we want to bundle
         stylesheets: [
-            cssDir + '/bootstrap.css',
+            cssDir + '/darkstrap.css',
+            cssDir + '/font-awesome.css',
             cssDir + '/app.css'
         ],
         beforeBuildJS: function () {

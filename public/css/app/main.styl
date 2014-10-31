@@ -3,25 +3,88 @@
 @import '../_variables'
 @import '../_mixins'
 
-// your styles here:
-body
-  background: #3D3D3D
+highlight = #444444
+background = #181818
+border = #444
 
-.navbar-inverse
-  border: none
-  border-radius: 0
+body
+  background: background
+
+h1
+  margin-top: 0
+
+#page-wrapper
+  padding-top: 0
+
+.selected
+  border-left: 7px solid highlight
+
+.panel-primary
+  border-color: highlight
+
+.panel-primary > .panel-heading
+  background-color: highlight
+  border-color: highlight
+
+.navbar
+  border-color: background
 
 .navbar-brand
   display: block
   padding-left: 55px
   background-repeat: no-repeat
   background-image: url('/images/boss.png')
-
-.navbar-inverse .navbar-brand:hover
   color: #777
+
+.navbar-brand:hover
+  color: #777
+
+.host-list
+  .host-name
+    padding: 15px
+    width: 100%
+    background-color: #181818
 
 .host-data table
   margin: 0
+
+.information
+  display: -webkit-flex
+  display: flex
+  margin: 0
+  padding: 0
+
+  li.expand
+    -webkit-flex-grow: 1
+    flex-grow: 1
+
+  li:last-child
+    border-right: 1px solid border
+
+  li
+    display: inline-block
+    margin: 0
+    border: 1px solid border
+    border-right: none
+    -webkit-flex-wrap: wrap
+    flex-wrap: wrap
+
+    h3, p
+      text-overflow: ellipsis
+      white-space: nowrap
+      overflow: hidden
+
+    h3
+      margin: 0
+      padding: 5px
+      font-size: 14px
+      background-color: #222
+      border-bottom: 1px solid border
+      color: #FFF
+
+    p
+      padding: 5px
+      margin: 0
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
   .navbar-brand
