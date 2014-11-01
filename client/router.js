@@ -22,10 +22,7 @@ module.exports = Router.extend({
       return this.redirectTo('/')
     }
 
-    return this.redirectTo('/' + hostName + '/system')
-
-    host.on('change:status', this._chooseHostPage.bind(this, host))
-    this._chooseHostPage(host)
+    return this.redirectTo('/host/' + hostName + '/system')
   },
 
   system: function(hostName) {
@@ -71,6 +68,10 @@ module.exports = Router.extend({
   },
 
   catchAll: function () {
+    if(window.app.hosts.models.length == 0) {
+      return this.trigger('page', new NoHostsPage())
+    }
+
     this.redirectTo('/host/' + window.app.hosts.at(0).name)
   }
 })

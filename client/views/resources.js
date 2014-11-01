@@ -12,6 +12,13 @@ module.exports = View.extend({
 
     var cpuUsage = this.query('[data-hook=cpu-usage]')
 
+    var fontStyle = {
+      fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+      fontSize: '14px',
+      fontWeight: 'normal',
+      color: '#BDBDBD'
+    }
+
     new Highcharts.Chart({
       colors: [
         '#2A9FD6', '#0F0', '#FF5C5C', '#F5FF5C'
@@ -25,20 +32,10 @@ module.exports = View.extend({
       },
       title: {
         text: 'CPU',
-        style: {
-          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-          fontSize: '14px',
-          fontWeight: 'normal',
-          color: '#BDBDBD'
-        }
+        style: fontStyle
       },
       legend: {
-        itemStyle: {
-          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-          fontSize: '14px',
-          fontWeight: 'normal',
-          color: '#BDBDBD'
-        },
+        itemStyle: fontStyle,
         itemHiddenStyle: {
           color: '#444'
         },
@@ -108,12 +105,7 @@ module.exports = View.extend({
       },
       title: {
         text: 'Memory',
-        style: {
-          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-          fontSize: '14px',
-          fontWeight: 'normal',
-          color: '#BDBDBD'
-        }
+        style: fontStyle
       },
       credits: {
         enabled: false
@@ -146,12 +138,7 @@ module.exports = View.extend({
         tickWidth: 0,
         labels: {
           y: 16,
-          style: {
-            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-            fontSize: '14px',
-            fontWeight: 'normal',
-            color: '#BDBDBD'
-          }
+          style: fontStyle
         },
         min: 0,
         max: 100,
