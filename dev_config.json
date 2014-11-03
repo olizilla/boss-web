@@ -24,7 +24,7 @@
         "host": "localhost",
         "port": 57483,
         "principal": "root",
-        "key": "VXKvf0pOYdkGoZPS2qmE5YquRBTGwiy2dWsPNnT2b2fvOD6dc+eZ8ZQSp0LtQTOz8+rr9R7W5yvKGJqQoGJgMjE48tYNfLH4HDQ69GHR+ygouCzy8Iou3JlrnFJ9OFr+2XmCbVkTpEjUmyhaaXp59thHCql0OW+6JI35PGoalbEL3CRo59D4+JaSNIP5OJ8ETnpd/ngBaDGCLa6XRXtRtbiK9EK9cvEYc4vAcC0jtp4+zoTAST7mJh5tExybOTMmhdi+yaiY6tg645VkPf+MwdNNisCP7lZx42KTyMvEfsrHwvAcX/sDoRUnWxoMSDLEYxiSqduNTCeJFwvJl9pHeA=="
+        "key": "rE6NFEx+O5l3pXQacMrQbwfBYfpP7ulIljy1t37u1u8wzbPdexxGxEHFKDHs63kADK94QhlotITcFwb0jzMmvUZbuHsnt7VxNBqpEvFUhrOmcebgZ+oDm/QXOYwt+ppE60xgpW+ELuw3aY9uilRRYUw5zhKx57SOq3rPb2Vq+T6Wc4rzdsyiJQvrqsqnOOtsn73WSClZQNbRPlQIdP0NMRg5TQUQLC1vlwmJ0+PM3hUKle2Je3TNW591ygHXny/H0E1EbXp2HZ1n7I0PECxdby/CRZJtwPz8gA0usXn2JKHyWJk/qEc4gafVJjbY19fte0FVf+hY6ZsSgitfeSOMWA=="
       }
     ],
 
@@ -45,6 +45,7 @@
   },
   "client": {
     "debugMode": true,
+    "frequency": 1000,
     "debugger": "http://localhost:8594",
     "hosts": [
       {

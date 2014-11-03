@@ -1,24 +1,28 @@
 var AmpersandModel = require('ampersand-model'),
-  remote = require('boss-remote'),
   config = require('clientconfig'),
-  semver = require('semver'),
   async = require('async'),
-  moment = require('moment')
+  moment = require('moment'),
+  prettysize = require('prettysize')
 
 module.exports = AmpersandModel.extend({
+  idAttribute: 'name',
   props: {
     name: 'string',
-    url: 'string',
-    key: 'string',
-    time: 'number',
-    uptime: 'number',
-    freeMemory: 'number',
-    totalMemory: 'number',
-    hostname: ['string', true, ''],
+    lastUpdated: 'date',
+    status: {
+      type: 'string',
+      values: ['connecting', 'connected', 'error', 'incompatible', 'timeout']
+    },
+    hostname: 'string',
     type: 'string',
     platform: 'string',
     arch: 'string',
     release: 'string',
+    version: 'string',
+    time: 'number',
+    uptime: 'number',
+    freeMemory: 'number',
+    totalMemory: 'number',
     cpus: ['array', true, function() {
       return {
         model: 'string',
@@ -34,6 +38,7 @@ module.exports = AmpersandModel.extend({
         }],
         load: ['object', false, function () {
           return {
+            cpu: 'number',
             idle: 'number',
             irq: 'number',
             nice: 'number',
@@ -42,16 +47,10 @@ module.exports = AmpersandModel.extend({
           }
         }]
       }
-    }],
-    version: 'string'
+    }]
   },
   session: {
-    selected: ['boolean', true, false],
-    remote: ['any', true, null],
-    status: {
-      type: 'string',
-      values: ['connecting', 'connected', 'error', 'incompatible', 'timeout']
-    }
+    selected: ['boolean', true, false]
   },
   derived: {
     timeFormatted: {
@@ -82,70 +81,12 @@ module.exports = AmpersandModel.extend({
       fn: function() {
         return ~~(((this.totalMemory - this.freeMemory) / this.totalMemory) * 100)
       }
+    },
+    totalMemoryFormatted: {
+      deps: ['totalMemory'],
+      fn: function () {
+        return prettysize(this.totalMemory, true)
+      }
     }
-  },
-  initialize: function() {
-    this.status = 'connecting'
-
-    async.waterfall([
-      remote.bind(remote, config, {
-        url: this.url + '/socket',
-        key: this.key,
-        principal: 'alex'
-      }),
-      function(boss, callback) {
-        this.remote = boss
-        this.remote.getDetails(callback)
-      }.bind(this),
-      function(details, callback) {
-        for(var key in details) {
-          this[key] = details[key]
-        }
-
-        if(!semver.satisfies(details.version, config.minVersion)) {
-          var error = new Error('Incompatible')
-          error.code = 'incompatible'
-
-          return callback(error)
-        }
-
-        callback()
-      }.bind(this),
-      function(callback) {
-        // set up listeners
-        setInterval(this._updateServerStatus.bind(this), config.frequency)
-        setInterval(this._updateProcesses.bind(this), config.frequency)
-
-        // and triger them immediately
-        this._updateServerStatus()
-        this._updateProcesses()
-
-        callback()
-      }.bind(this)
-    ], function(error) {
-      if(error) {
-        this.status = error.code ? error.code.toLowerCase() : 'error'
-        console.warn(error)
-        return
-      }
-
-      this.status = 'connected'
-    }.bind(this))
-  },
-
-  _updateServerStatus: function() {
-    this.remote.getServerStatus(function(error, status) {
-      if(error) {
-        return console.error(error)
-      }
-
-      for(var key in status) {
-        this[key] = status[key]
-      }
-    }.bind(this))
-  },
-
-  _updateProcesses: function() {
-
   }
 })

@@ -34,6 +34,8 @@ var HostData = function(data) {
 }
 
 HostData.prototype.afterPropertiesSet = function() {
+  this.status = 'connecting'
+
   remote(this._logger, this._data, function(error, boss) {
     if(error) {
       this._logger.error(error)
@@ -61,6 +63,8 @@ HostData.prototype.afterPropertiesSet = function() {
 
         return
       }
+
+      this.status = 'connected'
 
       // set up listeners
       setInterval(this._updateServerStatus.bind(this), this._config.server.frequency)

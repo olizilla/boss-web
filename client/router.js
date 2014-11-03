@@ -4,6 +4,7 @@ var Router = require('ampersand-router'),
   ConnectingPage = require('./pages/connecting'),
   IncompatiblePage = require('./pages/incompatible'),
   TimeoutPage = require('./pages/timeout'),
+  NoHostsPage = require('./pages/nohosts'),
   ErrorPage = require('./pages/error')
 
 module.exports = Router.extend({

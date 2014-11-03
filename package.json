@@ -36,7 +36,8 @@
     "wantsit": "^1.0",
     "ws": "^0.4",
     "wildemitter": "^1.0",
-    "columbo": "^1.0"
+    "columbo": "^1.0",
+    "prettysize": "^0.0"
   },
   "devDependencies": {},
   "jshintConfig": {

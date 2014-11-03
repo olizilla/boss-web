@@ -31,7 +31,7 @@ module.exports = View.extend({
         borderColor: '#444'
       },
       title: {
-        text: 'CPU',
+        text: 'CPU (' + this.model.cpuSpeed + ')',
         style: fontStyle
       },
       legend: {
@@ -104,7 +104,7 @@ module.exports = View.extend({
         backgroundColor: 'rgba(0, 0, 0, 0)'
       },
       title: {
-        text: 'Memory',
+        text: 'Memory (' + this.model.totalMemoryFormatted + ')',
         style: fontStyle
       },
       credits: {
