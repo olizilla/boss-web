@@ -13,18 +13,11 @@ module.exports = {
 
     // create an empty collection for our host models
     this.hosts = new Hosts()
-    this.hosts.on('add', function() {
-      //
-    })
-    this.hosts.on('remove', function(host, list, response) {
-      //
-    })
-    this.hosts.on('change', function() {
-      //
-    })
+    this.hosts.on('add', function(host) {
+      host.processes.fetch()
 
-    // load hosts from config
-    //config.hosts.forEach(this.hosts.add.bind(this.hosts))
+      setInterval(host.processes.fetch.bind(host.processes), config.frequency)
+    })
 
     // init our URL handlers and the history tracker
     this.router = new Router()

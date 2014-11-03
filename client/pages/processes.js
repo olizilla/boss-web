@@ -1,6 +1,7 @@
 var PageView = require('./base'),
   templates = require('../templates'),
-  config = require('clientconfig')
+  config = require('clientconfig'),
+  ProcessListView = require('../views/processlist')
 
 module.exports = PageView.extend({
   pageTitle: 'Boss Web',
@@ -8,6 +9,6 @@ module.exports = PageView.extend({
   render: function () {
     this.renderWithTemplate()
 
-
+    this.renderCollection(this.model.processes, ProcessListView, '[data-hook=process-list]')
   }
 })

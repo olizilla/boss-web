@@ -7,46 +7,11 @@
           <h4 class="panel-title">Processes</h4>
         </div>
         <div class="panel-body">
-          {{#if processes.length}}
-            <ul class="information">
-              {{#each processes}}
-                <li class="expand">
-                  <h3>Hostname</h3>
-                  <p>{{model.hostname}}</p>
-                </li>
-                <li>
-                  <h3>Type</h3>
-                  <p>{{model.type}}</p>
-                </li>
-                <li>
-                  <h3>Platform</h3>
-                  <p>{{model.platform}}</p>
-                </li>
-                <li>
-                  <h3>Arch</h3>
-                  <p>{{model.arch}}</p>
-                </li>
-                <li>
-                  <h3>Release</h3>
-                  <p>{{model.release}}</p>
-                </li>
-                <li>
-                  <h3>CPU(s)</h3>
-                  <p data-hook="cpuSpeed">{{model.cpus.length}}x {{model.cpuSpeed}}</p>
-                </li>
-                <li>
-                  <h3>Boss</h3>
-                  <p>{{model.version}}</p>
-                </li>
-                <li>
-                  <h3>Uptime</h3>
-                  <p data-hook="uptime">{{model.uptimeFormatted}}</p>
-                </li>
-              {{/each}}
-            </ul>
-          {{else}}
+          {{#if processes.isEmpty}}
             <p>There are no processes running.</p>
           {{/if}}
+          <ul class="information" data-hook="process-list">
+          </ul>
         </div>
       </div>
     </div>

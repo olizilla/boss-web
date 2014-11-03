@@ -10,25 +10,17 @@ var HostData = function(data) {
   this.name = data.name
   this.lastUpdated = Date.now()
 
-  var processes = []
-  var remote = null
-
   Object.defineProperties(this, {
     'processes': {
-      get: function () {
-        return processes
-      }.bind(this)
+      value: [],
+      writable: true
     },
     '_data': {
       value: data
     },
     '_remote': {
-      get: function() {
-        return remote
-      },
-      set: function(r) {
-        remote = r
-      }
+      value: null,
+      writable: true
     }
   })
 }

@@ -2,7 +2,8 @@ var AmpersandModel = require('ampersand-model'),
   config = require('clientconfig'),
   async = require('async'),
   moment = require('moment'),
-  prettysize = require('prettysize')
+  prettysize = require('prettysize'),
+  Processes = require('./processes')
 
 module.exports = AmpersandModel.extend({
   idAttribute: 'name',
@@ -88,5 +89,8 @@ module.exports = AmpersandModel.extend({
         return prettysize(this.totalMemory, true)
       }
     }
+  },
+  collections: {
+    processes: Processes
   }
 })

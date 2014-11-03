@@ -67,7 +67,7 @@
   },
   "client": {
     "debugMode": true,
-    "frequency": 1000,
+    "frequency": 5000,
     "debugger": "http://localhost:8594",
     "hosts": [
       {
