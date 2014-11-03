@@ -3,8 +3,8 @@ var Router = require('ampersand-router'),
   ProcessesPage = require('./pages/processes'),
   ConnectingPage = require('./pages/connecting'),
   IncompatiblePage = require('./pages/incompatible'),
-  ErrorPage = require('./pages/error'),
-  hosts = require('./models/hosts')
+  TimeoutPage = require('./pages/timeout'),
+  ErrorPage = require('./pages/error')
 
 module.exports = Router.extend({
   routes: {
@@ -58,6 +58,10 @@ module.exports = Router.extend({
       }))
     } else if(host.status == 'incompatible') {
       this.trigger('page', new IncompatiblePage({
+        model: host
+      }))
+    } else if(host.status == 'timeout') {
+      this.trigger('page', new TimeoutPage({
         model: host
       }))
     } else {

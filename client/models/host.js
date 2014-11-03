@@ -50,7 +50,7 @@ module.exports = AmpersandModel.extend({
     remote: ['any', true, null],
     status: {
       type: 'string',
-      values: ['connecting', 'connected', 'error', 'incompatible']
+      values: ['connecting', 'connected', 'error', 'incompatible', 'timeout']
     }
   },
   derived: {
@@ -90,7 +90,8 @@ module.exports = AmpersandModel.extend({
     async.waterfall([
       remote.bind(remote, config, {
         url: this.url + '/socket',
-        key: this.key
+        key: this.key,
+        principal: 'alex'
       }),
       function(boss, callback) {
         this.remote = boss
@@ -123,7 +124,7 @@ module.exports = AmpersandModel.extend({
       }.bind(this)
     ], function(error) {
       if(error) {
-        this.status = error.code || 'error'
+        this.status = error.code ? error.code.toLowerCase() : 'error'
         console.warn(error)
         return
       }

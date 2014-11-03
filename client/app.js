@@ -12,7 +12,8 @@ module.exports = {
     var self = window.app = this;
 
     // create an empty collection for our host models
-    this.hosts = new Hosts();
+    this.hosts = new Hosts()
+    this.hosts.fetch()
 
     // load hosts from config
     config.hosts.forEach(this.hosts.add.bind(this.hosts))

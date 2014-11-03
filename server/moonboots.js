@@ -1,10 +1,12 @@
-var config = require('getconfig');
-var stylizer = require('stylizer');
-var templatizer = require('templatizer-hbs');
+var path = require('path'),
+  config = require('getconfig'),
+  stylizer = require('stylizer'),
+  templatizer = require('templatizer-hbs')
 
 // for reuse
-var appDir = __dirname + '/client';
-var cssDir = __dirname + '/public/css';
+var appDir = path.resolve(__dirname + '/../client')
+var cssDir = path.resolve(__dirname + '/../public/css')
+var templateDir = path.resolve(__dirname + '/../templates')
 
 module.exports = {
     // Tell the Hapi server what URLs the application should be served from.
@@ -40,7 +42,7 @@ module.exports = {
             // js file is requested. Which means you can seamlessly change jade and
             // refresh in your browser to get new templates.
             if (config.isDev) {
-                templatizer(__dirname + '/templates/**/*.hbs', appDir + '/templates.js')
+                templatizer(templateDir + '/**/*.hbs', appDir + '/templates.js')
             }
         },
         beforeBuildCSS: function (done) {

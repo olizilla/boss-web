@@ -16,19 +16,41 @@
     "debugger": {
       "listen": "localhost",
       "port": 8594
+    },
+
+    "hosts": [
+      {
+        "name": "localhost",
+        "host": "localhost",
+        "port": 57483,
+        "principal": "root",
+        "key": "VXKvf0pOYdkGoZPS2qmE5YquRBTGwiy2dWsPNnT2b2fvOD6dc+eZ8ZQSp0LtQTOz8+rr9R7W5yvKGJqQoGJgMjE48tYNfLH4HDQ69GHR+ygouCzy8Iou3JlrnFJ9OFr+2XmCbVkTpEjUmyhaaXp59thHCql0OW+6JI35PGoalbEL3CRo59D4+JaSNIP5OJ8ETnpd/ngBaDGCLa6XRXtRtbiK9EK9cvEYc4vAcC0jtp4+zoTAST7mJh5tExybOTMmhdi+yaiY6tg645VkPf+MwdNNisCP7lZx42KTyMvEfsrHwvAcX/sDoRUnWxoMSDLEYxiSqduNTCeJFwvJl9pHeA=="
+      }
+    ],
+
+    "timeout": 10000,
+    "frequency": 1000,
+    "minVersion": "1.0.0",
+
+    // Settings for removing hosts that have gone away
+    "hostPurge": {
+
+      // How often to see if hosts have gone away (in ms)
+      "frequency": 10000,
+
+      // Hosts not having returned system data within this
+      // time period will be removed from display (in ms)
+      "cutoff": 60000
     }
   },
   "client": {
     "debugMode": true,
-    "minVersion": "1.0.0",
-    "timeout": 10000,
-    "frequency": 1000,
     "debugger": "http://localhost:8594",
     "hosts": [
       {
         "name": "localhost",
         "url": "http://localhost:57483",
-        "key": "/var/foo/bar"
+        "key": "drVtTdVqRF31Gv5SZJjuIJjcNuV1Zxm9eNORuvXawBQryLlYN9n2M8Rlfd6EWmHW6LWNlxV4Y+/Cm81Y+idEbeAfA1duMzs77yb4R8tGh16zL+yw1ODGd9Tf6Y6mmG5LS2yuLWsBpP8FHF9Ufn8SkVcRTx2Pbi54VVfGVl9sRdp9kykHTaf6y6QOqWXwnm/rwBexzX69CeeG6S4wm4C8Ilq2mp96kPMowUfORllGWbuMMBlwfjUz5YaEa68+tmFaiVJKO5d4bty6MuN6Wmg9MMjLtCSmmMCzAEWWTBR/SuVvOgu7ysmDPqRYDJZukx0C/HIR5G13BMlG3flajubTFQ=="
       }
     ]
   }
