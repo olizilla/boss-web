@@ -5,13 +5,16 @@ var Router = require('ampersand-router'),
   IncompatiblePage = require('./pages/incompatible'),
   TimeoutPage = require('./pages/timeout'),
   NoHostsPage = require('./pages/nohosts'),
-  ErrorPage = require('./pages/error')
+  LoadingHostsPage = require('./pages/loadinghosts')
+  ErrorPage = require('./pages/error'),
+  ProcessPage = require('./pages/processdetails')
 
 module.exports = Router.extend({
   routes: {
     'host/:host': 'host',
     'host/:host/system': 'system',
     'host/:host/processes': 'processes',
+    'host/:host/process/:process': 'process',
     '': 'catchAll',
     '(*path)': 'catchAll'
   },
@@ -48,6 +51,24 @@ module.exports = Router.extend({
     this._chooseHostPage(host, ProcessesPage)
   },
 
+  process: function(hostName, processId) {
+    var host = app.hosts.get(hostName)
+
+    if(!host) {
+      return this.redirectTo('/')
+    }
+
+    var process = host.processes.get(processId)
+
+    if(!process) {
+      return this.redirectTo('/')
+    }
+
+    this.trigger('page', new ProcessPage({
+      model: process
+    }))
+  },
+
   _chooseHostPage: function(host, ok) {
     if(host.status == 'connected') {
       this.trigger('page', new ok({
@@ -73,7 +94,9 @@ module.exports = Router.extend({
   },
 
   catchAll: function () {
-    if(window.app.hosts.models.length == 0) {
+    if(window.loadingHostList) {
+      return this.trigger('page', new LoadingHostsPage())
+    } else if(window.app.hosts.models.length == 0) {
       return this.trigger('page', new NoHostsPage())
     }
 

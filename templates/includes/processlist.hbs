@@ -1,5 +1,9 @@
-<ul class="information" data-hook="process-list">
+<ul class="information process-list" data-boss-process-id="{{model.id}}">
   <li class="expand">
+    <h3>Title</h3>
+    <p>{{model.title}}</p>
+  </li>
+  <li>
     <h3>Pid</h3>
     <p>{{model.pid}}</p>
   </li>
@@ -10,10 +14,6 @@
   <li>
     <h3>Group</h3>
     <p>{{model.group}}</p>
-  </li>
-  <li>
-    <h3>Title</h3>
-    <p>{{model.title}}</p>
   </li>
   <li>
     <h3>Uptime</h3>

@@ -4,7 +4,8 @@ var _ = require('underscore'),
   Router = require('./router'),
   MainView = require('./views/main'),
   Hosts = require('./models/hosts'),
-  domReady = require('domready')
+  domReady = require('domready'),
+  NoHostsPage = require('./pages/nohosts')
 
 module.exports = {
   // this is the the whole app initialiser
@@ -25,17 +26,19 @@ module.exports = {
     // wait for document ready to render our main view
     // this ensures the document has a body, etc
     domReady(function () {
-      var firstCall = true
+      window.loadingHostList = true
 
       var update = function() {
         self.hosts.fetch({
           merge: true,
           success: function() {
-            if(firstCall) {
-              firstCall = false
+            if(window.loadingHostList) {
+              delete window.loadingHostList
 
               if(self.hosts.models.length > 0) {
                 self.router.redirectTo('/host/' + self.hosts.models[0].name)
+              } else {
+                self.router.trigger('page', new NoHostsPage())
               }
             }
           }

@@ -19,6 +19,29 @@ module.exports = View.extend({
       color: '#BDBDBD'
     }
 
+    var cpuSeries = [{
+      name: 'user',
+      data: []
+    }, {
+      name: 'sys',
+      data: []
+    }, {
+      name: 'nice',
+      data: []
+    }, {
+      name: 'irq',
+      data: []
+    }]
+
+    if(this.model.cpus) {
+      this.model.cpus.forEach(function(cpu) {
+        cpuSeries[0].data.push(cpu.load.user)
+        cpuSeries[1].data.push(cpu.load.sys)
+        cpuSeries[2].data.push(cpu.load.nice)
+        cpuSeries[3].data.push(cpu.load.irq)
+      })
+    }
+
     new Highcharts.Chart({
       colors: [
         '#2A9FD6', '#0F0', '#FF5C5C', '#F5FF5C'
@@ -79,19 +102,7 @@ module.exports = View.extend({
           borderColor: '#222'
         }
       },
-      series: [{
-        name: 'user',
-        data: []
-      }, {
-        name: 'sys',
-        data: []
-      }, {
-        name: 'nice',
-        data: []
-      }, {
-        name: 'irq',
-        data: []
-      }]
+      series: cpuSeries
     })
 
     // cache an element for easy reference by other methods
@@ -173,7 +184,7 @@ module.exports = View.extend({
       },
       series: [{
         name: 'Memory',
-        data: [this.model.usedMemory ? this.model.usedMemory : 0],
+        data: [this.model.usedMemory],
         dataLabels: {
           format: '<div style="text-align:center;font-size:25px;color:#BDBDBD">{y}%</span></div>',
           borderColor: 'rgba(0, 0, 0, 0)',
