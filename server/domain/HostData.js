@@ -38,7 +38,7 @@ HostData.prototype.afterPropertiesSet = function() {
 
   remote(this._logger, this._data, function(error, boss) {
     if(error) {
-      this._logger.error(error)
+      this._logger.error('Error connecting to boss', error)
       this.status = 'error'
 
       return
@@ -48,7 +48,7 @@ HostData.prototype.afterPropertiesSet = function() {
 
     this._remote.getDetails(function(error, details) {
       if(error) {
-        this._logger.error(error)
+        this._logger.error('Error getting boss details', error)
         this.status = 'error'
 
         return
@@ -73,6 +73,16 @@ HostData.prototype.afterPropertiesSet = function() {
       // and trigger them immediately
       this._updateServerStatus()
       this._updateProcesses()
+
+      this._remote.on('process:log:*', function(type, process, event) {
+        var process = this.findProcessById(process.id)
+
+        if(!process) {
+          return
+        }
+
+        process.log(type.split(':')[2], event.date, event.message)
+      }.bind(this))
     }.bind(this))
   }.bind(this))
 }
@@ -80,8 +90,10 @@ HostData.prototype.afterPropertiesSet = function() {
 HostData.prototype._updateServerStatus = function() {
   this._remote.getServerStatus(function(error, status) {
     if(error) {
-      return this._logger.error(error)
+      return this._logger.error('Error getting boss status', error)
     }
+
+    this.status = 'connected'
 
     for(var key in status) {
       this[key] = status[key]
@@ -94,20 +106,22 @@ HostData.prototype._updateServerStatus = function() {
 HostData.prototype._updateProcesses = function() {
   this._remote.listProcesses(function(error, processes) {
     if(error) {
-      return this._logger.error(error)
+      return this._logger.error('Error listing processes', error)
     }
+
+    this.status = 'connected'
 
     this._removeMissingProcesses(processes)
 
-    processes.forEach(function(reportedProcess) {
-      var existingProcess = this.findProcessById(reportedProcess.id);
+    processes.forEach(function(data) {
+      var existingProcess = this.findProcessById(data.id);
 
       if(!existingProcess) {
-        existingProcess = this._processDataFactory.create(reportedProcess);
-        this.processes.push(existingProcess);
+        existingProcess = this._processDataFactory.create(data)
+        this.processes.push(existingProcess)
       }
 
-      existingProcess.update(reportedProcess, system);
+      existingProcess.update(data)
     }.bind(this))
 
     this.lastUpdated = Date.now()
@@ -118,22 +132,22 @@ HostData.prototype._removeMissingProcesses = function(reportedProcesses) {
   this.processes = this.processes.filter(function(existingProcess) {
     for(var i = 0; i < reportedProcesses.length; i++) {
       if(reportedProcesses[i].name == existingProcess.name) {
-        return true;
+        return true
       }
     }
 
-    return false;
-  });
+    return false
+  })
 }
 
 HostData.prototype.findProcessById = function(id) {
   for(var i = 0; i < this.processes.length; i++) {
     if(this.processes[i].id == id) {
-      return this.processes[i];
+      return this.processes[i]
     }
   }
 
-  return null;
+  return null
 }
 
 module.exports = HostData

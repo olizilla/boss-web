@@ -1,183 +1,186 @@
-var Autowired = require('wantsit').Autowired
+var Autowire = require('wantsit').Autowire
 
-var MILLISECONDS_IN_A_DAY = 86400000;
+var MILLISECONDS_IN_A_DAY = 86400000
 
 var ProcessData = function(data) {
-  this._config = Autowired
+  this._config = Autowire
 
-  this.usage = {
-    cpu: data.usage ? data.usage.cpu : [],
-    memory: data.usage ? data.usage.memory : []
-  };
+  this.heapTotal = []
+  this.heapUsed = []
+  this.residentSize = []
+  this.cpu = []
+  this.logs = []
 
-  this.logs = [];
-
-  if(Array.isArray(data.logs)) {
-    data.logs.forEach(function(log) {
-      this.log(log.type, log.data);
-    }.bind(this));
-  }
-
-  this._map(data);
+  this._map(data)
 }
 
-ProcessData.prototype.update = function(data, system) {
-  this._map(data);
+ProcessData.prototype.update = function(data) {
+  this._map(data)
 
-  this._append((data.memory / system.memory.total) * 100, data.cpu, system.time);
+  this._append(
+    data.heapTotal,
+    data.heapUsed,
+    data.residentSize,
+    data.cpu,
+    data.time
+  )
 }
 
-ProcessData.prototype.log = function(type, data) {
-  if(!type || !data) {
-    return;
+ProcessData.prototype.log = function(type, date, message) {
+  if(!type || !date || !message) {
+    return
   }
 
   this.logs.push({
     type: type,
-    data: data
-  });
+    date: date,
+    message: message
+  })
 
   // rotate logs if necessary
-  if(this.logs.length > this._config.get("logs:max")) {
-    this.logs.splice(0, this.logs.length - this._config.get("logs:max"));
+  if(this.logs.length > this._config.server.logs.max) {
+    this.logs.splice(0, this.logs.length - this._config.server.logs.max)
   }
 }
 
 ProcessData.prototype._map = function(data) {
-  ["id", "pid", "name", "script", "uptime", "restarts", "status", "memory", "cpu", "reloading", "debugPort", "mode"].forEach(function(key) {
-    this[key] = data[key];
-  }.bind(this));
+  ["gid", "group", "id", "pid", "restarts", "title", "uid", "uptime", "user"].forEach(function(key) {
+    this[key] = data[key]
+  }.bind(this))
 }
 
-ProcessData.prototype._append = function(memory, cpu, time) {
-  this.usage.memory = this._compressResourceUsage(this.usage.memory, time);
-  this.usage.cpu = this._compressResourceUsage(this.usage.cpu, time);
+ProcessData.prototype._append = function(heapTotal, heapUsed, residentSize, cpu, time) {
+  this.heapTotal = this._compressResourceUsage(this.heapTotal, time)
+  this.heapUsed = this._compressResourceUsage(this.heapUsed, time)
+  this.residentSize = this._compressResourceUsage(this.residentSize, time)
+  this.cpu = this._compressResourceUsage(this.cpu, time)
 
-  this._appendIfDifferent(this.usage.memory, memory, time);
-  this._appendIfDifferent(this.usage.cpu, cpu, time);
+  this._appendIfDifferent(this.heapTotal, heapTotal, time)
+  this._appendIfDifferent(this.heapUsed, heapTotal, time)
+  this._appendIfDifferent(this.residentSize, heapTotal, time)
+  this._appendIfDifferent(this.cpu, cpu, time)
 }
 
 ProcessData.prototype._appendIfDifferent = function(array, value, time) {
-  var rounded = ~~value;
+  var rounded = ~~value
 
   // if the last two datapoints have the same value as the one we're about to add,
   // don't add a third, just change the date of the last one to be now
   // x-----x becomes x-----------x instead of x-----x-----x
   if(array.length > 1 && array[array.length - 1].y == rounded && array[array.length - 2].y == rounded) {
-    array[array.length - 1].x = time;
+    array[array.length - 1].x = time
 
-    return;
+    return
   }
 
   array.push({
     x: time,
     y: rounded
-  });
+  })
 }
 
 ProcessData.prototype._compressResourceUsage = function(data, time) {
-  var datapoints = this._config.get("graph:datapoints");
-  datapoints -= 1;
+  var datapoints = this._config.server.graph.datapoints
+  datapoints -= 1
 
-  var distribution = this._config.get("graph:distribution");
-  var maxAgeInDays = distribution.length * MILLISECONDS_IN_A_DAY;
+  var distribution = this._config.server.graph.distribution
+  var maxAgeInDays = distribution.length * MILLISECONDS_IN_A_DAY
 
   if(data.length < datapoints) {
-    return data;
+    return data
   }
 
-  var now = time;
-  var cutoff = now - maxAgeInDays;
-  var usage = [];
+  var now = time
+  var cutoff = now - maxAgeInDays
+  var usage = []
 
-  var days = [];
-  var day = [];
+  var days = []
+  var day = []
 
   // group all data by day
   data.forEach(function(datum) {
     if(datum.x < cutoff) {
       // ignore anything older than graph:maxAgeInDays
-      return;
+      return
     }
 
     // record date so we can easily compare days
-    datum.date = new Date(datum.x);
+    datum.date = new Date(datum.x)
 
     if(day[day.length - 1] && day[day.length - 1].date.getDate() != datum.date.getDate()) {
-      days.push(day);
-      day = [];
+      days.push(day)
+      day = []
     } else {
-      day.push(datum);
+      day.push(datum)
     }
   });
 
   // all datapoints were in one day..
   if(days.length == 0) {
-    days.push(day);
+    days.push(day)
   }
 
   // compress each days worth of data
   days.forEach(function(day) {
-    var compressed = this._compressDay(day, now, datapoints, distribution);
+    var compressed = this._compressDay(day, now, datapoints, distribution)
 
-    usage = usage.concat(compressed);
-  }.bind(this));
+    usage = usage.concat(compressed)
+  }.bind(this))
 
-  return usage;
+  return usage
 }
 
 ProcessData.prototype._compressDay = function(day, now, datapoints, distribution) {
   if(day.length == 0) {
-    return day;
+    return day
   }
 
-  var dayDifference = Math.floor((now - day[day.length - 1].x) / MILLISECONDS_IN_A_DAY);
+  var dayDifference = Math.floor((now - day[day.length - 1].x) / MILLISECONDS_IN_A_DAY)
 
   if(dayDifference > distribution.length) {
-    return [];
+    return []
   }
 
-  var percent = distribution[dayDifference];
+  var percent = distribution[dayDifference]
 
-  return this._compress(day, (datapoints/100) * percent);
+  return this._compress(day, (datapoints/100) * percent)
 }
 
 ProcessData.prototype._compress = function(dataSet, maxSamples) {
-  var sampleSize = Math.ceil(dataSet.length/maxSamples);
+  var sampleSize = Math.ceil(dataSet.length/maxSamples)
 
-  var output = [];
-  var offset = 0;
-  var data = 0;
-  var date = 0;
+  var output = []
+  var offset = 0
+  var data = 0
+  var date = 0
 
   while(offset < dataSet.length) {
-    var processed = 0;
+    var processed = 0
 
     for(var i = 0; i < sampleSize; i++) {
       if(offset + i == dataSet.length) {
-        break;
+        break
       }
 
       // might at some point overflow MAX_INT here. won't that be fun.
-      date += dataSet[offset + i].x;
+      date += dataSet[offset + i].x
+      data += dataSet[offset + i].y
 
-      data += dataSet[offset + i].y;
-
-      processed++;
+      processed++
     }
 
-    offset += processed;
+    offset += processed
 
     output.push({
       x: date / processed,
       y: data / processed
-    });
+    })
 
-    data = 0;
-    date = 0;
+    data = 0
+    date = 0
   }
 
-  return output;
+  return output
 }
 
-module.exports = ProcessData;
+module.exports = ProcessData

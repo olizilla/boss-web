@@ -41,6 +41,28 @@
       // Hosts not having returned system data within this
       // time period will be removed from display (in ms)
       "cutoff": 60000
+    },
+
+    // Graph settings
+    "graph": {
+
+      // Max number of points to plot on the graph
+      "datapoints": 1000,
+
+      // Graph data will be compressed over time. Distribution is the % distribution going back in time.
+      // e.g. [40, 25, 10, 10, 5] means the last 24 hours will hold 40% of graph:datapoints, the 24
+      // hours prior to that will hold 25%, the 24 hours prior to that will hold 10% and so on.  You
+      // may add as many entries to this array as you wish but they must add up to 100.
+      "distribution": [
+        40, 25, 10, 10, 5
+      ]
+    },
+
+    // Log settings
+    "logs": {
+
+      // The max number of log entries per process that will be shown in the browser
+      "max": 1000
     }
   },
   "client": {
