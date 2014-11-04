@@ -3,7 +3,7 @@ var PageView = require('./base'),
   DetailsView = require('../views/process/details'),
   MemoryView = require('../views/process/memory'),
   CpuView = require('../views/process/cpu'),
-  LogsView = require('../views/process/logs')
+  LogsView = require('../views/process/loglist/list')
 
 module.exports = PageView.extend({
   pageTitle: 'Boss',

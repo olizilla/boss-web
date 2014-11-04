@@ -1,7 +1,7 @@
 var AmpersandModel = require('ampersand-model'),
-  config = require('clientconfig'),
   moment = require('moment'),
-  prettysize = require('prettysize')
+  prettysize = require('prettysize'),
+  Logs = require('./logs')
 
 module.exports = AmpersandModel.extend({
   props: {
@@ -28,13 +28,6 @@ module.exports = AmpersandModel.extend({
       return {
         x: 'number',
         y: 'number'
-      }
-    }],
-    logs: ['array', true, function() {
-      return {
-        type: ['info', 'warn', 'error', 'debug'],
-        date: 'date',
-        message: 'string'
       }
     }],
     gid: 'number',
@@ -88,5 +81,8 @@ module.exports = AmpersandModel.extend({
         return moment.duration(this.uptime * 1000).humanize()
       }
     }
+  },
+  collections: {
+    logs: Logs
   }
 })

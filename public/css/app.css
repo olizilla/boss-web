@@ -92,10 +92,248 @@ li.active {
 .nav > li.host-name span {
   display: block;
   padding: 15px 20px;
+  background-color: #050505;
+}
+.panel-heading-logs button {
+  float: right;
+  margin-left: 5px;
+}
+.panel-logs {
+  padding: 0;
+}
+ul.logs {
+  background: #000;
+  color: #fff;
+  font-family: 'Lucida Console', Monaco, monospace;
+  height: 400px;
+  margin: 0;
+  overflow: auto;
+  padding: 5px 0;
+}
+ul.logs li {
+  font-size: 12px;
+  background-color: transparent;
+  color: #fff;
+  line-height: 1.4;
+  white-space: pre;
+  padding: 1px 5px;
+  display: none;
+}
+ul.logs li.error {
+  background-color: #330100;
+}
+ul.logs li.visible {
+  display: block;
+}
+ul.logs:after {
+  content: "\2588";
+  margin-left: 5px;
+  -webkit-animation: blinker 1s linear 0s infinite;
+  -moz-animation: blinker 1s linear 0s infinite;
+  -ms-animation: blinker 1s linear 0s infinite;
+  -animation: blinker 1s linear 0s infinite;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .navbar-brand {
     background-image: url("/images/boss@2x.png");
     background-size: 50px 50px;
+  }
+}
+@-moz-keyframes blinker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes blinker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes reloading {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@-webkit-keyframes reloading {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@-moz-keyframes erroring {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@-webkit-keyframes erroring {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@-moz-keyframes blinker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes blinker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-o-keyframes blinker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes blinker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes reloading {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@-webkit-keyframes reloading {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@-o-keyframes reloading {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@keyframes reloading {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@-moz-keyframes erroring {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@-webkit-keyframes erroring {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@-o-keyframes erroring {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
+  }
+}
+@keyframes erroring {
+  0% {
+    background: fade(, 20%);
+  }
+  50% {
+    background: fade(, 5%);
+  }
+  100% {
+    background: fade(, 20%);
   }
 }

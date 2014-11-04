@@ -150,7 +150,7 @@ HostData.prototype._updateProcesses = function() {
 HostData.prototype._removeMissingProcesses = function(reportedProcesses) {
   this.processes = this.processes.filter(function(existingProcess) {
     for(var i = 0; i < reportedProcesses.length; i++) {
-      if(reportedProcesses[i].name == existingProcess.name) {
+      if(reportedProcesses[i].title == existingProcess.title) {
         return true
       }
     }
