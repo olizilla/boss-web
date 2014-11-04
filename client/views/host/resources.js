@@ -1,12 +1,12 @@
 var View = require('ampersand-view'),
-  templates = require('../templates'),
+  templates = require('../../templates'),
   HighCharts = require('Highcharts')
 
 require('HighchartsMore')
 require('HighchartsSolidGauge')
 
 module.exports = View.extend({
-  template: templates.includes.resources,
+  template: templates.includes.host.resources,
   render: function () {
     this.renderWithTemplate(this);
 

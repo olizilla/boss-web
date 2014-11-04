@@ -1,16 +1,12 @@
 <section class="page host">
   <div class="row">
     <div class="col-md-12">
-      <h1>{{model.name}} <small>Process information</small></h1>
+      <h1>{{model.name}}</h1>
       <div class="panel panel-primary">
         <div class="panel-heading">
           <h4 class="panel-title">Processes</h4>
         </div>
-        <div class="panel-body" data-hook="process-list">
-          {{#if processes.isEmpty}}
-            <p>There are no processes running.</p>
-          {{/if}}
-        </div>
+        <div class="panel-body" data-hook="view"></div>
       </div>
     </div>
   </div>

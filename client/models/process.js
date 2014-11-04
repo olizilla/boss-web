@@ -1,18 +1,18 @@
 var AmpersandModel = require('ampersand-model'),
   config = require('clientconfig'),
-  async = require('async'),
   moment = require('moment'),
   prettysize = require('prettysize')
 
 module.exports = AmpersandModel.extend({
   props: {
+    debugPort: 'number',
     heapTotal: ['array', true, function() {
       return {
         x: 'number',
         y: 'number'
       }
     }],
-    heapTotal: ['array', true, function() {
+    heapUsed: ['array', true, function() {
       return {
         x: 'number',
         y: 'number'
@@ -45,7 +45,8 @@ module.exports = AmpersandModel.extend({
     title: 'string',
     uid: 'number',
     uptime: 'number',
-    user: 'string'
+    user: 'string',
+    script: 'string'
   },
   derived: {
     cpuFormatted: {
@@ -65,13 +66,13 @@ module.exports = AmpersandModel.extend({
       }
     },
     memoryFormatted: {
-      deps: ['residentSize'],
+      deps: ['heapUsed'],
       fn: function () {
-        if(this.residentSize.length == 0) {
+        if(this.heapUsed.length == 0) {
           return '?'
         }
 
-        var last = this.residentSize[this.residentSize.length - 1]
+        var last = this.heapUsed[this.heapUsed.length - 1]
 
         if(!last) {
           return '?'

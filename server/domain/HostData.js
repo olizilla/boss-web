@@ -21,6 +21,14 @@ var HostData = function(data) {
     '_remote': {
       value: null,
       writable: true
+    },
+    '_updateServerStatusInterval': {
+      value: null,
+      writable: true
+    },
+    '_updateProcessesInterval': {
+      value: null,
+      writable: true
     }
   })
 }
@@ -28,53 +36,68 @@ var HostData = function(data) {
 HostData.prototype.afterPropertiesSet = function() {
   this.status = 'connecting'
 
-  remote(this._logger, this._data, function(error, boss) {
-    if(error) {
-      this._logger.error('Error connecting to boss', error)
+  this._connectToDaemon()
+}
+
+HostData.prototype._connectToDaemon = function() {
+  this.status = 'connecting'
+
+  remote(this._logger, this._data, this._connectedToDaemon.bind(this))
+}
+
+HostData.prototype._connectedToDaemon = function(error, boss) {
+  boss.on('disconnected', function() {
+    clearInterval(this._updateServerStatusInterval)
+    clearInterval(this._updateProcessesInterval)
+
+    this.status = 'connecting'
+  }.bind(this))
+
+  if(error) {
+    this._logger.error('Error connecting to boss', error)
+    this.status = 'error'
+
+    return
+  }
+
+  this._remote = boss
+
+  this._remote.getDetails(function(error, details) {
+    if (error) {
+      this._logger.error('Error getting boss details', error)
       this.status = 'error'
 
       return
     }
 
-    this._remote = boss
+    for (var key in details) {
+      this[key] = details[key]
+    }
 
-    this._remote.getDetails(function(error, details) {
-      if(error) {
-        this._logger.error('Error getting boss details', error)
-        this.status = 'error'
+    if (!details.version || !semver.satisfies(details.version, this._config.server.minVersion)) {
+      this.status = 'incompatible'
 
+      return
+    }
+
+    this.status = 'connected'
+
+    // set up listeners
+    this._updateServerStatusInterval = setInterval(this._updateServerStatus.bind(this), this._config.server.frequency)
+    this._updateProcessesInterval = setInterval(this._updateProcesses.bind(this), this._config.server.frequency)
+
+    // and trigger them immediately
+    this._updateServerStatus()
+    this._updateProcesses()
+
+    this._remote.on('process:log:*', function (type, process, event) {
+      var process = this.findProcessById(process.id)
+
+      if (!process) {
         return
       }
 
-      for(var key in details) {
-        this[key] = details[key]
-      }
-
-      if(!details.version || !semver.satisfies(details.version, this._config.server.minVersion)) {
-        this.status = 'incompatible'
-
-        return
-      }
-
-      this.status = 'connected'
-
-      // set up listeners
-      setInterval(this._updateServerStatus.bind(this), this._config.server.frequency)
-      setInterval(this._updateProcesses.bind(this), this._config.server.frequency)
-
-      // and trigger them immediately
-      this._updateServerStatus()
-      this._updateProcesses()
-
-      this._remote.on('process:log:*', function(type, process, event) {
-        var process = this.findProcessById(process.id)
-
-        if(!process) {
-          return
-        }
-
-        process.log(type.split(':')[2], event.date, event.message)
-      }.bind(this))
+      process.log(type.split(':')[2], event.date, event.message)
     }.bind(this))
   }.bind(this))
 }
@@ -82,6 +105,8 @@ HostData.prototype.afterPropertiesSet = function() {
 HostData.prototype._updateServerStatus = function() {
   this._remote.getServerStatus(function(error, status) {
     if(error) {
+      this.status = error.code == 'TIMEOUT' ? 'timeout' : 'error'
+
       return this._logger.error('Error getting boss status', error)
     }
 
@@ -98,6 +123,8 @@ HostData.prototype._updateServerStatus = function() {
 HostData.prototype._updateProcesses = function() {
   this._remote.listProcesses(function(error, processes) {
     if(error) {
+      this.status = error.code == 'TIMEOUT' ? 'timeout' : 'error'
+
       return this._logger.error('Error listing processes', error)
     }
 

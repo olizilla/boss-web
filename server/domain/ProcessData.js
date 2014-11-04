@@ -44,7 +44,7 @@ ProcessData.prototype.log = function(type, date, message) {
 }
 
 ProcessData.prototype._map = function(data) {
-  ["gid", "group", "id", "pid", "restarts", "title", "uid", "uptime", "user"].forEach(function(key) {
+  ["debugPort", "gid", "group", "id", "pid", "restarts", "script", "title", "uid", "uptime", "user"].forEach(function(key) {
     this[key] = data[key]
   }.bind(this))
 }
@@ -56,8 +56,8 @@ ProcessData.prototype._append = function(heapTotal, heapUsed, residentSize, cpu,
   this.cpu = this._compressResourceUsage(this.cpu, time)
 
   this._appendIfDifferent(this.heapTotal, heapTotal, time)
-  this._appendIfDifferent(this.heapUsed, heapTotal, time)
-  this._appendIfDifferent(this.residentSize, heapTotal, time)
+  this._appendIfDifferent(this.heapUsed, heapUsed, time)
+  this._appendIfDifferent(this.residentSize, residentSize, time)
   this._appendIfDifferent(this.cpu, cpu, time)
 }
 

@@ -6,7 +6,7 @@ var View = require('ampersand-view'),
   dom = require('ampersand-dom'),
   templates = require('../templates'),
   setFavicon = require('favicon-setter'),
-  HostListView = require('./hostlist')
+  HostListView = require('./hostlist/host')
 
 module.exports = View.extend({
   template: templates.body,
@@ -24,6 +24,8 @@ module.exports = View.extend({
 
     // main renderer
     this.renderWithTemplate()
+
+    // list of hosts on the left
     this.renderCollection(app.hosts, HostListView, '[data-hook=host-list]')
 
     // init and configure our page switcher

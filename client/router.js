@@ -1,5 +1,5 @@
 var Router = require('ampersand-router'),
-  SystemPage = require('./pages/system'),
+  HostPage = require('./pages/host'),
   ProcessesPage = require('./pages/processes'),
   ConnectingPage = require('./pages/connecting'),
   IncompatiblePage = require('./pages/incompatible'),
@@ -7,7 +7,7 @@ var Router = require('ampersand-router'),
   NoHostsPage = require('./pages/nohosts'),
   LoadingHostsPage = require('./pages/loadinghosts')
   ErrorPage = require('./pages/error'),
-  ProcessPage = require('./pages/processdetails')
+  ProcessPage = require('./pages/process')
 
 module.exports = Router.extend({
   routes: {
@@ -36,8 +36,8 @@ module.exports = Router.extend({
       return this.redirectTo('/')
     }
 
-    host.on('change:status', this._chooseHostPage.bind(this, host, SystemPage))
-    this._chooseHostPage(host, SystemPage)
+    host.on('change:status', this._chooseHostPage.bind(this, host, HostPage))
+    this._chooseHostPage(host, HostPage)
   },
 
   processes: function(hostName) {

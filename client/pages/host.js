@@ -1,12 +1,12 @@
 var PageView = require('./base'),
   templates = require('../templates'),
   config = require('clientconfig'),
-  SystemDataView = require('../views/system'),
-  ResourceDataView = require('../views/resources')
+  SystemDataView = require('../views/host/system'),
+  ResourceDataView = require('../views/host/resources')
 
 module.exports = PageView.extend({
   pageTitle: 'Boss Web',
-  template: templates.pages.system,
+  template: templates.pages.host,
   render: function () {
     this.renderWithTemplate()
 

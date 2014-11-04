@@ -1,7 +1,8 @@
 var PageView = require('./base'),
   templates = require('../templates'),
-  config = require('clientconfig'),
-  ProcessListView = require('../views/processlist')
+  ProcessListView = require('../views/processlist/list'),
+  EmptyProcessListView = require('../views/processlist/empty'),
+  ViewSwitcher = require('ampersand-view-switcher')
 
 module.exports = PageView.extend({
   pageTitle: 'Boss Web',
@@ -9,27 +10,20 @@ module.exports = PageView.extend({
   render: function () {
     this.renderWithTemplate()
 
-    this.renderCollection(this.model.processes, ProcessListView, '[data-hook=process-list]')
-  },
-  events: {
-    "click li": "showProcess"
-  },
-  showProcess: function(event) {
-    var id = null
-    var target = event.delegateTarget
+    this.pageContainer = this.queryByHook('view');
 
-    while(target && target.nodeName.toLowerCase() != 'ul') {
-      target = target.parentNode
+    // set up our page switcher for that element
+    this.pageSwitcher = new ViewSwitcher(this.pageContainer);
 
-      if(target.nodeName.toLowerCase() == 'ul') {
-        id = target.getAttribute('data-boss-process-id')
-      }
+    this.emptyListView = new EmptyProcessListView()
+    this.listView = new ProcessListView({
+      model: this.model
+    })
+
+    if(this.model.processes.isEmpty()) {
+      this.pageSwitcher.set(this.emptyListView)
+    } else {
+      this.pageSwitcher.set(this.listView)
     }
-
-    if(!id) {
-      return
-    }
-
-    window.app.router.redirectTo('/host/' + this.model.name + '/process/' + id)
   }
 })

@@ -1,6 +1,5 @@
 var AmpersandModel = require('ampersand-model'),
   config = require('clientconfig'),
-  async = require('async'),
   moment = require('moment'),
   prettysize = require('prettysize'),
   Processes = require('./processes')
@@ -24,6 +23,7 @@ module.exports = AmpersandModel.extend({
     uptime: 'number',
     freeMemory: 'number',
     totalMemory: 'number',
+    debuggerPort: 'number',
     cpus: ['array', true, function() {
       return {
         model: 'string',

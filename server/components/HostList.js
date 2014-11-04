@@ -20,6 +20,10 @@ HostList.prototype._hostPurge = function() {
   var now = Date.now();
 
   Object.keys(this._hostData).forEach(function(key) {
+    if(this._hostData[key].status == 'connecting') {
+      return
+    }
+
     if(now - this._hostData[key].lastUpdated > this._config.server.hostPurge.cutoff) {
       this._logger.info("HostList", key, "has gone away");
       delete this._hostData[key];

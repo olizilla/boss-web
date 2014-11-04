@@ -1,8 +1,8 @@
 var View = require('ampersand-view'),
-  templates = require('../templates')
+  templates = require('../../templates')
 
 module.exports = View.extend({
-  template: templates.includes.system,
+  template: templates.includes.host.system,
   bindings: {
     'model.uptimeFormatted': {
       type: 'text',
