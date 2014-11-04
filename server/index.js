@@ -42,7 +42,6 @@ BossWeb = function() {
     throw exception
   }.bind(this));
 
-
   var internals = {
     clientConfig: JSON.stringify(config.client),
 
@@ -93,6 +92,13 @@ BossWeb = function() {
       directory: {
         path: path.resolve(__dirname + '/../public/fonts')
       }
+    }
+  })
+  server.route({
+    method: 'GET',
+    path: '/apple-touch-icon.png',
+    handler: function (request, reply) {
+      reply.file(path.resolve(__dirname + '/../public/apple-touch-icon.png'))
     }
   })
 

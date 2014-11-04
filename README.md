@@ -1,23 +1,26 @@
 # boss-web
 
-This app was generated with the [ampersand cli tool](http://ampersandjs.com/learn/quick-start-guide).
+A web interface for the [boss](http://github.com/tableflip/boss) process manager.
 
-## How to run it
+## Prerequisites
 
-1. download/install [node.js](http://nodejs.org/)
-1. install dependencies: `npm install`
-1. run it: `npm start`
-1. open http://localhost:3000 in a browser
+ 1. Boss installed on one or more servers
+ 2. A modern web browser
 
-## How it's structured
+## Installation
 
-See docs: http://ampersandjs.com/
-Curated modules: http://tools.ampersandjs.com/
+```sh
+$ npm install -g boss-web
+``
 
-## Credits
+## Setup
 
-Built by folks at [&yet](http://andyet.com).
 
-## Want a deeper understanding?
 
-Get the book: http://humanjavascript.com
+All users are authenticated with a secret and a pre-shared AES key.  To set up a user to connect to boss remotely, on the machine boss is running on, run the following (where `$USER` is the username you wish to add):
+
+```sh
+# bs remote useradd $USER
+```
+
+You will then be prompted to enter a password for that user

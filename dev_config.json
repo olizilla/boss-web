@@ -10,12 +10,29 @@
       "secure": false
     },
     "http": {
-      "listen": "localhost",
+      "listen": "0.0.0.0",
       "port": 3000
     },
-    "debugger": {
-      "listen": "localhost",
-      "port": 8594
+    "https": {
+      // If you are performing SSL termination somewhere else set this to false to
+      // stop boss-web from starting an https server, otherwise leave this enabled!
+      "enabled": true,
+
+      // Only accept connections from this hosts (0.0.0.0 is a wildcard)
+      "listen": "0.0.0.0",
+
+      // The port to listen on
+      "port": 3001,
+
+      // Path to the secure key for this server
+      "key": "/path/to/key",
+
+      // Path to the certificate for this server
+      "cert": "/path/to/cert",
+
+      // if true, start an http server on ${server.http.port} and redirect users to the
+      // server running on ${server.https.port}
+      "upgrade": true
     },
 
     "hosts": [
@@ -24,7 +41,16 @@
         "host": "localhost",
         "port": 57483,
         "principal": "root",
+        //"key": "/path/to/key"
         "key": "VXKvf0pOYdkGoZPS2qmE5YquRBTGwiy2dWsPNnT2b2fvOD6dc+eZ8ZQSp0LtQTOz8+rr9R7W5yvKGJqQoGJgMjE48tYNfLH4HDQ69GHR+ygouCzy8Iou3JlrnFJ9OFr+2XmCbVkTpEjUmyhaaXp59thHCql0OW+6JI35PGoalbEL3CRo59D4+JaSNIP5OJ8ETnpd/ngBaDGCLa6XRXtRtbiK9EK9cvEYc4vAcC0jtp4+zoTAST7mJh5tExybOTMmhdi+yaiY6tg645VkPf+MwdNNisCP7lZx42KTyMvEfsrHwvAcX/sDoRUnWxoMSDLEYxiSqduNTCeJFwvJl9pHeA=="
+}
+    ],
+
+    "users": [
+      {
+        "name": "alex",
+        "password": "foo",
+        "key": "/path/to/key"
       }
     ],
 

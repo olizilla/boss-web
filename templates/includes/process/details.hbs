@@ -3,7 +3,7 @@
     <h4 class="panel-title">Vital statistics</h4>
   </div>
   <div class="panel-body">
-    <h5>Script</h5>
-    <p>{{model.script}}</p>
+    <p><span data-hook="script">{{model.script}}</span> has been running for <span data-hook="uptime">{{model.uptimeFormatted}}</span> with <span data-hook="restarts">{{model.restarts}}</span> restart(s).</p>
+    <p>The current pid is <span data-hook="pid">{{model.pid}}</span> and it's running as <span data-hook="user">{{model.user}}</span>:<span data-hook="group">{{model.group}}</span>.</p>
   </div>
 </div>

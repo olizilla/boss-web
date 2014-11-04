@@ -86,22 +86,40 @@ li.active
       padding: 5px
       margin: 0
 
-.process-list tbody td, .process-list tbody th
+.process-list
+  margin: 0
+  table-layout: fixed
+  width: 100%
+
+.process-list td
+  overflow: hidden
   text-overflow: ellipsis
   white-space: nowrap
-  overflow: hidden
 
 .process-list tbody tr:hover
   cursor: pointer
 
-.nav > li.host-name {
+.process-list td small
+  color: #999
+
+.process-list .pid, .process-list .uptime, .process-list .restarts, .process-list .cpu, .process-list .memory
+  width: 80px
+
+@media (max-width: 512px)
+  .process-list .pid, .process-list .uptime, .process-list .restarts
+    display: none
+
+@media (max-width: 640px)
+  .process-list .pid
+    display: none
+
+.nav > li.host-name
   padding: 0
-}
-.nav > li.host-name span {
+
+.nav > li.host-name span
   display: block
   padding: 15px 20px
   background-color: #050505
-}
 
 .panel-heading-logs button
   float: right

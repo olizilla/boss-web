@@ -110,7 +110,7 @@ module.exports = View.extend({
           name: "Heap size",
           data: this.model.heapTotal
         }, {
-          name: "RSS",
+          name: "Resident set size",
           data: this.model.residentSize
         }
       ]
