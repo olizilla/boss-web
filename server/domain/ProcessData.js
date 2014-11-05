@@ -38,8 +38,8 @@ ProcessData.prototype.log = function(type, date, message) {
   })
 
   // rotate logs if necessary
-  if(this.logs.length > this._config.server.logs.max) {
-    this.logs.splice(0, this.logs.length - this._config.server.logs.max)
+  if(this.logs.length > this._config.logs.max) {
+    this.logs.splice(0, this.logs.length - this._config.logs.max)
   }
 }
 
@@ -80,10 +80,10 @@ ProcessData.prototype._appendIfDifferent = function(array, value, time) {
 }
 
 ProcessData.prototype._compressResourceUsage = function(data, time) {
-  var datapoints = this._config.server.graph.datapoints
+  var datapoints = this._config.graph.datapoints
   datapoints -= 1
 
-  var distribution = this._config.server.graph.distribution
+  var distribution = this._config.graph.distribution
   var maxAgeInDays = distribution.length * MILLISECONDS_IN_A_DAY
 
   if(data.length < datapoints) {

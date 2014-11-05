@@ -1,95 +1,12 @@
 {
   "isDev": true,
-  "server": {
-    "isSecure": false,
-    "session": {
-      "host": "localhost",
-      "port": 6379,
-      "db": 1,
-      "secret": "bang!",
-      "secure": false
-    },
-    "http": {
-      "listen": "0.0.0.0",
-      "port": 3000
-    },
-    "https": {
-      // If you are performing SSL termination somewhere else set this to false to
-      // stop boss-web from starting an https server, otherwise leave this enabled!
-      "enabled": true,
-
-      // Only accept connections from this hosts (0.0.0.0 is a wildcard)
-      "listen": "0.0.0.0",
-
-      // The port to listen on
-      "port": 3001,
-
-      // Path to the secure key for this server
-      "key": "/path/to/key",
-
-      // Path to the certificate for this server
-      "cert": "/path/to/cert",
-
-      // if true, start an http server on ${server.http.port} and redirect users to the
-      // server running on ${server.https.port}
-      "upgrade": true
-    },
-
-    "hosts": [
-      {
-        "name": "localhost",
-        "host": "localhost",
-        "port": 57483,
-        "principal": "root",
-        //"key": "/path/to/key"
-        "key": "VXKvf0pOYdkGoZPS2qmE5YquRBTGwiy2dWsPNnT2b2fvOD6dc+eZ8ZQSp0LtQTOz8+rr9R7W5yvKGJqQoGJgMjE48tYNfLH4HDQ69GHR+ygouCzy8Iou3JlrnFJ9OFr+2XmCbVkTpEjUmyhaaXp59thHCql0OW+6JI35PGoalbEL3CRo59D4+JaSNIP5OJ8ETnpd/ngBaDGCLa6XRXtRtbiK9EK9cvEYc4vAcC0jtp4+zoTAST7mJh5tExybOTMmhdi+yaiY6tg645VkPf+MwdNNisCP7lZx42KTyMvEfsrHwvAcX/sDoRUnWxoMSDLEYxiSqduNTCeJFwvJl9pHeA=="
-}
-    ],
-
-    "users": [
-      {
-        "name": "alex",
-        "password": "foo",
-        "key": "/path/to/key"
-      }
-    ],
-
-    "timeout": 10000,
-    "frequency": 1000,
-    "minVersion": "1.0.0",
-
-    // Settings for removing hosts that have gone away
-    "hostPurge": {
-
-      // How often to see if hosts have gone away (in ms)
-      "frequency": 10000,
-
-      // Hosts not having returned system data within this
-      // time period will be removed from display (in ms)
-      "cutoff": 60000
-    },
-
-    // Graph settings
-    "graph": {
-
-      // Max number of points to plot on the graph
-      "datapoints": 1000,
-
-      // Graph data will be compressed over time. Distribution is the % distribution going back in time.
-      // e.g. [40, 25, 10, 10, 5] means the last 24 hours will hold 40% of graph:datapoints, the 24
-      // hours prior to that will hold 25%, the 24 hours prior to that will hold 10% and so on.  You
-      // may add as many entries to this array as you wish but they must add up to 100.
-      "distribution": [
-        40, 25, 10, 10, 5
-      ]
-    },
-
-    // Log settings
-    "logs": {
-
-      // The max number of log entries per process that will be shown in the browser
-      "max": 1000
-    }
+  "isSecure": false,
+  "session": {
+    "host": "localhost",
+    "port": 6379,
+    "db": 1,
+    "secret": "bang!",
+    "secure": false
   },
   "client": {
     "debugMode": true,

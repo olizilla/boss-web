@@ -40,7 +40,8 @@
     "wildemitter": "^1.0",
     "columbo": "^1.0",
     "prettysize": "^0.0",
-    "ansi-to-html": "^0.2"
+    "ansi-to-html": "^0.2",
+    "rc": "^0.5"
   },
   "devDependencies": {},
   "jshintConfig": {

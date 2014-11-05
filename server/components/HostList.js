@@ -9,11 +9,11 @@ var HostList = function() {
 }
 
 HostList.prototype.afterPropertiesSet = function() {
-  this._config.server.hosts.forEach(function(host) {
-    this._hostData[host.name] = this._hostDataFactory.create(host)
+  Object.keys(this._config.hosts).forEach(function(name) {
+    this._hostData[name] = this._hostDataFactory.create(name, this._config.hosts[name])
   }.bind(this))
 
-  setInterval(this._hostPurge.bind(this), this._config.server.hostPurge.frequency);
+  setInterval(this._hostPurge.bind(this), this._config.hostPurge.frequency);
 };
 
 HostList.prototype._hostPurge = function() {
@@ -24,7 +24,7 @@ HostList.prototype._hostPurge = function() {
       return
     }
 
-    if(now - this._hostData[key].lastUpdated > this._config.server.hostPurge.cutoff) {
+    if(now - this._hostData[key].lastUpdated > this._config.hostPurge.cutoff) {
       this._logger.info("HostList", key, "has gone away");
       delete this._hostData[key];
     }

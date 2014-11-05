@@ -5,10 +5,82 @@ var Container = require('wantsit').Container,
   EventEmitter = require('wildemitter'),
   util = require('util'),
   fs = require('fs'),
-  config = require('getconfig'),
+  clientConfig = coerce(stripUnderscores(require('rc')('boss/bossweb-client', path.resolve(__dirname + '/../bossweb-client')))),
   logger = require('andlog'),
   Hapi = require('hapi'),
-  Columbo = require("columbo")
+  Columbo = require("columbo"),
+  hostConfig = coerce(checkLength(stripUnderscores(require('rc')('boss/bossweb-hosts')), 'Please define some host names')),
+  userConfig = coerce(checkLength(stripUnderscores(require('rc')('boss/bossweb-users')), 'Please define some users')),
+  config = coerce(stripUnderscores(require('rc')('boss/bossweb', path.resolve(__dirname + '/../bossweb'))))
+
+function coerce(obj) {
+  if(Array.isArray(obj)) {
+    return obj.map(function(value) {
+      return coerce(value)
+    })
+  }
+
+  if(obj instanceof String || typeof obj == 'string') {
+    if(obj == 'false') {
+      return false
+    }
+
+    if(obj == 'true') {
+      return true
+    }
+
+    if(isFinite(obj)) {
+      return parseFloat(obj)
+    }
+
+    return obj
+  }
+
+  if(obj === true || obj === false) {
+    return obj
+  }
+
+  for(var key in obj) {
+    obj[key] = coerce(obj[key])
+  }
+
+  return obj
+}
+
+function stripUnderscores(obj) {
+  for(var key in obj) {
+    if(key == '_') {
+      delete obj[key]
+    }
+  }
+
+  return obj
+}
+
+function checkLength(obj, message) {
+  if(Object.keys(obj).length == 0) {
+    console.error(message)
+    process.exit(1)
+  }
+
+  return obj
+}
+
+Object.keys(userConfig).forEach(function(userName) {
+  for(var key in userConfig[userName]) {
+    if(key == 'password') {
+      continue
+    }
+
+    if(!hostConfig[key]) {
+      console.error('User \'%s\' has config set for host \'%s\' but no such host exists in bossweb-hosts - please fix your configuration', userName, key)
+      process.exit(1)
+    }
+  }
+})
+
+config.hosts = hostConfig
+config.users = userConfig
 
 BossWeb = function() {
 
@@ -43,17 +115,17 @@ BossWeb = function() {
   }.bind(this));
 
   var internals = {
-    clientConfig: JSON.stringify(config.client),
+    clientConfig: JSON.stringify(clientConfig.client),
 
     // set clientconfig cookie
     configStateConfig: {
       encoding: 'none',
       ttl: 1000 * 60 * 15,
-      isSecure: config.isSecure
+      isSecure: clientConfig.isSecure
     }
   }
 
-  var server = Hapi.createServer(config.server.http.listen, config.server.http.port)
+  var server = Hapi.createServer(config.http.listen, config.http.port)
 
   server.state('config', internals.configStateConfig)
 
@@ -72,7 +144,7 @@ BossWeb = function() {
 
     server.start(function (err) {
       if (err) throw err
-      console.log("boss-web is running at: http://localhost:%d", config.server.http.port)
+      console.log("boss-web is running at: http://localhost:%d", config.http.port)
     })
   })
 

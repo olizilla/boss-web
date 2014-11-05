@@ -2,12 +2,12 @@ var Autowire = require('wantsit').Autowire,
   remote = require('boss-remote'),
   semver = require('semver')
 
-var HostData = function(data) {
+var HostData = function(name, data) {
   this._logger = Autowire
   this._processDataFactory = Autowire
   this._config = Autowire
 
-  this.name = data.name
+  this.name = name
   this.lastUpdated = Date.now()
 
   Object.defineProperties(this, {
@@ -65,7 +65,14 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
   this._remote.getDetails(function(error, details) {
     if (error) {
       this._logger.error('Error getting boss details', error)
-      this.status = 'error'
+
+      if(error.code == 'TIMEOUT') {
+        this.status = 'timeout'
+      } else if(error.code == 'INVALIDSIGNATURE') {
+        this.status = 'badkey'
+      } else {
+        this.status = 'error'
+      }
 
       return
     }
@@ -74,7 +81,7 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
       this[key] = details[key]
     }
 
-    if (!details.version || !semver.satisfies(details.version, this._config.server.minVersion)) {
+    if (!details.version || !semver.satisfies(details.version, this._config.minVersion)) {
       this.status = 'incompatible'
 
       return
@@ -83,8 +90,8 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
     this.status = 'connected'
 
     // set up listeners
-    this._updateServerStatusInterval = setInterval(this._updateServerStatus.bind(this), this._config.server.frequency)
-    this._updateProcessesInterval = setInterval(this._updateProcesses.bind(this), this._config.server.frequency)
+    this._updateServerStatusInterval = setInterval(this._updateServerStatus.bind(this), this._config.frequency)
+    this._updateProcessesInterval = setInterval(this._updateProcesses.bind(this), this._config.frequency)
 
     // and trigger them immediately
     this._updateServerStatus()
@@ -105,7 +112,13 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
 HostData.prototype._updateServerStatus = function() {
   this._remote.getServerStatus(function(error, status) {
     if(error) {
-      this.status = error.code == 'TIMEOUT' ? 'timeout' : 'error'
+      if(error.code == 'TIMEOUT') {
+        this.status = 'timeout'
+      } else if(error.code == 'INVALIDSIGNATURE') {
+        this.status = 'badkey'
+      } else {
+        this.status = 'error'
+      }
 
       return this._logger.error('Error getting boss status', error)
     }
@@ -123,7 +136,13 @@ HostData.prototype._updateServerStatus = function() {
 HostData.prototype._updateProcesses = function() {
   this._remote.listProcesses(function(error, processes) {
     if(error) {
-      this.status = error.code == 'TIMEOUT' ? 'timeout' : 'error'
+      if(error.code == 'TIMEOUT') {
+        this.status = 'timeout'
+      } else if(error.code == 'INVALIDSIGNATURE') {
+        this.status = 'badkey'
+      } else {
+        this.status = 'error'
+      }
 
       return this._logger.error('Error listing processes', error)
     }

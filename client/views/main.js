@@ -6,7 +6,8 @@ var View = require('ampersand-view'),
   dom = require('ampersand-dom'),
   templates = require('../templates'),
   setFavicon = require('favicon-setter'),
-  HostListView = require('./hostlist/host')
+  HostListView = require('./hostlist/host'),
+  pkg = require('../../package.json')
 
 module.exports = View.extend({
   template: templates.body,
@@ -45,6 +46,8 @@ module.exports = View.extend({
 
     // setting a favicon for fun (note, it's dynamic)
     setFavicon('/images/favicon.png')
+
+    this.query('[data-hook=version]').innerHTML = pkg.version
 
     return this
   },
