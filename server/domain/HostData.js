@@ -69,7 +69,7 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
       if(error.code == 'TIMEOUT') {
         this.status = 'timeout'
       } else if(error.code == 'INVALIDSIGNATURE') {
-        this.status = 'badkey'
+        this.status = 'badsignature'
       } else {
         this.status = 'error'
       }
@@ -115,7 +115,7 @@ HostData.prototype._updateServerStatus = function() {
       if(error.code == 'TIMEOUT') {
         this.status = 'timeout'
       } else if(error.code == 'INVALIDSIGNATURE') {
-        this.status = 'badkey'
+        this.status = 'badsignature'
       } else {
         this.status = 'error'
       }
@@ -139,7 +139,7 @@ HostData.prototype._updateProcesses = function() {
       if(error.code == 'TIMEOUT') {
         this.status = 'timeout'
       } else if(error.code == 'INVALIDSIGNATURE') {
-        this.status = 'badkey'
+        this.status = 'badsignature'
       } else {
         this.status = 'error'
       }

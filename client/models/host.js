@@ -11,7 +11,7 @@ module.exports = AmpersandModel.extend({
     lastUpdated: 'date',
     status: {
       type: 'string',
-      values: ['connecting', 'connected', 'error', 'incompatible', 'timeout', 'badkey']
+      values: ['connecting', 'connected', 'error', 'incompatible', 'timeout', 'badsignature']
     },
     hostname: 'string',
     type: 'string',

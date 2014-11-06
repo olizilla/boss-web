@@ -7,6 +7,7 @@ var Router = require('ampersand-router'),
   NoHostsPage = require('./pages/nohosts'),
   LoadingHostsPage = require('./pages/loadinghosts')
   ErrorPage = require('./pages/error'),
+  BadSignaturePage = require('./pages/badsignature'),
   ProcessPage = require('./pages/process')
 
 module.exports = Router.extend({
@@ -84,6 +85,10 @@ module.exports = Router.extend({
       }))
     } else if(host.status == 'timeout') {
       this.trigger('page', new TimeoutPage({
+        model: host
+      }))
+    } else if(host.status == 'badsignature') {
+      this.trigger('page', new BadSignaturePage({
         model: host
       }))
     } else {
