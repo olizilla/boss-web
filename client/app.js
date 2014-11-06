@@ -5,12 +5,45 @@ var _ = require('underscore'),
   MainView = require('./views/main'),
   Hosts = require('./models/hosts'),
   domReady = require('domready'),
-  NoHostsPage = require('./pages/nohosts')
+  NoHostsPage = require('./pages/nohosts'),
+  SocketIO = require('socket.io-client')
 
 module.exports = {
   // this is the the whole app initialiser
   blastoff: function () {
     var self = window.app = this
+
+    this.socket = SocketIO('//');
+    this.socket.on('connect', function() {
+      console.info('connect')
+    })
+    this.socket.on('connect_error', function(error) {
+      console.info('connect_error', error)
+    })
+    this.socket.on('connect_timeout', function() {
+      console.info('connect_timeout')
+    })
+    this.socket.on('reconnect_attempt', function() {
+      console.info('reconnect_attempt')
+    })
+    this.socket.on('reconnecting', function(count) {
+      console.info('reconnecting', count)
+    })
+    this.socket.on('reconnect_error', function(error) {
+      console.info('reconnect_error', error)
+    })
+    this.socket.on('reconnect_failed', function() {
+      console.info('reconnect_failed')
+    })
+    this.socket.on('reconnect', function(count) {
+      console.info('reconnect', count)
+    })
+    this.socket.on('disconnect', function() {
+      console.info('disconnect')
+    })
+    this.socket.on('event', function() {
+      console.info('event', arguments)
+    })
 
     // create an empty collection for our host models
     this.hosts = new Hosts()

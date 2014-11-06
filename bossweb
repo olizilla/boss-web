@@ -72,3 +72,9 @@ minVersion = 1.0.0
 [logs]
   ; The max number of log entries per process that will be stored
   max = 1000
+
+[ws]
+  ; Incoming log/exception events arrive in real time and are batched before begin sent to
+  ; the browser to prevent locking up the UI. This is how frequently they are sent in ms.
+  ; If your processes log excessively, you may wish to increase this number.
+  frequency = 500

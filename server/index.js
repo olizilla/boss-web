@@ -2,20 +2,18 @@ var Container = require('wantsit').Container,
   ObjectFactory = require('wantsit').ObjectFactory,
   path = require('path'),
   WebSocketServer = require('ws').Server,
-  EventEmitter = require('wildemitter'),
-  util = require('util'),
   fs = require('fs'),
   os = require('os'),
   logger = require('andlog'),
   Hapi = require('hapi'),
-  HapiSession = require('hapi-session'),
   BasicAuth = require('hapi-auth-basic'),
   Columbo = require("columbo"),
   config = require('./config'),
   pem = require('pem'),
   async = require('async'),
   http = require('http'),
-  bcrypt = require('bcrypt')
+  bcrypt = require('bcrypt'),
+  SocketIO = require('socket.io')
 
 BossWeb = function() {
 
@@ -34,13 +32,6 @@ BossWeb = function() {
 
   // set up logging
   container.register("logger", logger)
-
-  // web sockets
-//  container.createAndRegister("webSocketResponder", require("./components/WebSocketResponder"));
-//  container.createAndRegister("webSocketServer", WebSocketServer, {
-//    server: this._server,
-//    path: "/ws"
-//  });
 
   // object factories
   container.createAndRegister("hostDataFactory", ObjectFactory, require("./domain/HostData"))
@@ -185,6 +176,10 @@ BossWeb = function() {
       hapi.start(function (err) {
         if (err) throw err
         console.log("boss-web is running at: http://localhost:%d", hapi.info.port)
+
+        // web sockets
+        container.register('webSocket', SocketIO.listen(hapi.listener))
+        container.createAndRegister("webSocketResponder", require("./components/WebSocketResponder"))
       })
     })
 
