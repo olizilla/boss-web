@@ -29,14 +29,16 @@ minVersion = 1.0.0
   ; Which port to accept connections on
   port = 3001
 
-  ; Path to the private key for this server
+  ; Uncomment to provide a path to the private key for this server.  If left
+  ; commented and ${https.enabled} is true, a temporary key will be generated.
   ; key = /path/to/key
 
-  ; Path to the certificate for this server
-  ; cert = /path/to/cert
-
-  ; The passphrase for the the private key
+  ; Uncomment to provide the passphrase for ${https.key}
   ; passphrase = passphrase
+
+  ; Uncomment to provide a path to the certificate for this server.  If left
+  ; commented and ${https.enabled} is true, a temporary certificate will be generated.
+  ; cert = /path/to/cert
 
   ; if true, start an http server on ${server.http.port} and redirect users to the
   ; server running on ${server.https.port} with the same host as the incoming request
@@ -46,11 +48,11 @@ minVersion = 1.0.0
 [hostPurge]
 
   ; How often to see if hosts have gone away (in ms)
-  frequency = 10000
+  frequency = 300000
 
   ; Hosts not having returned system data within this
   ; time period will be removed from display (in ms)
-  cutoff = 60000
+  cutoff = 600000
 
 [graph]
 
