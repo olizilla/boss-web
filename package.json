@@ -5,6 +5,11 @@
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install"
   },
+  "prefer-global": true,
+  "bin": {
+    "bs-web": "bin/bs-web",
+    "boss-web": "bin/bs-web"
+  },
   "dependencies": {
     "ampersand-dom": "^1.0",
     "ampersand-form-view": "^2.0",
@@ -24,6 +29,8 @@
     "favicon-setter": "^0.1",
     "getconfig": "^0.3",
     "hapi": "^7.0",
+    "hapi-session": "^0.1",
+    "hapi-auth-basic": "^1.1",
     "moonboots_hapi": "^3.0",
     "stylizer": "^2.0",
     "templatizer-hbs": "^0.0",
@@ -41,7 +48,12 @@
     "columbo": "^1.0",
     "prettysize": "^0.0",
     "ansi-to-html": "^0.2",
-    "rc": "^0.5"
+    "rc": "^0.5",
+    "pem": "^1.0",
+    "commander": "^2.0",
+    "prompt": "^0.2",
+    "colors": "^1.0",
+    "bcrypt": "^0.8"
   },
   "devDependencies": {},
   "jshintConfig": {
