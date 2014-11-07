@@ -1,6 +1,6 @@
 ; Salt, used to hash user passwords.  If you change this value after setting it,
 ; you will need to rehash all user passwords.
-; salt = A long string
+salt = undefined
 
 ; How long to wait for remote daemons to respond to RPC requests
 timeout = 10000

@@ -15,50 +15,22 @@ $ npm install -g boss-web
 
 ## Setup
 
-There are three configuration files of interest `bossweb`, `bossweb-hosts` and `bossweb-users`.
+For the impatient.
 
-Depending on who is running boss-web, configuration files should be placed at one of:
+Here `$CONFIG_DIR` is `/etc/boss` if you are root or `$HOME/.config/boss` if you are not.  
 
- * Normal user - `$HOME/.boss/bossweb` or `$HOME/.config/boss/bossweb`
- * Root user - `/etc/boss/bossweb`
+Unless you want it to listen on privileged ports (e.g. 80 or 443), you do not need to be root to run boss-web.
 
-The config files contain sensitive information so should have appropriate permissions applied to them, i.e. `0600`.
-
-### bossweb
-
-`bossweb` contains various preferences and settings for the web server and user interface.
-
-The first thing to do is to generate a salt for user passwords:
-
-```
-$ bs-web gensalt
-Please update the bossweb config file with:
-
-salt = $2a$10$wg...
-```
-
-Take the `salt = $2a$10$wg...` part and add it to the top of `bossweb`  e.g:
-
-```
-salt = $2a$10$wg...
-
-[http]
-  port = 80
-  ... more settings here
-```
-
-See the [default configuration file](./bossweb) for discussion on the various options.
-
-Anything you specify in your configuration file will override the defaults.
-
-### bossweb-hostsrc
-
-This file contains the hosts you wish to monitor.
-
-To configure a host, run the `remoteconfig` subcommand on the boss server you wish to monitor:
+### Step 1. Create a user to log in as
 
 ```sh
-$ sudo bs remoteconfig
+$ bs-web useradd alex
+```
+
+### Step 2. On the machine Boss is running on, obtain the host config
+
+```sh
+$ sudo bs hostconfig
 
 Add the following to your bossweb-hosts file:
 
@@ -69,49 +41,34 @@ Add the following to your bossweb-hosts file:
   secret = ZD57XFx6sBz....
 ```
 
-Copy this into your `bossweb-hostsrc` file and repeat for any other servers you wish to monitor.
+Create a file at `$CONFIG_DIR/bossweb-hosts` with the output from the `hostconfig` command.
 
-### bossweb-usersrc
-
-All users are authenticated with a secret and a pre-shared AES key.  To enable a user named `alex` to connect to boss remotely, on the machine boss is running on, run the following:
+### Step 3. Still on the Boss machine, add a remote user
 
 ```sh
 $ sudo bs useradd alex
 
-Add the following to your bossweb-users file:
-
 [alex.foo-bar-com]
   secret = LsYd5UaH...
-
-If alex is not in your config file yet, run `bs-web passwd alex` to generate the appropriate configuration
 ```
 
-You can remove users with the following:
+The file `$CONFIG_DIR/bossweb-users` should have been created during step 1 - open it and add the output from `useradd` .
+
+### Step 4. Start boss-web
 
 ```sh
-$ sudo bs rmuser alex
+$ bs-web
 ```
 
-A users key/secret can be reset with the following
+## Running boss-web with boss
 
-```
-$ sudo bs reset alex
+Ouroboros style:
 
-Update your bossweb-users file with the following:
-
-[alex.foo-bar-com]
-  secret = DJnnqA1...
+```sh
+$ bs start /usr/local/lib/node_modules/boss-web
 ```
 
-Once a user has been created with boss, you need to create the user for boss-web as well. This should be done on the machine that boss-web will run on.
+## More information
 
-```
-$ bs-web passwd alex
-: Enter a password (no characters will appear):  
-: Repeat the password:  
-
-Update your bossweb-users file with the following:
-
-[alex]
-  password = $2a$10$Y0...
-```
+ * [Config files](CONFIG.md)
+ * [User management](CONFIG.md)

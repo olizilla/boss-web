@@ -1,14 +1,12 @@
 var Container = require('wantsit').Container,
   ObjectFactory = require('wantsit').ObjectFactory,
   path = require('path'),
-  WebSocketServer = require('ws').Server,
   fs = require('fs'),
   os = require('os'),
   logger = require('andlog'),
   Hapi = require('hapi'),
   BasicAuth = require('hapi-auth-basic'),
   Columbo = require("columbo"),
-  config = require('./config'),
   pem = require('pem'),
   async = require('async'),
   http = require('http'),
@@ -28,7 +26,7 @@ BossWeb = function() {
   var container = new Container();
 
   // parse configuration
-  container.register("config", config)
+  var config = container.createAndRegister("config", require("./components/Configuration"))
 
   // set up logging
   container.register("logger", logger)
@@ -39,6 +37,11 @@ BossWeb = function() {
 
   // holds host data
   container.createAndRegister("hostList", require("./components/HostList"));
+
+
+  var moonbootsConfig = {
+    "isDev": true
+  }
 
   var tasks = []
 
@@ -74,17 +77,6 @@ BossWeb = function() {
 
   async.series(tasks, function(error, result) {
     if(error) throw error
-
-    var internals = {
-      clientConfig: JSON.stringify(config.client.client),
-
-      // set clientconfig cookie
-      configStateConfig: {
-        encoding: 'none',
-        ttl: 1000 * 60 * 15,
-        isSecure: config.https.enabled
-      }
-    }
 
     var options = {}
     var host = config.http.listen
@@ -137,22 +129,28 @@ BossWeb = function() {
     }
 
     var hapi = Hapi.createServer(host, port, options)
-
-    hapi.state('config', internals.configStateConfig)
-
+    hapi.state('config', {
+      ttl: null,
+      isSecure: config.https.enabled,
+      encoding: 'none'
+    })
     hapi.ext('onPreResponse', function(request, reply) {
-      if (!request.state.config) {
-        return reply(request.response.state('config', encodeURIComponent(internals.clientConfig)))
-      }
-      else {
+      if(!request.state.config && !(request.response instanceof Error)) {
+        // copy the config
+        var clientConfig = JSON.parse(JSON.stringify(config.client))
+
+        // add the auth
+        clientConfig.auth = request.auth.credentials
+
+        // encode the cookie
+        var cookie = encodeURIComponent(JSON.stringify(clientConfig))
+
+        // set the cookie
+        return reply(request.response.state('config', cookie))
+      } else {
         return reply()
       }
     })
-    /*hapi.auth('session', {
-      implementation: new HapiSession(hapi, {
-
-      })
-    })*/
     hapi.pack.register(BasicAuth, function (error) {
       hapi.auth.strategy('simple', 'basic', true, {
         validateFunc: function (userName, password, callback) {
@@ -170,7 +168,7 @@ BossWeb = function() {
         }
       })
     })
-    hapi.pack.register({plugin: require('moonboots_hapi'), options: require('./moonboots')}, function (err) {
+    hapi.pack.register({plugin: require('moonboots_hapi'), options: require('./moonboots')(moonbootsConfig)}, function (err) {
       if (err) throw err
 
       hapi.start(function (err) {

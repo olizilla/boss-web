@@ -6,7 +6,8 @@ var _ = require('underscore'),
   Hosts = require('./models/hosts'),
   domReady = require('domready'),
   NoHostsPage = require('./pages/nohosts'),
-  SocketIO = require('socket.io-client')
+  SocketIO = require('socket.io-client'),
+  User = require('./models/user')
 
 module.exports = {
   // this is the the whole app initialiser
@@ -80,9 +81,14 @@ module.exports = {
       update()
       setInterval(update, config.frequency)
 
+      var user = new User()
+      //user.name = config.auth.name
+      user.name = 'Alex'
+
       // init our main view
       var main = self.view = new MainView({
-        el: document.body
+        el: document.body,
+        model: user
       })
 
       // ...and render it
