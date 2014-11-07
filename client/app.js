@@ -81,14 +81,13 @@ module.exports = {
       update()
       setInterval(update, config.frequency)
 
-      var user = new User()
-      //user.name = config.auth.name
-      user.name = 'Alex'
+      app.user = new User()
+      app.user.name = config.auth.user
 
       // init our main view
       var main = self.view = new MainView({
         el: document.body,
-        model: user
+        model: app.user
       })
 
       // ...and render it
