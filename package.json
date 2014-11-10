@@ -57,7 +57,9 @@
     "wantsit": "^1.0",
     "wildemitter": "^1.0",
     "coercer": "^1.0",
-    "copy-to": "^2.0"
+    "copy-to": "^2.0",
+    "bootstrap-growl": "^2.0",
+    "jquery": "^2.0"
   },
   "devDependencies": {
     "coveralls": "^2.8",

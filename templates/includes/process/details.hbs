@@ -5,5 +5,10 @@
   <div class="panel-body">
     <p><span data-hook="script">{{model.script}}</span> has been running for <span data-hook="uptime">{{model.uptimeFormatted}}</span> with <span data-hook="restarts">{{model.restarts}}</span> restart(s).</p>
     <p>The current pid is <span data-hook="pid">{{model.pid}}</span> and it's running as <span data-hook="user">{{model.user}}</span>:<span data-hook="group">{{model.group}}</span>.</p>
+    <button type="button" class="btn btn-default btn-xs process-gc"><i class="fa fa-trash"></i> Garbage collect</button>
+    <button type="button" class="btn btn-default btn-xs process-heap"><i class="fa fa-h-square"></i> Heap dump</button>
+    <button type="button" class="btn btn-default btn-xs process-debug"><i class="fa fa-bug"></i> Debug</button>
+    <button type="button" class="btn btn-default btn-xs process-restart"><i class="fa fa-refresh"></i> Restart</button>
+    <button type="button" class="btn btn-default btn-xs process-stop"><i class="fa fa-stop"></i> Stop</button>
   </div>
 </div>

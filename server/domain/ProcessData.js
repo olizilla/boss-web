@@ -17,6 +17,11 @@ var ProcessData = function(data) {
 ProcessData.prototype.update = function(data) {
   this._map(data)
 
+  if(data.heapTotal === undefined) {
+    // partial data (ie. status timed out), skip appending data
+    return
+  }
+
   this._append(
     data.heapTotal,
     data.heapUsed,

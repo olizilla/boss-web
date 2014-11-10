@@ -30,16 +30,16 @@ module.exports = AmpersandModel.extend({
         y: 'number'
       }
     }],
-    gid: 'number',
-    group: 'string',
+    gid: ['number', true, '?'],
+    group: ['string', true, '?'],
     id: 'string',
-    pid: 'number',
-    restarts: 'number',
-    title: 'string',
-    uid: 'number',
-    uptime: 'number',
-    user: 'string',
-    script: 'string'
+    pid: ['number', true, '?'],
+    restarts: ['number', true, '?'],
+    title: ['string', true, '?'],
+    uid: ['number', true, '?'],
+    uptime: ['number', true, '?'],
+    user: ['string', true, '?'],
+    script: ['string', true, '?']
   },
   derived: {
     cpuFormatted: {
@@ -77,6 +77,10 @@ module.exports = AmpersandModel.extend({
     uptimeFormatted: {
       deps: ['uptime'],
       fn: function () {
+        if(this.uptime == '?') {
+          return this.uptime
+        }
+
         // uptime is reported in seconds
         return moment.duration(this.uptime * 1000).humanize()
       }

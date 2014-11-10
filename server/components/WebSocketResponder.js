@@ -1,5 +1,6 @@
 var Autowire = require("wantsit").Autowire,
-  bcrypt = require('bcrypt')
+  bcrypt = require('bcrypt'),
+  remote = require('boss-remote')
 
 var WebSocketResponder = function() {
   this._config = Autowire
@@ -56,7 +57,12 @@ WebSocketResponder.prototype.afterPropertiesSet = function() {
 
     bcrypt.compare(password, user.password, function(error, isValid) {
       if(isValid) {
-        socket.user = user
+        socket.user = {
+          name: username,
+          hosts: Object.keys(user).filter(function(key) {
+            return key != 'password'
+          })
+        }
 
         return next()
       }
@@ -70,12 +76,12 @@ WebSocketResponder.prototype.afterPropertiesSet = function() {
       return client.conn.close()
     }
 
-    client.on('process:stop', this.stopProcess.bind(this))
-    client.on('process:start', this.startProcess.bind(this))
-    client.on('process:restart', this.restartProcess.bind(this))
-    client.on('process:debug', this.debugProcess.bind(this))
-    client.on('process:gc', this.gcProcess.bind(this))
-    client.on('process:heapdump', this.heapdumpProcess.bind(this))
+    client.on('process:stop', this._checkHost.bind(this, this.stopProcess.bind(this), client))
+    client.on('process:start', this._checkHost.bind(this, this.startProcess.bind(this), client))
+    client.on('process:restart', this._checkHost.bind(this, this.restartProcess.bind(this), client))
+    client.on('process:debug', this._checkHost.bind(this, this.debugProcess.bind(this), client))
+    client.on('process:gc', this._checkHost.bind(this, this.gcProcess.bind(this), client))
+    client.on('process:heapdump', this._checkHost.bind(this, this.heapdumpProcess.bind(this), client))
   }.bind(this))
 
 /*
@@ -190,6 +196,39 @@ WebSocketResponder.prototype._broadcastLog = function(type, event) {
   })
 }
 
+WebSocketResponder.prototype._checkHost = function(callback, client, hostName) {
+  if(client.user.hosts.indexOf(hostName) == -1) {
+    // this user has no access to this host
+    return
+  }
+
+  var args = Array.prototype.slice.call(arguments, 1)
+  callback.apply(this, args)
+}
+
+WebSocketResponder.prototype._checkHost = function(callback, client, hostName, processId) {
+  var host = this._hostList.getHostByName(hostName)
+
+  if(!host || !this._config.hosts[hostName]) {
+    return
+  }
+
+  remote(this._logger, {
+    host: this._config.hosts[hostName].host,
+    port:  this._config.hosts[hostName].port,
+    user: client.user.name,
+    secret: this._config.users[client.user.name][hostName].secret
+  }, function(error, boss) {
+    if(error) {
+      return boss.disconnect()
+    }
+
+    callback(undefined, client, hostName, processId, boss, function() {
+      boss.disconnect()
+    })
+  })
+}
+
 WebSocketResponder.prototype.startProcess = function(client, host, id) {
   this._logger.info('starting process', arguments)
 }
@@ -206,12 +245,37 @@ WebSocketResponder.prototype.debugProcess = function(client, host, id) {
   this._logger.info('debugging process', arguments)
 }
 
-WebSocketResponder.prototype.gcProcess = function(client, host, id) {
-  this._logger.info('gc process', arguments)
+WebSocketResponder.prototype.gcProcess = function(error, client, hostName, processId, boss, callback) {
+  client.emit('ws:gc:started', hostName, processId)
+
+  boss.invokeRemoteProcessMethod(processId, 'forceGc', [], client.user.name, function(error) {
+    if(error) {
+      client.emit('ws:gc:error', hostName, processId, error.message)
+    } else {
+      client.emit('ws:gc:finished', hostName, processId)
+    }
+
+    callback()
+  })
 }
 
-WebSocketResponder.prototype.heapdumpProcess = function(client, host, id) {
-  this._logger.info('heapdump process', arguments)
+WebSocketResponder.prototype.heapdumpProcess = function(error, client, hostName, processId, boss, callback) {
+  client.emit('ws:heap:started', hostName, processId)
+
+  boss.invokeRemoteProcessMethod(processId, 'dumpHeap', [], client.user.name, function(error, path) {
+    if(error && error.code == 'TIMEOUT') {
+      // dumping heap can take ages..
+      return
+    }
+
+    if(error) {
+      client.emit('ws:heap:error', hostName, processId, error.message)
+    } else {
+      client.emit('ws:heap:finished', hostName, processId, path)
+    }
+
+    callback()
+  })
 }
 
 module.exports = WebSocketResponder

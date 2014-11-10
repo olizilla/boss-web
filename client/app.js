@@ -14,6 +14,22 @@ module.exports = {
   blastoff: function () {
     var self = window.app = this
 
+    var withHostAndProcess = function(hostName, processId, callback) {
+      var host = app.hosts.get(hostName)
+
+      if(!host) {
+        return
+      }
+
+      var process = host.processes.get(processId)
+
+      if(!process) {
+        return
+      }
+
+      callback(host, process)
+    }
+
     this.socket = SocketIO('//');
     this.socket.on('connect', function() {
       console.info('connect')
@@ -44,6 +60,24 @@ module.exports = {
     })
     this.socket.on('event', function() {
       console.info('event', arguments)
+    })
+    this.socket.on('ws:gc:finished', function(hostName, processId) {
+      withHostAndProcess(hostName, processId, function(host, process) {
+        jQuery.growl('<h4>Garbage collection complete</h4><strong>' +
+        process.title + '</strong> on host <strong>' +
+        host.name + '</strong> has finished garbage collection',{
+          type: 'info'
+        })
+      })
+    })
+    this.socket.on('ws:heap:finished', function(hostName, processId, path) {
+      withHostAndProcess(hostName, processId, function(host, process) {
+        jQuery.growl('<h4>Heap dump complete</h4><strong>' +
+        process.title + '</strong> on host <strong>' +
+        host.name + '</strong> has dumped heap to ' + path,{
+          type: 'info'
+        })
+      })
     })
 
     // create an empty collection for our host models
@@ -95,6 +129,9 @@ module.exports = {
 
       // we have what we need, we can now start our router and show the appropriate page
       self.router.history.start({pushState: true, root: '/'})
+
+      window.jQuery = require('jquery')
+      require('bootstrap-growl')
     })
   },
 
