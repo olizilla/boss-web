@@ -47,7 +47,7 @@
     "pem": "^1.0",
     "prettysize": "^0.0",
     "prompt": "^0.2",
-    "rc": "^0.5",
+    "boss-rc": "^0.5",
     "semver": "^4.0",
     "socket.io": "^1.2",
     "socket.io-client": "^1.2",
@@ -59,7 +59,8 @@
     "coercer": "^1.0",
     "copy-to": "^2.0",
     "bootstrap-growl": "^2.0",
-    "jquery": "^2.0"
+    "jquery": "^2.0",
+    "mkdirp": "^0.5"
   },
   "devDependencies": {
     "coveralls": "^2.8",

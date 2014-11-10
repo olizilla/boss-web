@@ -3,36 +3,79 @@ var commander = require('commander'),
   path = require('path'),
   prompt = require('prompt'),
   bcrypt = require('bcrypt'),
-  Configuration = require('./server/components/Configuration')
+  pem = require('pem'),
+  fs = require('fs'),
+  ini = require('ini'),
+  mkdirp = require('mkdirp'),
+  path = require('path')
 
 colors = require('colors')
+
+function loadUserConfig(file) {
+  function load(path) {
+    try {
+      if(fs.existsSync(path)) {
+        return ini.parse(fs.readFileSync(path, 'utf-8'))
+      }
+    } catch(error) {
+      if(error.code != 'EACCES') {
+        throw error
+      }
+    }
+  }
+
+  return load('/etc/boss/' + file)
+    || load(process.env.HOME + '/.config/boss/' + file)
+    || {}
+}
+
+function saveUserConfig(file, contents) {
+  return witeFileToConfigDirectory(file, ini.stringify(contents))
+}
+
+function witeFileToConfigDirectory(file, contents) {
+  function write(file) {
+    var dir = path.dirname(file)
+
+    try {
+      mkdirp.sync(dir, {
+        mode: 0700
+      })
+
+      fs.writeFileSync(file, contents, {
+        mode: 0600
+      })
+    } catch (error) {
+      if (error.code != 'EACCES') {
+        throw error
+      }
+
+      return false
+    }
+
+    return file
+  }
+
+  return write('/etc/boss/' + file)
+    || write(process.env.HOME + '/.config/boss/' + file)
+    || false
+}
 
 var CLI = function() {
 
 }
 
-CLI.prototype._withConfiguration = function(callback) {
-  var config = new Configuration()
-
-  callback(config, function(error) {
-    if(error) {
-      return console.error(error.message.red)
-    }
-
-    config.save()
-  })
-}
-
 CLI.prototype.generateSalt = function() {
-  this._withConfiguration(function(config, done) {
-    if(config.salt && Object.keys(config.users).length != 0) {
-      console.warn('Passwords for all users will need to be reset!')
-    }
+  var config = loadUserConfig('bossweb')
+  var users = loadUserConfig('bossweb-users', [])
 
-    this._generateSalt(config)
+  if(config.salt && Object.keys(users).length != 0) {
+    console.log('Passwords for all users will need to be reset!'.yellow)
+  }
 
-    done()
-  }.bind(this))
+  this._generateSalt(config, users)
+
+  saveUserConfig('bossweb', config)
 }
 
 CLI.prototype._generateSalt = function(config) {
@@ -40,69 +83,91 @@ CLI.prototype._generateSalt = function(config) {
 }
 
 CLI.prototype.addUser = function(userName) {
-  this._withConfiguration(function(config, done) {
-    console.info(config)
+  var config = loadUserConfig('bossweb')
 
-    if(!config.salt) {
-      console.info('no salt!')
-      this._generateSalt(config)
+  if(!config.salt) {
+    this._generateSalt(config)
+    saveUserConfig('bossweb', config)
+  }
+
+  var users = loadUserConfig('bossweb-users')
+
+  if(users[userName]) {
+    return console.log('A user with the name'.red, userName, 'already exists'.red)
+  }
+
+  this._getUserPassword(config, function(error, password) {
+    users[userName] = {
+      password: password
     }
 
-    if(config.users[userName]) {
-      console.info('already user!')
-      return done(new Error('A user with the name ' + userName +  ' already exists'))
-    }
-
-    this._getUserPassword(config, function(error, password) {
-      config.users[userName] = {
-        password: password
-      }
-
-      done(error)
-    })
-  }.bind(this))
+    saveUserConfig('bossweb-users', users)
+  })
 }
 
 CLI.prototype.removeUser = function(userName) {
-  this._withConfiguration(function(config, done) {
-    delete config.users[userName]
+  var users = loadUserConfig('bossweb-users')
 
-    done()
-  }.bind(this))
+  delete users[userName]
+
+  if(!saveUserConfig('bossweb-users', users)) {
+    console.log('Could not remove user'.red, userName)
+  }
 }
 
 CLI.prototype.changeUserPassword = function(userName) {
-  this._withConfiguration(function(config, done) {
-    if(!config.salt) {
-      this._generateSalt(config)
-    }
+  var config = loadUserConfig('bossweb')
 
-    if(!config.users[userName]) {
-      return done(new Error('No user with the name ' + userName +  'exists'))
-    }
+  if(!config.salt) {
+    this._generateSalt(config)
+    saveUserConfig('bossweb', config)
+  }
 
-    this._getUserPassword(config, function(error, password) {
-      config.users[userName].password = password
+  var users = loadUserConfig('bossweb-users')
 
-      done(error)
-    })
-  }.bind(this))
+  if(!users[userName]) {
+    return console.log('No user with the name'.red, userName, 'exists'.red)
+  }
+
+  this._getUserPassword(config, function(error, password) {
+    users[userName].password = password
+
+    saveUserConfig('bossweb-users', users)
+  })
 }
 
 CLI.prototype.listUsers = function() {
-  this._withConfiguration(function(config, done) {
-    var userNames = Object.keys(config.users)
+  var users = loadUserConfig('bossweb-users')
+  var userNames = Object.keys(users)
 
-    if(userNames.length == 0) {
-      console.info('No users')
-    } else {
-      userNames.forEach(function(userName) {
-        console.info(userName)
-      })
-    }
+  if(userNames.length == 0) {
+    console.info('No users')
+  } else {
+    userNames.forEach(function(userName) {
+      console.log(userName)
+    })
+  }
+}
 
-    done()
-  }.bind(this))
+CLI.prototype.generateSSLCertificate = function(days) {
+  days = days || 365
+
+  pem.createCertificate({
+    days: days,
+    selfSigned: true
+  }, function(err, keys) {
+    var config = loadUserConfig('bossweb')
+
+    config.https = config.https || {}
+    config.https.enabled = true
+    config.https.key = witeFileToConfigDirectory('ssh.key', keys.serviceKey)
+    config.https.certificate = witeFileToConfigDirectory('ssh.cert', keys.certificate)
+    config.https.enabled = true
+
+    delete config.https.passphrase
+
+    saveUserConfig('bossweb', config)
+  })
 }
 
 CLI.prototype._getUserPassword = function(config, callback) {
@@ -144,6 +209,7 @@ commander
 
 commander
   .command('useradd <username>')
+  .alias('adduser')
   .description('Adds a web user')
   .action(cli.addUser.bind(cli))
 
@@ -161,6 +227,11 @@ commander
   .command('userlist')
   .description('Prints out a list of users')
   .action(cli.listUsers.bind(cli))
+
+commander
+  .command('genssl [days]')
+  .description('Generates self-signed SSL certificates for boss-web that will expire in the passed number of days (defaults to 365)')
+  .action(cli.generateSSLCertificate.bind(cli))
 
 var program = commander.parse(process.argv)
 

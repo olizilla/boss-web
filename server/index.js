@@ -46,7 +46,7 @@ BossWeb = function() {
   var tasks = []
 
   if(config.https.enabled) {
-    if(config.https.key && config.https.cert) {
+    if(config.https.key && config.https.certificate) {
       tasks.push(function(callback) {
         logger.info('Reading SSL key and certificate')
 
@@ -54,7 +54,7 @@ BossWeb = function() {
           fs.readFile.bind(fs, config.https.key, {
             encoding: 'utf8'
           }),
-          fs.readFile.bind(fs, config.https.cert, {
+          fs.readFile.bind(fs, config.https.certificate, {
             encoding: 'utf8'
           })
         ], function(error, result) {

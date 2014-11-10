@@ -68,6 +68,16 @@ Ouroboros style:
 $ bs start /usr/local/lib/node_modules/boss-web
 ```
 
+## Every time I restart boss-web I have to re-accept a self-signed certificate!
+
+Buy a proper SSL certificate or generate a 30 day certificate with:
+
+```sh
+$ bs-web genssl 30
+```
+
+If the number of days is omitted it defaults to one year.
+
 ## More information
 
  * [Config files](CONFIG.md)
