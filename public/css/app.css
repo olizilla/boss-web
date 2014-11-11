@@ -8955,6 +8955,9 @@ ul.logs:after {
   -ms-animation: blinker 1s linear 0s infinite;
   -animation: blinker 1s linear 0s infinite;
 }
+.process .details button {
+  margin-bottom: 5px;
+}
 body {
   background: #181818;
 }
@@ -9059,12 +9062,22 @@ footer a.tableflip {
   background-size: 16px 16px;
   margin-left: 2px;
 }
+footer a.boss-web:hover {
+  color: #273f5f;
+}
+footer a.tableflip:hover {
+  color: #3edab7;
+  background-image: url("/images/tableflip-colour.png");
+}
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .navbar-brand {
     background-image: url("/images/boss@2x.png");
   }
   footer a.tableflip {
     background-image: url("/images/tableflip@2x.png");
+  }
+  footer a.tableflip:hover {
+    background-image: url("/images/tableflip@2x-colour.png");
   }
 }
 @-moz-keyframes blinker {

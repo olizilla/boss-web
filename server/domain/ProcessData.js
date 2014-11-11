@@ -22,10 +22,12 @@ ProcessData.prototype.update = function(data) {
     return
   }
 
+  // memory usage is reported in bytes so round it down otherwise
+  // we exhaust our datapoint limit really quickly...
   this._append(
-    data.heapTotal,
-    data.heapUsed,
-    data.residentSize,
+    ~~(data.heapTotal / 10000) * 10000,
+    ~~(data.heapUsed / 10000) * 10000,
+    ~~(data.residentSize / 10000) * 10000,
     data.cpu,
     data.time
   )
@@ -49,7 +51,7 @@ ProcessData.prototype.log = function(type, date, message) {
 }
 
 ProcessData.prototype._map = function(data) {
-  ["debugPort", "gid", "group", "id", "pid", "restarts", "script", "title", "uid", "uptime", "user"].forEach(function(key) {
+  ["debugPort", "gid", "group", "id", "pid", "restarts", "script", "title", "uid", "uptime", "user", "status"].forEach(function(key) {
     this[key] = data[key]
   }.bind(this))
 }
