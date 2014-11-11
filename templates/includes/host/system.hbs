@@ -1,37 +1,31 @@
-<div class="panel panel-primary">
+<div class="panel panel-primary system">
   <div class="panel-heading">
     <h4 class="panel-title">Vital statistics</h4>
   </div>
   <div class="panel-body">
-    <ul class="information">
-      <li class="expand">
-        <h3>Hostname</h3>
-        <p>{{model.hostname}}</p>
-      </li>
-      <li>
-        <h3>Type</h3>
-        <p>{{model.type}}</p>
-      </li>
-      <li>
-        <h3>Platform</h3>
-        <p>{{model.platform}}</p>
-      </li>
-      <li>
-        <h3>Arch</h3>
-        <p>{{model.arch}}</p>
-      </li>
-      <li>
-        <h3>Release</h3>
-        <p>{{model.release}}</p>
-      </li>
-      <li>
-        <h3>Boss</h3>
-        <p>{{model.version}}</p>
-      </li>
-      <li>
-        <h3>Uptime</h3>
-        <p data-hook="uptime">{{model.uptimeFormatted}}</p>
-      </li>
-    </ul>
+    <table class="table table-striped info system-details">
+      <thead>
+        <tr>
+          <th class="hostname">Hostname</th>
+          <th class="type">Type</th>
+          <th class="platform">Platform</th>
+          <th class="arch">Arch</th>
+          <th class="release">Release</th>
+          <th class="boss">Boss</th>
+          <th class="uptime">Uptime</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="hostname">{{model.hostname}}</td>
+          <td class="type">{{model.type}}</td>
+          <td class="platform">{{model.platform}}</td>
+          <td class="arch">{{model.arch}}</td>
+          <td class="release">{{model.release}}</td>
+          <td class="boss">{{model.version}}</td>
+          <td class="uptime" data-hook="uptime">{{model.uptimeFormatted}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

@@ -5,25 +5,29 @@ var PageView = require('./base'),
   ViewSwitcher = require('ampersand-view-switcher')
 
 module.exports = PageView.extend({
-  pageTitle: 'Boss Web',
+  pageTitle: function() {
+    return 'Boss - ' + this.model.name
+  },
   template: templates.pages.processes,
   render: function () {
     this.renderWithTemplate()
 
     this.pageContainer = this.queryByHook('view');
-
-    // set up our page switcher for that element
     this.pageSwitcher = new ViewSwitcher(this.pageContainer);
-
     this.emptyListView = new EmptyProcessListView()
-    this.listView = new ProcessListView({
-      model: this.model
-    })
 
+    this.listenTo(this.model.processes, 'add remove', this.chooseView.bind(this))
+
+    this.chooseView()
+  },
+  chooseView: function() {
     if(this.model.processes.isEmpty()) {
       this.pageSwitcher.set(this.emptyListView)
     } else {
-      this.pageSwitcher.set(this.listView)
+      // for some reason, reusing the same listview doesn't always notice new additions to the collection?!
+      this.pageSwitcher.set(new ProcessListView({
+        model: this.model
+      }))
     }
   }
 })

@@ -3651,11 +3651,6 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     border-radius: 4px;
   }
 }
-@media (min-width: 768px) {
-  .navbar-header {
-    float: left;
-  }
-}
 .navbar-collapse {
   max-height: 340px;
   overflow-x: visible;

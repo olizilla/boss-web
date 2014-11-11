@@ -22,6 +22,12 @@ bs-web rmuser alex
 bs-web passwd alex
 ```
 
+#### Listing users
+
+```sh
+bs-web lsusers
+```
+
 #### Changing the password salt
 
 N.b. this will invalidate all user passwords, so don't forget to reset them otherwise no-one will be able to log in!

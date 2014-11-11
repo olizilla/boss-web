@@ -13,7 +13,8 @@ module.exports = AmpersandModel.extend({
       type: 'string',
       values: ['connecting', 'connected', 'error', 'incompatible', 'timeout', 'badsignature']
     },
-    hostname: 'string',
+    host: 'string', // this is set from config
+    hostname: 'string', // this is set from os.hostname()
     type: 'string',
     platform: 'string',
     arch: 'string',

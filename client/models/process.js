@@ -39,7 +39,13 @@ module.exports = AmpersandModel.extend({
     uid: ['number', true, '?'],
     uptime: ['number', true, '?'],
     user: ['string', true, '?'],
-    script: ['string', true, '?']
+    script: ['string', true, '?'],
+    gcRequested: ['boolean', true, false],
+    heapDumpRequested: ['boolean', true, false],
+    status: {
+      type: 'string',
+      values: ['starting', 'started', 'restarting', 'stopped', 'errored']
+    }
   },
   derived: {
     cpuFormatted: {

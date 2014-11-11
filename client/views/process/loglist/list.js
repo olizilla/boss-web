@@ -11,7 +11,7 @@ module.exports = View.extend({
 
     this.renderCollection(this.model.logs, LogListView, '[data-hook=logs]')
 
-    this.model.logs.on('add', this.scrollLogs.bind(this))
+    this.listenTo(this.model.logs, 'add', this.scrollLogs.bind(this))
     this.scrollLogs()
   },
   events: {

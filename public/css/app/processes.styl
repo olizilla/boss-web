@@ -1,0 +1,34 @@
+.processes .panel-body
+  padding: 0
+
+.processes .panel-body p
+  padding: 15px
+  margin: 0
+
+.process-list
+  margin: 0
+  table-layout: fixed
+  width: 100%
+
+.process-list tbody tr:hover
+  cursor: pointer
+
+.process-list td small
+  color: #999
+
+.process-list .title
+  padding-left: 15px;
+
+.process-list
+  .pid, .uptime, .restarts, .cpu, .memory
+    width: 80px
+
+@media (max-width: 512px)
+  .process-list
+    .pid, .uptime, .restarts
+      display: none
+
+@media (max-width: 640px)
+  .process-list
+    .pid
+      display: none

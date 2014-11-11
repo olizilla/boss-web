@@ -8,6 +8,7 @@ var HostData = function(name, data) {
   this._config = Autowire
 
   this.name = name
+  this.host = data.host
   this.lastUpdated = Date.now()
 
   Object.defineProperties(this, {

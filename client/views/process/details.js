@@ -34,7 +34,7 @@ module.exports = View.extend({
     event.target.blur()
 
     window.open('http://' +
-      this.model.collection.parent.hostname +
+      this.model.collection.parent.host +
       ':' +
       this.model.collection.parent.debuggerPort +
       '/debug?port=' +
@@ -43,9 +43,13 @@ module.exports = View.extend({
   restart: function(event) {
     event.preventDefault()
     event.target.blur()
+
+    window.app.socket.emit('process:restart', this.model.collection.parent.name, this.model.id)
   },
   stop: function(event) {
     event.preventDefault()
     event.target.blur()
+
+    window.app.socket.emit('process:stop', this.model.collection.parent.name, this.model.id)
   }
 })

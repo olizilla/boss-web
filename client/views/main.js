@@ -17,9 +17,10 @@ module.exports = View.extend({
   },
   events: {
     'click a[href]': 'handleLinkClick',
-    'click [data-hook=toggle-nav]' : 'toggleNav'
+    'click [data-hook=toggle-nav]' : 'toggleNav',
+    'click #nav-shadow': 'hideNavIfShowing'
   },
-  render: function () {
+  render: function() {
     // some additional stuff we want to add to the document head
     document.head.appendChild(domify(templates.head()))
 
@@ -52,7 +53,7 @@ module.exports = View.extend({
     return this
   },
 
-  handleNewPage: function (view) {
+  handleNewPage: function(view) {
     // tell the view switcher to render the new one
     this.pageSwitcher.set(view)
 
@@ -60,7 +61,7 @@ module.exports = View.extend({
     this.updateActiveNav()
   },
 
-  handleLinkClick: function (e) {
+  handleLinkClick: function(e) {
     var aTag = e.target
     var local = aTag.host === window.location.host
 
@@ -72,44 +73,50 @@ module.exports = View.extend({
     }
   },
 
-  updateActiveNav: function () {
-    var path = window.location.pathname.slice(1);
+  updateActiveNav: function() {
+    var path = window.location.pathname.slice(1)
 
     this.queryAll('.nav a[href]').forEach(function (aTag) {
-      var aPath = aTag.pathname.slice(1);
+      var aPath = aTag.pathname.slice(1)
 
       if ((!aPath && !path) || (aPath && path.indexOf(aPath) === 0)) {
-        dom.addClass(aTag.parentNode, 'active');
+        dom.addClass(aTag.parentNode, 'active')
       } else {
-        dom.removeClass(aTag.parentNode, 'active');
+        dom.removeClass(aTag.parentNode, 'active')
       }
-    });
+    })
+
+    this.hideNavIfShowing()
   },
 
-  toggleNav: function(event) {
-    var sourceElement = event.srcElement
+  toggleNav: function() {
+    var navBar = this.query('[data-hook=nav-container]')
+    var navShadow = this.query('#nav-shadow')
+    var classes = Array.prototype.slice.call(navBar.classList)
 
-    while(!sourceElement.hasAttribute('data-target')) {
-      if(!sourceElement.parentNode) {
-        return
-      }
-
-      sourceElement = sourceElement.parentNode
-    }
-
-    var targetElementClassName = sourceElement.getAttribute('data-target')
-    var toggleClassName = sourceElement.getAttribute('data-toggle')
-    var targetElement = this.query(targetElementClassName)
-    var classes = Array.prototype.slice.call(targetElement.classList)
-
-    if(classes.indexOf(toggleClassName) == -1) {
-      classes.push(toggleClassName)
+    if(classes.indexOf('collapse') == -1) {
+      classes.push('collapse')
+      navShadow.className = ''
     } else {
       classes = classes.filter(function(existingClassName) {
-        return existingClassName != toggleClassName
+        return existingClassName != 'collapse'
       })
+      navShadow.className = 'shadow'
     }
 
-    targetElement.className = classes.join(' ')
+    navBar.className = classes.join(' ')
+  },
+
+  hideNavIfShowing: function() {
+    var navBar = this.query('[data-hook=nav-container]')
+    var navShadow = this.query('#nav-shadow')
+    var classes = Array.prototype.slice.call(navBar.classList)
+
+    if(classes.indexOf('collapse') == -1) {
+      classes.push('collapse')
+      navShadow.className = ''
+    }
+
+    navBar.className = classes.join(' ')
   }
 })

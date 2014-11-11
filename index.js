@@ -224,7 +224,7 @@ commander
   .action(cli.changeUserPassword.bind(cli))
 
 commander
-  .command('userlist')
+  .command('lsusers')
   .description('Prints out a list of users')
   .action(cli.listUsers.bind(cli))
 

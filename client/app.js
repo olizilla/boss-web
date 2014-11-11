@@ -1,5 +1,4 @@
 var _ = require('underscore'),
-  logger = require('andlog'),
   config = require('clientconfig'),
   Router = require('./router'),
   MainView = require('./views/main'),
@@ -64,18 +63,20 @@ module.exports = {
     this.socket.on('ws:gc:finished', function(hostName, processId) {
       withHostAndProcess(hostName, processId, function(host, process) {
         jQuery.growl('<h4>Garbage collection complete</h4><strong>' +
-        process.title + '</strong> on host <strong>' +
-        host.name + '</strong> has finished garbage collection',{
-          type: 'info'
+        process.title + '</strong> on <strong>' +
+        host.name + '</strong> has collected garbage', {
+          type: 'success',
+          offset: 15
         })
       })
     })
     this.socket.on('ws:heap:finished', function(hostName, processId, path) {
       withHostAndProcess(hostName, processId, function(host, process) {
         jQuery.growl('<h4>Heap dump complete</h4><strong>' +
-        process.title + '</strong> on host <strong>' +
-        host.name + '</strong> has dumped heap to ' + path,{
-          type: 'info'
+        process.title + '</strong> on <strong>' +
+        host.name + '</strong> has dumped heap to ' + path.split('/').pop(), {
+          type: 'success',
+          offset: 15
         })
       })
     })

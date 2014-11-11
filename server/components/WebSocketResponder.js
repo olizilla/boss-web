@@ -213,6 +213,14 @@ WebSocketResponder.prototype._checkHost = function(callback, client, hostName, p
     return
   }
 
+  if(!client || !client.user || !client.user.name) {
+    return
+  }
+
+  if(!this._config.users[client.user.name][hostName] || !this._config.users[client.user.name][hostName].secret) {
+    return
+  }
+
   remote(this._logger, {
     host: this._config.hosts[hostName].host,
     port:  this._config.hosts[hostName].port,
@@ -248,33 +256,48 @@ WebSocketResponder.prototype.debugProcess = function(client, host, id) {
 WebSocketResponder.prototype.gcProcess = function(error, client, hostName, processId, boss, callback) {
   client.emit('ws:gc:started', hostName, processId)
 
-  boss.invokeRemoteProcessMethod(processId, 'forceGc', [], client.user.name, function(error) {
+  boss.connectToProcess(processId, function(error, remoteProcess) {
     if(error) {
-      client.emit('ws:gc:error', hostName, processId, error.message)
-    } else {
-      client.emit('ws:gc:finished', hostName, processId)
+      if(error.code == 'TIMEOUT') {
+        client.emit('ws:gc:timeout', hostName, processId, error.message)
+      }
+
+      return callback(error)
     }
 
-    callback()
+    remoteProcess.forceGc(function(error) {
+      if(error) {
+        client.emit('ws:gc:error', hostName, processId, error.message)
+      } else {
+        client.emit('ws:gc:finished', hostName, processId)
+      }
+
+      callback()
+    })
   })
 }
 
 WebSocketResponder.prototype.heapdumpProcess = function(error, client, hostName, processId, boss, callback) {
   client.emit('ws:heap:started', hostName, processId)
 
-  boss.invokeRemoteProcessMethod(processId, 'dumpHeap', [], client.user.name, function(error, path) {
-    if(error && error.code == 'TIMEOUT') {
-      // dumping heap can take ages..
-      return
-    }
-
+  boss.connectToProcess(processId, function(error, remoteProcess) {
     if(error) {
-      client.emit('ws:heap:error', hostName, processId, error.message)
-    } else {
-      client.emit('ws:heap:finished', hostName, processId, path)
+      if(error.code == 'TIMEOUT') {
+        client.emit('ws:heap:timeout', hostName, processId, error.message)
+      }
+
+      return callback(error)
     }
 
-    callback()
+    remoteProcess.dumpHeap(function(error, path) {
+      if(error) {
+        client.emit('ws:heap:error', hostName, processId, error.message)
+      } else {
+        client.emit('ws:heap:finished', hostName, processId, path)
+      }
+
+      callback()
+    })
   })
 }
 
