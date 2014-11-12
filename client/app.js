@@ -80,6 +80,27 @@ module.exports = {
         })
       })
     })
+    this.socket.on('ws:restart:finished', function(hostName, processId) {
+      withHostAndProcess(hostName, processId, function(host, process) {
+        jQuery.growl('<h4>Restart complete</h4><strong>' +
+        process.title + '</strong> on <strong>' +
+        host.name + '</strong> restarted', {
+          type: 'success',
+          offset: 15
+        })
+      })
+    })
+    this.socket.on('ws:stop:finished', function(hostName, processId) {
+      withHostAndProcess(hostName, processId, function(host, process) {
+        jQuery.growl('<h4>Restart complete</h4><strong>' +
+        process.title + '</strong> on <strong>' +
+        host.name + '</strong> stopped', {
+          type: 'success',
+          offset: 15
+        })
+      })
+    })
+
 
     // create an empty collection for our host models
     this.hosts = new Hosts()

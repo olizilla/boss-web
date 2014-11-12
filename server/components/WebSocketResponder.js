@@ -241,12 +241,52 @@ WebSocketResponder.prototype.startProcess = function(client, host, id) {
   this._logger.info('starting process', arguments)
 }
 
-WebSocketResponder.prototype.stopProcess = function(client, host, id) {
-  this._logger.info('stopping process', arguments)
+WebSocketResponder.prototype.stopProcess = function(error, client, hostName, processId, boss, callback) {
+  client.emit('ws:stop:started', hostName, processId)
+
+  boss.connectToProcess(processId, function(error, remoteProcess) {
+    if(error) {
+      if(error.code == 'TIMEOUT') {
+        client.emit('ws:stop:timeout', hostName, processId, error.message)
+      }
+
+      return callback(error)
+    }
+
+    remoteProcess.kill(function(error) {
+      if(error) {
+        client.emit('ws:stop:error', hostName, processId, error.message)
+      } else {
+        client.emit('ws:stop:finished', hostName, processId, path)
+      }
+
+      callback()
+    })
+  })
 }
 
-WebSocketResponder.prototype.restartProcess = function(client, host, id) {
-  this._logger.info('restarting process', arguments)
+WebSocketResponder.prototype.restartProcess = function(error, client, hostName, processId, boss, callback) {
+  client.emit('ws:restart:started', hostName, processId)
+
+  boss.connectToProcess(processId, function(error, remoteProcess) {
+    if(error) {
+      if(error.code == 'TIMEOUT') {
+        client.emit('ws:restart:timeout', hostName, processId, error.message)
+      }
+
+      return callback(error)
+    }
+
+    remoteProcess.restart(function(error) {
+      if(error) {
+        client.emit('ws:restart:error', hostName, processId, error.message)
+      } else {
+        client.emit('ws:restart:finished', hostName, processId)
+      }
+
+      callback()
+    })
+  })
 }
 
 WebSocketResponder.prototype.debugProcess = function(client, host, id) {

@@ -44,7 +44,10 @@ module.exports = AmpersandModel.extend({
     heapDumpRequested: ['boolean', true, false],
     status: {
       type: 'string',
-      values: ['starting', 'started', 'restarting', 'stopped', 'errored']
+      values: [
+        'uninitialised', 'starting', 'running', 'restarting', 'stopping',
+        'stopped', 'errored', 'failed', 'paused', 'unresponsive'
+      ]
     }
   },
   derived: {
