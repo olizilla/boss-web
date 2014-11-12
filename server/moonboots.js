@@ -5,6 +5,7 @@ var path = require('path'),
 // for reuse
 var appDir = path.resolve(__dirname + '/../client')
 var cssDir = path.resolve(__dirname + '/../public/css')
+var javascriptDir = path.resolve(__dirname + '/../public/javascript')
 var templateDir = path.resolve(__dirname + '/../templates')
 
 module.exports = function(config) {
@@ -29,7 +30,12 @@ module.exports = function(config) {
       // These will simply be included before any of your application code in the
       // order you provide them. So for example, if you're using jQuery make sure
       // you list any plugins after jQuery itself.
-      libraries: [],
+      libraries: [
+        javascriptDir + '/jquery/jquery-1.11.1.js',
+        javascriptDir + '/highcharts/highcharts.js',
+        javascriptDir + '/highcharts/highcharts-more.js',
+        javascriptDir + '/highcharts/modules/solid-gauge.js'
+      ],
       // Specify the stylesheets we want to bundle
       stylesheets: [
         cssDir + '/darkstrap.css',

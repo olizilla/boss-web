@@ -1,7 +1,6 @@
 var View = require('ampersand-view'),
   templates = require('../../templates'),
-  prettysize = require('prettysize'),
-  HighCharts = require('Highcharts')
+  prettysize = require('prettysize')
 
 module.exports = View.extend({
   template: templates.includes.process.memory,
@@ -123,7 +122,7 @@ module.exports = View.extend({
           return
         }
 
-        var chart = HighCharts.charts[el.getAttribute('data-highcharts-chart')]
+        var chart = Highcharts.charts[el.getAttribute('data-highcharts-chart')]
 
         if(!chart) {
           return
@@ -139,7 +138,7 @@ module.exports = View.extend({
           return
         }
 
-        var chart = HighCharts.charts[el.getAttribute('data-highcharts-chart')]
+        var chart = Highcharts.charts[el.getAttribute('data-highcharts-chart')]
 
         if(!chart) {
           return
@@ -155,7 +154,7 @@ module.exports = View.extend({
           return
         }
 
-        var chart = HighCharts.charts[el.getAttribute('data-highcharts-chart')]
+        var chart = Highcharts.charts[el.getAttribute('data-highcharts-chart')]
 
         if(!chart) {
           return
