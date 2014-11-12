@@ -92,7 +92,7 @@ module.exports = {
     })
     this.socket.on('ws:stop:finished', function(hostName, processId) {
       withHostAndProcess(hostName, processId, function(host, process) {
-        jQuery.growl('<h4>Restart complete</h4><strong>' +
+        jQuery.growl('<h4>Process stopped</h4><strong>' +
         process.title + '</strong> on <strong>' +
         host.name + '</strong> stopped', {
           type: 'success',

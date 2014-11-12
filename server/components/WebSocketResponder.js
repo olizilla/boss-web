@@ -257,7 +257,7 @@ WebSocketResponder.prototype.stopProcess = function(error, client, hostName, pro
       if(error) {
         client.emit('ws:stop:error', hostName, processId, error.message)
       } else {
-        client.emit('ws:stop:finished', hostName, processId, path)
+        client.emit('ws:stop:finished', hostName, processId)
       }
 
       callback()

@@ -6,10 +6,18 @@ var PageView = require('./base'),
   LogsView = require('../views/process/loglist/list')
 
 module.exports = PageView.extend({
-  pageTitle: 'Boss',
+  pageTitle: function() {
+    return 'Boss - ' + this.model.title
+  },
   template: templates.pages.process,
   render: function () {
     this.renderWithTemplate()
+
+    this.listenTo(window.app.socket, 'ws:stop:finished', function(hostName, processId) {
+      if(hostName == this.model.collection.parent.name && processId == this.model.id) {
+        window.app.router.redirectTo('/host/' + hostName + '/processes')
+      }
+    }.bind(this))
 
     this.renderSubview(new DetailsView({
       model: this.model
