@@ -1,5 +1,6 @@
 var notify = require('./notification'),
-  SocketIO = require('socket.io-client')
+  SocketIO = require('socket.io-client'),
+  WildEmitter = require('wildemitter')
 
 function withHostAndProcess(hostName, processId, callback) {
   var host = app.hosts.get(hostName)
@@ -18,6 +19,14 @@ function withHostAndProcess(hostName, processId, callback) {
 }
 
 var socket = SocketIO('//');
+//socket.callbacks = {}
+
+for(var key in WildEmitter.prototype) {
+  if(typeof WildEmitter.prototype[key] != 'function') {}
+
+  //socket[key] = WildEmitter.prototype[key]
+}
+
 socket.on('connect', function() {
   console.info('connect')
 })
@@ -91,6 +100,12 @@ socket.on('ws:stop:finished', function(hostName, processId) {
       type: 'success'
     })
   })
+})
+socket.on('localhost:process:log:info:*', function() {
+  console.info('incoming log!', arguments)
+})
+socket.on('*', function() {
+  console.info('incoming!', arguments)
 })
 
 module.exports = socket

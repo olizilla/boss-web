@@ -84,70 +84,6 @@ WebSocketResponder.prototype.afterPropertiesSet = function() {
     client.on('process:heapdump', this._checkHost.bind(this, this.heapdumpProcess.bind(this), client))
   }.bind(this))
 
-/*
-    // send config and all host data
-    client.send(JSON.stringify([{
-      method: "onConfig",
-      args: [{
-        graph: this._config.get("graph"),
-        logs: this._config.get("logs"),
-        updateFrequency: this._config.get("updateFrequency"),
-        requiredPm2Version: this._config.get("requiredPm2Version")
-      }]
-    }, {
-      method: "onHosts",
-      args: [
-        this._hostList.getHosts()
-      ]
-    }
-    ]))
-*/
-/*
-  // broadcast error logging
-  this._listener.on("log:err", this._broadcastLog.bind(this, "error"))
-
-  // broadcast info logging
-  this._listener.on("log:out", this._broadcastLog.bind(this, "info"))
-
-  // broadcast exceptions
-  this._listener.on("process:exception", function(event) {
-    var data = event.data ? event.data : event.err
-    var host, id, message, stack
-
-    host = event.name
-
-    if(event.process) {
-      id = event.process.pm_id
-    }
-
-    message = data.message
-    stack = data.stack
-
-    if(!id) {
-      return
-    }
-
-    this._hostList.addLog(host, id, "error", stack)
-
-    this._events.push({
-      method: "onProcessException",
-      args: [
-        host, id, message, stack
-      ]
-    })
-  }.bind(this))
-
-  // broadcast system data updates
-  this._listener.on("systemData", function(data) {
-    this._events.push({
-      method: "onSystemData",
-      args: [
-        data
-      ]
-    })
-  }.bind(this))
- */
-
   setInterval(this._processEvents.bind(this), this._config.ws.frequency)
 }
 
@@ -156,44 +92,15 @@ WebSocketResponder.prototype._processEvents = function() {
     return
   }
 
-  this._webSocketServer.broadcast(this._events)
+  this._events.forEach(function(event) {
+    this._webSocket.emit.apply(this._webSocket, event)
+  }.bind(this))
 
   this._events.length = 0
 }
 
-WebSocketResponder.prototype._broadcastLog = function(type, event) {
-  var id = event.process.pm_id
-  var log
-
-  // ugh
-  if(event.data) {
-    if(event.data.str) {
-      log = event.data.str
-    } else if(Array.isArray(event.data)) {
-      log = new Buffer(event.data).toString('utf8')
-    } else {
-      log = event.data.toString()
-    }
-  } else if(event.str) {
-    log = event.str
-  }
-
-  if(!log) {
-    return
-  }
-
-  if(log.trim) {
-    log = log.trim()
-  }
-
-  this._hostList.addLog(event.name, id, type, log)
-
-  this._events.push({
-    method: "on" + type.substring(0, 1).toUpperCase() + type.substring(1) + "Log",
-    args: [
-      event.name, id, log
-    ]
-  })
+WebSocketResponder.prototype.broadcast = function() {
+  this._events.push(Array.prototype.slice.call(arguments))
 }
 
 WebSocketResponder.prototype._checkHost = function(callback, client, hostName) {

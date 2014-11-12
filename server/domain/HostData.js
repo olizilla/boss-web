@@ -6,6 +6,7 @@ var HostData = function(name, data) {
   this._logger = Autowire
   this._processDataFactory = Autowire
   this._config = Autowire
+  this._webSocketResponder = Autowire
 
   this.name = name
   this.host = data.host
@@ -107,6 +108,14 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
 
       process.log(type.split(':')[2], event.date, event.message)
     }.bind(this))
+
+    this._remote.on('*', function() {
+      var args = Array.prototype.slice.call(arguments)
+      args[0] = this.name + ':' + args[0]
+
+      this._webSocketResponder.broadcast.apply(this._webSocketResponder, args)
+    }.bind(this))
+
   }.bind(this))
 }
 

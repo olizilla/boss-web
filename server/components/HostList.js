@@ -5,7 +5,7 @@ var HostList = function() {
   this._logger = Autowire
   this._hostDataFactory = Autowire
 
-  this._hostData = {};
+  this._hostData = {}
 }
 
 HostList.prototype.afterPropertiesSet = function() {
@@ -13,11 +13,11 @@ HostList.prototype.afterPropertiesSet = function() {
     this._hostData[name] = this._hostDataFactory.create(name, this._config.hosts[name])
   }.bind(this))
 
-  setInterval(this._hostPurge.bind(this), this._config.hostPurge.frequency);
-};
+  setInterval(this._hostPurge.bind(this), this._config.hostPurge.frequency)
+}
 
 HostList.prototype._hostPurge = function() {
-  var now = Date.now();
+  var now = Date.now()
 
   Object.keys(this._hostData).forEach(function(key) {
     if(this._hostData[key].status == 'connecting') {
@@ -25,20 +25,20 @@ HostList.prototype._hostPurge = function() {
     }
 
     if(now - this._hostData[key].lastUpdated > this._config.hostPurge.cutoff) {
-      this._logger.info("HostList", key, "has gone away");
-      delete this._hostData[key];
+      this._logger.info("HostList", key, "has gone away")
+      delete this._hostData[key]
     }
-  }.bind(this));
-};
+  }.bind(this))
+}
 
 HostList.prototype.getHosts = function() {
-  var output = [];
+  var output = []
 
   Object.keys(this._hostData).forEach(function(key) {
-    output.push(this._hostData[key]);
-  }.bind(this));
+    output.push(this._hostData[key])
+  }.bind(this))
 
-  return output;
+  return output
 }
 
 HostList.prototype.getHostByName = function(name) {
@@ -46,19 +46,19 @@ HostList.prototype.getHostByName = function(name) {
 }
 
 HostList.prototype.addLog = function(host, id, type, data) {
-  var host = this._hostData[host];
+  var host = this._hostData[host]
 
   if(!host) {
-    return;
+    return
   }
 
-  var process = host.findProcessById(id);
+  var process = host.findProcessById(id)
 
   if(!process) {
-    return;
+    return
   }
 
-  process.log(type, data);
+  process.log(type, data)
 }
 
-module.exports = HostList;
+module.exports = HostList
