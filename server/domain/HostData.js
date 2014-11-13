@@ -111,7 +111,10 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
 
     this._remote.on('*', function() {
       var args = Array.prototype.slice.call(arguments)
-      args[0] = this.name + ':' + args[0]
+      args.splice(1, 0, {
+        name: this.name,
+        host: this.host
+      })
 
       this._webSocketResponder.broadcast.apply(this._webSocketResponder, args)
     }.bind(this))

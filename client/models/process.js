@@ -45,7 +45,7 @@ module.exports = AmpersandModel.extend({
     status: {
       type: 'string',
       values: [
-        'uninitialised', 'starting', 'running', 'restarting', 'stopping',
+        'uninitialised', 'starting', 'started', 'running', 'restarting', 'stopping',
         'stopped', 'errored', 'failed', 'aborted', 'paused', 'unresponsive'
       ]
     }

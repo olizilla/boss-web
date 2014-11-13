@@ -47,28 +47,6 @@ function withHostAndProcess(hostName, processId, callback) {
 }
 
 var socket = SocketIO('//')
-/*
-socket.emit = function(event) {
-  this._callbacks = this._callbacks || {}
-
-  var argsWithoutEvent = Array.prototype.slice.call(arguments, 1)
-  var argsWithEvent = Array.prototype.slice.call(arguments, 0)
-
-  Object.keys(this._callbacks).forEach(function(eventName) {
-    var hasWildCard = eventName.indexOf('*') != -1
-    var subEvent = eventName.split('*')[0]
-
-    if(eventName == event) {
-      this._callbacks[eventName].forEach(function(callback) {
-        callback.apply(callback, argsWithoutEvent)
-      })
-    } else if (hasWildCard && event.substring(0, subEvent.length) == subEvent) {
-      this._callbacks[eventName].forEach(function(callback) {
-        callback.apply(callback, argsWithEvent)
-      })
-    }
-  }.bind(this))
-}*/
 socket.on('connect', function() {
   console.info('connect')
 })

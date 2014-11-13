@@ -1,12 +1,17 @@
-var Autowire = require("wantsit").Autowire
+var Autowire = require('wantsit').Autowire,
+  EventEmitter = require('events').EventEmitter,
+  util = require('util')
 
 var HostList = function() {
+  EventEmitter.call(this)
+
   this._config = Autowire
   this._logger = Autowire
   this._hostDataFactory = Autowire
 
   this._hostData = {}
 }
+util.inherits(HostList, EventEmitter)
 
 HostList.prototype.afterPropertiesSet = function() {
   Object.keys(this._config.hosts).forEach(function(name) {

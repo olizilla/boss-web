@@ -26,6 +26,8 @@ Configuration = function() {
   this._copy(userClientConfig, this.client)
   this.hosts = userHostsConfig
   this.users = userUsersConfig
+
+  this.client.minVersion = this.minVersion
 }
 
 Configuration.prototype._copy = function(source, dest) {
