@@ -59,7 +59,7 @@
     "templatizer-hbs": "^0.0",
     "underscore": "^1.0",
     "wantsit": "^1.0",
-    "wildemitter": "^1.0"
+    "component-emitter": "1.1.2"
   },
   "devDependencies": {
     "coveralls": "^2.8",

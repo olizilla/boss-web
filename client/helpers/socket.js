@@ -1,6 +1,34 @@
+var Emitter = require('component-emitter')
+
+Emitter.prototype.emit = function(event) {
+  this._callbacks = this._callbacks || {}
+
+  var argsWithoutEvent = Array.prototype.slice.call(arguments, 1)
+  var argsWithEvent = Array.prototype.slice.call(arguments, 0)
+
+  for(var eventName in this._callbacks) {
+    if(!Array.isArray(this._callbacks[eventName])) {
+      continue
+    }
+
+    var callbacks = this._callbacks[eventName].slice()
+    var hasWildCard = eventName.indexOf('*') != -1
+    var subEvent = eventName.split('*')[0]
+
+    if(eventName == event) {
+      for(var i = 0; i < callbacks.length; i++) {
+        callbacks[i].apply(this, argsWithoutEvent)
+      }
+    } else if(hasWildCard && event.substring(0, subEvent.length) == subEvent) {
+      for(var i = 0; i < callbacks.length; i++) {
+        callbacks[i].apply(this, argsWithEvent)
+      }
+    }
+  }
+}
+
 var notify = require('./notification'),
-  SocketIO = require('socket.io-client'),
-  WildEmitter = require('wildemitter')
+  SocketIO = require('socket.io-client')
 
 function withHostAndProcess(hostName, processId, callback) {
   var host = app.hosts.get(hostName)
@@ -18,15 +46,29 @@ function withHostAndProcess(hostName, processId, callback) {
   callback(host, process)
 }
 
-var socket = SocketIO('//');
-//socket.callbacks = {}
+var socket = SocketIO('//')
+/*
+socket.emit = function(event) {
+  this._callbacks = this._callbacks || {}
 
-for(var key in WildEmitter.prototype) {
-  if(typeof WildEmitter.prototype[key] != 'function') {}
+  var argsWithoutEvent = Array.prototype.slice.call(arguments, 1)
+  var argsWithEvent = Array.prototype.slice.call(arguments, 0)
 
-  //socket[key] = WildEmitter.prototype[key]
-}
+  Object.keys(this._callbacks).forEach(function(eventName) {
+    var hasWildCard = eventName.indexOf('*') != -1
+    var subEvent = eventName.split('*')[0]
 
+    if(eventName == event) {
+      this._callbacks[eventName].forEach(function(callback) {
+        callback.apply(callback, argsWithoutEvent)
+      })
+    } else if (hasWildCard && event.substring(0, subEvent.length) == subEvent) {
+      this._callbacks[eventName].forEach(function(callback) {
+        callback.apply(callback, argsWithEvent)
+      })
+    }
+  }.bind(this))
+}*/
 socket.on('connect', function() {
   console.info('connect')
 })
