@@ -1,5 +1,6 @@
 var View = require('ampersand-view'),
-  templates = require('../../templates')
+  templates = require('../../templates'),
+  dom = require('ampersand-dom')
 
 module.exports = View.extend({
   template: templates.includes.process.details,
@@ -8,7 +9,61 @@ module.exports = View.extend({
     'model.user': '[data-hook=user]',
     'model.group': '[data-hook=group]',
     'model.uptimeFormatted': '[data-hook=uptime]',
-    'model.restarts': '[data-hook=restarts]'
+    'model.restarts': '[data-hook=restarts]',
+    'model.isGc': {
+      type: function (el, value) {
+        el.disabled = value
+
+        var i = $(el).find('i')
+
+        if(value) {
+          $(i).removeClass('fa-trash')
+          $(i).addClass('fa-circle-o-notch')
+          $(i).addClass('fa-spin')
+        } else {
+          $(i).addClass('fa-trash')
+          $(i).removeClass('fa-circle-o-notch')
+          $(i).removeClass('fa-spin')
+        }
+      },
+      selector: '[data-hook=gcbutton]'
+    },
+    'model.isHeapDump': {
+      type: function (el, value) {
+        el.disabled = value
+
+        var i = $(el).find('i')
+
+        if(value) {
+          $(i).removeClass('fa-h-square')
+          $(i).addClass('fa-circle-o-notch')
+          $(i).addClass('fa-spin')
+        } else {
+          $(i).addClass('fa-h-square')
+          $(i).removeClass('fa-circle-o-notch')
+          $(i).removeClass('fa-spin')
+        }
+      },
+      selector: '[data-hook=heapdumpbutton]'
+    },
+    'model.isRestarting': {
+      type: function (el, value) {
+        el.disabled = value
+
+        var i = $(el).find('i')
+
+        if(value) {
+          $(i).removeClass('fa-refresh')
+          $(i).addClass('fa-circle-o-notch')
+          $(i).addClass('fa-spin')
+        } else {
+          $(i).addClass('fa-refresh')
+          $(i).removeClass('fa-circle-o-notch')
+          $(i).removeClass('fa-spin')
+        }
+      },
+      selector: '[data-hook=restartbutton]'
+    }
   },
   events: {
     'click button.process-gc': 'garbageCollect',

@@ -4,8 +4,8 @@ var Autowire = require('wantsit').Autowire,
 
 var HostData = function(name, data) {
   this._logger = Autowire
-  this._processDataFactory = Autowire
   this._config = Autowire
+  this._processDataFactory = Autowire
   this._webSocketResponder = Autowire
 
   this.name = name
@@ -24,11 +24,11 @@ var HostData = function(name, data) {
       value: null,
       writable: true
     },
-    '_updateServerStatusInterval': {
+    '_updateServerStatusTimeout': {
       value: null,
       writable: true
     },
-    '_updateProcessesInterval': {
+    '_updateProcessesTimeout': {
       value: null,
       writable: true
     }
@@ -49,8 +49,11 @@ HostData.prototype._connectToDaemon = function() {
 
 HostData.prototype._connectedToDaemon = function(error, boss) {
   boss.on('disconnected', function() {
-    clearInterval(this._updateServerStatusInterval)
-    clearInterval(this._updateProcessesInterval)
+    boss.off('*')
+    boss.off('process:log:*')
+
+    clearTimeout(this._updateServerStatusTimeout)
+    clearTimeout(this._updateProcessesTimeout)
 
     this.status = 'connecting'
   }.bind(this))
@@ -91,11 +94,7 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
 
     this.status = 'connected'
 
-    // set up listeners
-    this._updateServerStatusInterval = setInterval(this._updateServerStatus.bind(this), this._config.frequency)
-    this._updateProcessesInterval = setInterval(this._updateProcesses.bind(this), this._config.frequency)
-
-    // and trigger them immediately
+    // update details
     this._updateServerStatus()
     this._updateProcesses()
 
@@ -111,10 +110,7 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
 
     this._remote.on('*', function() {
       var args = Array.prototype.slice.call(arguments)
-      args.splice(1, 0, {
-        name: this.name,
-        host: this.host
-      })
+      args.splice(1, 0, this.name)
 
       this._webSocketResponder.broadcast.apply(this._webSocketResponder, args)
     }.bind(this))
@@ -133,16 +129,20 @@ HostData.prototype._updateServerStatus = function() {
         this.status = 'error'
       }
 
-      return this._logger.error('Error getting boss status', error)
+      this._logger.error('Error getting boss status', error)
+    } else {
+      this.status = 'connected'
+
+      for(var key in status) {
+        this[key] = status[key]
+      }
+
+      this.lastUpdated = Date.now()
+
+      this._webSocketResponder.broadcast('server:status', this.name, this)
     }
 
-    this.status = 'connected'
-
-    for(var key in status) {
-      this[key] = status[key]
-    }
-
-    this.lastUpdated = Date.now()
+    this._updateServerStatusTimeout = setTimeout(this._updateServerStatus.bind(this), this._config.frequency)
   }.bind(this))
 }
 
@@ -157,25 +157,29 @@ HostData.prototype._updateProcesses = function() {
         this.status = 'error'
       }
 
-      return this._logger.error('Error listing processes', error)
+      this._logger.error('Error listing processes', error)
+    } else {
+      this.status = 'connected'
+
+      this._removeMissingProcesses(processes)
+
+      processes.forEach(function(data) {
+        var existingProcess = this.findProcessById(data.id);
+
+        if(!existingProcess) {
+          existingProcess = this._processDataFactory.create(data)
+          this.processes.push(existingProcess)
+        }
+
+        existingProcess.update(data)
+      }.bind(this))
+
+      this.lastUpdated = Date.now()
+
+      this._webSocketResponder.broadcast('server:processes', this.name, this.processes)
     }
 
-    this.status = 'connected'
-
-    this._removeMissingProcesses(processes)
-
-    processes.forEach(function(data) {
-      var existingProcess = this.findProcessById(data.id);
-
-      if(!existingProcess) {
-        existingProcess = this._processDataFactory.create(data)
-        this.processes.push(existingProcess)
-      }
-
-      existingProcess.update(data)
-    }.bind(this))
-
-    this.lastUpdated = Date.now()
+    this._updateProcessesTimeout = setTimeout(this._updateProcesses.bind(this), this._config.frequency)
   }.bind(this))
 }
 

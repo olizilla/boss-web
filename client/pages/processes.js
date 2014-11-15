@@ -21,7 +21,7 @@ module.exports = PageView.extend({
     this.chooseView()
   },
   chooseView: function() {
-    if(this.model.processes.isEmpty()) {
+    if(this.model.processes.length == 0) {
       this.pageSwitcher.set(this.emptyListView)
     } else {
       // for some reason, reusing the same listview doesn't always notice new additions to the collection?!

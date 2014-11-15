@@ -40,8 +40,6 @@ module.exports = AmpersandModel.extend({
     uptime: ['number', true, '?'],
     user: ['string', true, '?'],
     script: ['string', true, '?'],
-    gcRequested: ['boolean', true, false],
-    heapDumpRequested: ['boolean', true, false],
     status: {
       type: 'string',
       values: [
@@ -49,6 +47,11 @@ module.exports = AmpersandModel.extend({
         'stopped', 'errored', 'failed', 'aborted', 'paused', 'unresponsive'
       ]
     }
+  },
+  session: {
+    'isGc': ['boolean', true, false],
+    'isHeapDump': ['boolean', true, false],
+    'isRestarting': ['boolean', true, false]
   },
   derived: {
     cpuFormatted: {

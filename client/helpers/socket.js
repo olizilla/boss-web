@@ -31,19 +31,25 @@ var notify = require('./notification'),
   SocketIO = require('socket.io-client')
 
 function withHostAndProcess(hostName, processId, callback) {
+  withHost(hostName, function(host) {
+    var process = host.processes.get(processId)
+
+    if(!process) {
+      return
+    }
+
+    callback(host, process)
+  })
+}
+
+function withHost(hostName, callback) {
   var host = app.hosts.get(hostName)
 
   if(!host) {
     return
   }
 
-  var process = host.processes.get(processId)
-
-  if(!process) {
-    return
-  }
-
-  callback(host, process)
+  callback(host)
 }
 
 var socket = SocketIO('//')
@@ -54,7 +60,11 @@ socket.on('connect_error', function(error) {
   console.info('connect_error', error)
 })
 socket.on('connect_timeout', function() {
-  console.info('connect_timeout')
+  notify({
+    header: 'Connection timeout',
+    message: 'The fire hose websocket timed out while connecting',
+    type: 'danger'
+  })
 })
 socket.on('reconnect_attempt', function() {
   console.info('reconnect_attempt')
@@ -69,10 +79,25 @@ socket.on('reconnect_failed', function() {
   console.info('reconnect_failed')
 })
 socket.on('reconnect', function(count) {
-  console.info('reconnect', count)
+  notify({
+    header: 'boss-web came back',
+    message: 'Reconnected after ' + count + ' attempts',
+    type: 'info'
+  })
 })
 socket.on('disconnect', function() {
-  console.info('disconnect')
+  notify({
+    header: 'boss-web went away',
+    message: 'Lost connection',
+    type: 'danger'
+  })
+})
+socket.on('disconnected', function(hostName) {
+  notify({
+    header: 'Lost connection',
+    message: 'Disconnected from ' + hostName,
+    type: 'danger'
+  })
 })
 socket.on('event', function() {
   console.info('event', arguments)
@@ -121,11 +146,120 @@ socket.on('ws:stop:finished', function(hostName, processId) {
     })
   })
 })
-socket.on('localhost:process:log:info:*', function() {
-  console.info('incoming log!', arguments)
+socket.on('process:log:info', function(hostName, process, log) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.logs.add({
+      type: 'info',
+      date: log.date,
+      message: log.message
+    })
+  })
+})
+socket.on('process:log:warn', function(hostName, process, log) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.logs.add({
+      type: 'warn',
+      date: log.date,
+      message: log.message
+    })
+  })
+})
+socket.on('process:log:debug', function(hostName, process, log) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.logs.add({
+      type: 'debug',
+      date: log.date,
+      message: log.message
+    })
+  })
+})
+socket.on('process:log:error', function(hostName, process, log) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.logs.add({
+      type: 'error',
+      date: log.date,
+      message: log.message
+    })
+  })
 })
 socket.on('*', function() {
   console.info('incoming!', arguments)
 })
+socket.on('server:status', function(hostName, data) {
+  app.hosts.add(data, {
+    merge: true
+  })
+})
+socket.on('server:processes', function(hostName, processes) {
+  withHost(hostName, function(host) {
+    host.processes.forEach(function(existingProcess) {
+      var present = false
+
+      processes.forEach(function(process) {
+        if(process.id == existingProcess.id) {
+          present = true
+        }
+      })
+
+      if(!present) {
+        host.processes.remove(existingProcess)
+      }
+    })
+
+    host.processes.add(processes, {
+      merge: true
+    })
+  })
+})
+
+socket.on('process:gc:start', function(hostName, process) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.isGc = true
+  })
+})
+socket.on('process:gc:complete', function(hostName, process) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.isGc = false
+  })
+})
+
+socket.on('process:heapdump:start', function(hostName, process) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.isHeapDump = true
+  })
+})
+socket.on('process:heapdump:complete', function(hostName, process) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.isHeapDump = false
+  })
+})
+socket.on('process:heapdump:error', function(hostName, process) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.isHeapDump = false
+  })
+})
+socket.on('process:restarting', function(hostName, process) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.isRestarting = true
+  })
+})
+socket.on('process:restarted', function(hostName, process) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    process.isRestarting = false
+  })
+})
+
+socket.on('process:aborted', function(hostName, process) {
+  withHostAndProcess(hostName, process.id, function(host, process) {
+    notify({
+      header: 'Aborted',
+      host: host.name,
+      process: process.title,
+      message: 'restarted too many times and was aborted',
+      type: 'danger'
+    })
+  })
+})
+
 
 module.exports = socket

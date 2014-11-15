@@ -23,21 +23,13 @@ BossWeb = function() {
   }.bind(this))
 
   // create container
-  var container = new Container();
+  var container = new Container()
 
   // parse configuration
   var config = container.createAndRegister("config", require("./components/Configuration"))
 
   // set up logging
   container.register("logger", logger)
-
-  // object factories
-  container.createAndRegister("hostDataFactory", ObjectFactory, require("./domain/HostData"))
-  container.createAndRegister("processDataFactory", ObjectFactory, require("./domain/ProcessData"))
-
-  // holds host data
-  container.createAndRegister("hostList", require("./components/HostList"));
-
 
   var moonbootsConfig = {
     "isDev": true
@@ -173,7 +165,14 @@ BossWeb = function() {
 
       hapi.start(function (err) {
         if (err) throw err
-        console.log("boss-web is running at: http://localhost:%d", hapi.info.port)
+        console.log("boss-web is running at: http://%s:%d", hapi.info.host, hapi.info.port)
+
+        // object factories
+        container.createAndRegister("hostDataFactory", ObjectFactory, require("./domain/HostData"))
+        container.createAndRegister("processDataFactory", ObjectFactory, require("./domain/ProcessData"))
+
+        // holds host data
+        container.createAndRegister("hostList", require("./components/HostList"))
 
         // web sockets
         container.register('webSocket', SocketIO.listen(hapi.listener))

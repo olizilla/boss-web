@@ -19,6 +19,12 @@ module.exports = PageView.extend({
       }
     }.bind(this))
 
+    this.listenTo(window.app.socket, 'process:aborted', function(hostName, processId) {
+      if(hostName == this.model.collection.parent.name && processId == this.model.id) {
+        window.app.router.redirectTo('/host/' + hostName + '/processes')
+      }
+    }.bind(this))
+
     this.renderSubview(new DetailsView({
       model: this.model
     }), '[data-hook=details]')

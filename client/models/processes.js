@@ -1,9 +1,6 @@
-var Collection = require('ampersand-rest-collection'),
+var Collection = require('ampersand-collection'),
   Process = require('./process');
 
 module.exports = Collection.extend({
-  url: function() {
-    return '/hosts/' + this.parent.name + '/processes'
-  },
   model: Process
 })

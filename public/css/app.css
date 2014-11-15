@@ -9032,6 +9032,9 @@ li.active {
 .growl-animated {
   max-width: 370px;
 }
+.growl-animated h4 {
+  margin-right: 20px;
+}
 .info td {
   overflow: hidden;
   text-overflow: ellipsis;

@@ -9,7 +9,13 @@ var ProcessData = function(data) {
   this.heapUsed = []
   this.residentSize = []
   this.cpu = []
-  this.logs = []
+
+  Object.defineProperties(this, {
+    'logs': {
+      value: [],
+      writable: true
+    }
+  })
 
   this._map(data)
 }

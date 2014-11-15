@@ -4,7 +4,6 @@ var _ = require('underscore'),
   MainView = require('./views/main'),
   Hosts = require('./models/hosts'),
   domReady = require('domready'),
-  NoHostsPage = require('./pages/nohosts'),
   User = require('./models/user')
 
 module.exports = {
@@ -14,10 +13,8 @@ module.exports = {
 
     // create an empty collection for our host models
     this.hosts = new Hosts()
-    this.hosts.on('add', function(host) {
-      host.processes.fetch()
-
-      setInterval(host.processes.fetch.bind(host.processes), config.frequency)
+    this.hosts.once('add', function(host) {
+      self.router.redirectTo('/host/' + host.name)
     })
 
     window.app.socket = require('./helpers/socket')
@@ -29,25 +26,6 @@ module.exports = {
     // this ensures the document has a body, etc
     domReady(function () {
       window.loadingHostList = true
-
-      var update = function() {
-        self.hosts.fetch({
-          merge: true,
-          success: function() {
-            if(window.loadingHostList) {
-              delete window.loadingHostList
-
-              if(self.hosts.models.length > 0) {
-                self.router.redirectTo('/host/' + self.hosts.models[0].name)
-              } else {
-                self.router.trigger('page', new NoHostsPage())
-              }
-            }
-          }
-        })
-      }
-      update()
-      setInterval(update, config.frequency)
 
       app.user = new User()
       app.user.name = config.auth.user
