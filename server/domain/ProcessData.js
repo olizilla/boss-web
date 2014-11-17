@@ -4,6 +4,7 @@ var MILLISECONDS_IN_A_DAY = 86400000
 
 var ProcessData = function(data) {
   this._config = Autowire
+  this._processDataFactory = Autowire
 
   this.heapTotal = []
   this.heapUsed = []
@@ -18,7 +19,7 @@ var ProcessData = function(data) {
     }
   })
 
-  this._map(data)
+  this.afterPropertiesSet = this._map.bind(this, data)
 }
 
 ProcessData.prototype.update = function(data) {
@@ -75,6 +76,36 @@ ProcessData.prototype._map = function(data) {
   ["debugPort", "gid", "group", "id", "name", "pid", "restarts", "script", "uid", "uptime", "user", "status"].forEach(function(key) {
     this[key] = data[key]
   }.bind(this))
+
+  if(data.workers) {
+    if(!this.workers) {
+      this.workers = []
+    }
+
+    var workers = []
+
+    data.workers.forEach(function(incomingWorker) {
+      var worker
+
+      for(var i = 0; i < this.workers.length; i++) {
+        if(this.workers[i].id == incomingWorker.id) {
+          worker = this.workers[i]
+
+          break
+        }
+      }
+
+      if(!worker) {
+        worker = this._processDataFactory.create(incomingWorker)
+      } else {
+        worker.update(incomingWorker)
+      }
+
+      workers.push(worker)
+    }.bind(this))
+
+    this.workers = workers
+  }
 }
 
 ProcessData.prototype._append = function(heapTotal, heapUsed, residentSize, cpu, time) {

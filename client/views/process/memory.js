@@ -15,7 +15,7 @@ module.exports = View.extend({
     }
     var lineColour = '#444'
 
-    var chart = new Highcharts.Chart({
+    this._chart = new Highcharts.Chart({
       colors: [
         "rgba(245, 255, 92, 0.8)",
         "rgba(0, 255, 0, 0.8)",
@@ -115,6 +115,14 @@ module.exports = View.extend({
       ]
     })
   },
+  remove: function() {
+    View.prototype.remove.call(this)
+
+    if(this._chart) {
+      this._chart.destroy()
+      this._chart = null
+    }
+  },
   bindings: {
     'model.residentSize': {
       type: function(el, residentSize) {
@@ -122,13 +130,11 @@ module.exports = View.extend({
           return
         }
 
-        var chart = Highcharts.charts[el.getAttribute('data-highcharts-chart')]
-
-        if(!chart) {
+        if(!this._chart) {
           return
         }
 
-        chart.series[2].setData(residentSize)
+        this._chart.series[2].setData(residentSize)
       },
       selector: '[data-hook=memory-usage]'
     },
@@ -138,13 +144,11 @@ module.exports = View.extend({
           return
         }
 
-        var chart = Highcharts.charts[el.getAttribute('data-highcharts-chart')]
-
-        if(!chart) {
+        if(!this._chart) {
           return
         }
 
-        chart.series[1].setData(heapTotal)
+        this._chart.series[1].setData(heapTotal)
       },
       selector: '[data-hook=memory-usage]'
     },
@@ -154,13 +158,11 @@ module.exports = View.extend({
           return
         }
 
-        var chart = Highcharts.charts[el.getAttribute('data-highcharts-chart')]
-
-        if(!chart) {
+        if(!this._chart) {
           return
         }
 
-        chart.series[0].setData(heapUsed)
+        this._chart.series[0].setData(heapUsed)
       },
       selector: '[data-hook=memory-usage]'
     }

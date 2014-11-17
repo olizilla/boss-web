@@ -14,7 +14,7 @@ module.exports = View.extend({
     }
     var lineColour = '#444'
 
-    var chart = new Highcharts.Chart({
+    this._chart = new Highcharts.Chart({
       chart: {
         type: "areaspline",
         renderTo: this.query('[data-hook=cpu-usage]'),
@@ -93,6 +93,18 @@ module.exports = View.extend({
         data: this.model.cpu
       }]
     })
+
+    this.once('remove', function() {
+
+    })
+  },
+  remove: function() {
+    View.prototype.remove.call(this)
+
+    if(this._chart) {
+      this._chart.destroy()
+      this._chart = null
+    }
   },
   bindings: {
     'model.cpu': {
@@ -101,13 +113,11 @@ module.exports = View.extend({
           return
         }
 
-        var chart = Highcharts.charts[el.getAttribute('data-highcharts-chart')]
-
-        if(!chart) {
+        if(!this._chart) {
           return
         }
 
-        chart.series[0].setData(cpu)
+        this._chart.series[0].setData(cpu)
       },
       selector: '[data-hook=cpu-usage]'
     }

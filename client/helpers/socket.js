@@ -182,9 +182,11 @@ socket.on('process:log:error', function(hostName, process, log) {
     })
   })
 })
+/*
 socket.on('*', function() {
   console.info('incoming!', arguments)
 })
+*/
 socket.on('server:status', function(hostName, data) {
   app.hosts.add(data, {
     merge: true
@@ -192,10 +194,24 @@ socket.on('server:status', function(hostName, data) {
 })
 socket.on('server:processes', function(hostName, processes) {
   withHost(hostName, function(host) {
+    var incomingProcesses = []
+
+    processes.forEach(function(process) {
+      incomingProcesses.push(process)
+
+      if(process.workers) {
+        process.workers.forEach(function(worker) {
+          worker.clusterManager = process.id
+
+          incomingProcesses.push(worker)
+        })
+      }
+    })
+
     host.processes.forEach(function(existingProcess) {
       var present = false
 
-      processes.forEach(function(process) {
+      incomingProcesses.forEach(function(process) {
         if(process.id == existingProcess.id) {
           present = true
         }
@@ -206,7 +222,7 @@ socket.on('server:processes', function(hostName, processes) {
       }
     })
 
-    host.processes.add(processes, {
+    host.processes.add(incomingProcesses, {
       merge: true
     })
   })

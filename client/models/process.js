@@ -47,7 +47,8 @@ module.exports = AmpersandModel.extend({
         'uninitialised', 'starting', 'started', 'running', 'restarting', 'stopping',
         'stopped', 'errored', 'failed', 'aborted', 'paused', 'unresponsive'
       ]
-    }
+    },
+    clusterManager: ['string', false, null]
   },
   session: {
     'isGc': ['boolean', true, false],

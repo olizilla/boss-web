@@ -4,12 +4,8 @@ var Router = require('ampersand-router'),
   ProcessOverviewPage = require('./pages/process/overview'),
   ProcessLogsPage = require('./pages/process/logs'),
   ProcessExceptionsPage = require('./pages/process/exceptions'),
-
-
   NoHostsPage = require('./pages/nohosts'),
   LoadingHostsPage = require('./pages/loadinghosts')
-  ErrorPage = require('./pages/error'),
-  BadSignaturePage = require('./pages/badsignature')
 
 module.exports = Router.extend({
   routes: {
@@ -125,35 +121,6 @@ module.exports = Router.extend({
       model: process
     }))
   },
-/*
-  _chooseHostPage: function(host, ok) {
-    if(host.status == 'connected') {
-      this.trigger('page', new ok({
-        model: host
-      }))
-    } else if(host.status == 'connecting') {
-      this.trigger('page', new ConnectingPage({
-        model: host
-      }))
-    } else if(host.status == 'incompatible') {
-      this.trigger('page', new IncompatiblePage({
-        model: host
-      }))
-    } else if(host.status == 'timeout') {
-      this.trigger('page', new TimeoutPage({
-        model: host
-      }))
-    } else if(host.status == 'badsignature') {
-      this.trigger('page', new BadSignaturePage({
-        model: host
-      }))
-    } else {
-      this.trigger('page', new ErrorPage({
-        model: host
-      }))
-    }
-  },
-*/
   catchAll: function () {
     if(window.loadingHostList) {
       return this.trigger('page', new LoadingHostsPage())

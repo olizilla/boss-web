@@ -65,6 +65,8 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
       this.status = 'hostnotfound'
     } else if(error.code == 'TIMEDOUT') {
       this.status = 'connectiontimedout'
+    } else if(error.code == 'NETWORKDOWN') {
+      this.status = 'networkdown'
     } else {
       this._logger.error('Error connecting to boss', error.code)
 

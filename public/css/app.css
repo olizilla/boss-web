@@ -8888,9 +8888,17 @@ Copyright (c) 2014 Daniel Eden
     display: none;
   }
 }
+#wrapper .navbar li,
+#wrapper .navbar a {
+  width: 100%;
+}
+#wrapper .navbar a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .host-list .host-name {
   padding: 15px;
-  width: 100%;
   background-color: #181818;
   border-bottom: 10px solid #222;
 }
@@ -8909,7 +8917,7 @@ Copyright (c) 2014 Daniel Eden
   border-left-width: 56px;
 }
 .host-list .host-name li.active {
-  border-color: #273f5f;
+  border-color: #03377c;
   background-color: #050505;
 }
 .system .panel-body {
@@ -9042,11 +9050,11 @@ h1 {
   padding: 0 15px 15px 15px;
 }
 .panel-primary {
-  border-color: #273f5f;
+  border-color: #03377c;
 }
 .panel-primary > .panel-heading {
-  background-color: #273f5f;
-  border-color: #273f5f;
+  background-color: #03377c;
+  border-color: #03377c;
 }
 .growl-animated {
   max-width: 370px;
@@ -9058,6 +9066,9 @@ h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.fa {
+  margin-right: 3px;
 }
 footer {
   text-align: right;
@@ -9085,7 +9096,7 @@ footer a.tableflip {
   margin-left: 2px;
 }
 footer a.boss-web:hover {
-  color: #273f5f;
+  color: #03377c;
 }
 footer a.tableflip:hover {
   color: #3edab7;

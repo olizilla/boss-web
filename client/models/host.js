@@ -11,9 +11,10 @@ module.exports = AmpersandModel.extend({
     lastUpdated: 'date',
     status: {
       type: 'string',
-      values: ['connecting', 'connected',
-        'connectionrefused', 'connectionreset', 'hostnotfound', 'connectiontimedout',
-        'error', 'incompatible', 'timeout', 'badsignature']
+      values: [
+        'connecting', 'connected', 'connectionrefused', 'connectionreset',
+        'hostnotfound', 'connectiontimedout', 'error', 'incompatible',
+        'timeout', 'badsignature', 'networkdown']
     },
     host: 'string', // this is set from config
     hostname: 'string', // this is set from os.hostname()

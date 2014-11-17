@@ -12,14 +12,25 @@ module.exports = View.extend({
   render: function () {
     this.renderWithTemplate()
 
-    this.renderSubview(new DetailsView({
+    this._detailsView = new DetailsView({
       model: this.model
-    }), '[data-hook=details]')
-    this.renderSubview(new MemoryView({
+    })
+    this._memoryView = new MemoryView({
       model: this.model
-    }), '[data-hook=memory]')
-    this.renderSubview(new CpuView({
+    })
+    this._cpuView = new CpuView({
       model: this.model
-    }), '[data-hook=cpu]')
+    })
+
+    this.renderSubview(this._detailsView, '[data-hook=details]')
+    this.renderSubview(this._memoryView, '[data-hook=memory]')
+    this.renderSubview(this._cpuView, '[data-hook=cpu]')
+  },
+  remove: function() {
+    View.prototype.remove.call(this)
+
+    this._detailsView.remove()
+    this._memoryView.remove()
+    this._cpuView.remove()
   }
 })
