@@ -107,7 +107,7 @@ socket.on('ws:gc:finished', function(hostName, processId) {
     notify({
       header: 'Garbage collection complete',
       host: host.name,
-      process: process.title,
+      process: process.name,
       message: 'has collected garbage',
       type: 'success'
     })
@@ -118,7 +118,7 @@ socket.on('ws:heap:finished', function(hostName, processId, path) {
     notify({
       header: 'Heap dump complete',
       host: host.name,
-      process: process.title,
+      process: process.name,
       message: 'has dumped heap to ' + path.split('/').pop(),
       type: 'success'
     })
@@ -129,7 +129,7 @@ socket.on('ws:restart:finished', function(hostName, processId) {
     notify({
       header: 'Restart complete',
       host: host.name,
-      process: process.title,
+      process: process.name,
       message: 'restarted',
       type: 'success'
     })
@@ -140,7 +140,7 @@ socket.on('ws:stop:finished', function(hostName, processId) {
     notify({
       header: 'Process stopped',
       host: host.name,
-      process: process.title,
+      process: process.name,
       message: 'stopped',
       type: 'success'
     })
@@ -254,7 +254,7 @@ socket.on('process:aborted', function(hostName, process) {
     notify({
       header: 'Aborted',
       host: host.name,
-      process: process.title,
+      process: process.name,
       message: 'restarted too many times and was aborted',
       type: 'danger'
     })

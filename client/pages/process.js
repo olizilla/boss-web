@@ -7,7 +7,7 @@ var PageView = require('./base'),
 
 module.exports = PageView.extend({
   pageTitle: function() {
-    return 'Boss - ' + this.model.title
+    return 'Boss - ' + this.model.name
   },
   template: templates.pages.process,
   render: function () {

@@ -57,7 +57,7 @@ ProcessData.prototype.log = function(type, date, message) {
 }
 
 ProcessData.prototype._map = function(data) {
-  ["debugPort", "gid", "group", "id", "pid", "restarts", "script", "title", "uid", "uptime", "user", "status"].forEach(function(key) {
+  ["debugPort", "gid", "group", "id", "name", "pid", "restarts", "script", "uid", "uptime", "user", "status"].forEach(function(key) {
     this[key] = data[key]
   }.bind(this))
 }

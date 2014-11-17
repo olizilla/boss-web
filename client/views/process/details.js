@@ -63,6 +63,24 @@ module.exports = View.extend({
         }
       },
       selector: '[data-hook=restartbutton]'
+    },
+    'model.isRestarting': {
+      type: function (el, value) {
+        el.disabled = value
+
+        var i = $(el).find('i')
+
+        if(value) {
+          $(i).removeClass('fa-stop')
+          $(i).addClass('fa-circle-o-notch')
+          $(i).addClass('fa-spin')
+        } else {
+          $(i).addClass('fa-stop')
+          $(i).removeClass('fa-circle-o-notch')
+          $(i).removeClass('fa-spin')
+        }
+      },
+      selector: '[data-hook=stopbutton]'
     }
   },
   events: {
@@ -76,11 +94,15 @@ module.exports = View.extend({
     event.preventDefault()
     event.target.blur()
 
+    this.model.isGc = true
+
     window.app.socket.emit('process:gc', this.model.collection.parent.name, this.model.id)
   },
   heapDump: function(event) {
     event.preventDefault()
     event.target.blur()
+
+    this.model.isHeapDump = true
 
     window.app.socket.emit('process:heapdump', this.model.collection.parent.name, this.model.id)
   },
@@ -99,11 +121,15 @@ module.exports = View.extend({
     event.preventDefault()
     event.target.blur()
 
+    this.model.isRestarting = true
+
     window.app.socket.emit('process:restart', this.model.collection.parent.name, this.model.id)
   },
   stop: function(event) {
     event.preventDefault()
     event.target.blur()
+
+    this.model.isStopping = true
 
     window.app.socket.emit('process:stop', this.model.collection.parent.name, this.model.id)
   }

@@ -35,7 +35,7 @@ module.exports = AmpersandModel.extend({
     id: 'string',
     pid: ['number', true, '?'],
     restarts: ['number', true, '?'],
-    title: ['string', true, '?'],
+    name: ['string', true, '?'],
     uid: ['number', true, '?'],
     uptime: ['number', true, '?'],
     user: ['string', true, '?'],
@@ -51,7 +51,8 @@ module.exports = AmpersandModel.extend({
   session: {
     'isGc': ['boolean', true, false],
     'isHeapDump': ['boolean', true, false],
-    'isRestarting': ['boolean', true, false]
+    'isRestarting': ['boolean', true, false],
+    'isStopping': ['boolean', true, false]
   },
   derived: {
     cpuFormatted: {

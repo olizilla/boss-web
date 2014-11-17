@@ -17,23 +17,6 @@ HostList.prototype.afterPropertiesSet = function() {
   Object.keys(this._config.hosts).forEach(function(name) {
     this._hostData[name] = this._hostDataFactory.create(name, this._config.hosts[name])
   }.bind(this))
-
-  setInterval(this._hostPurge.bind(this), this._config.hostPurge.frequency)
-}
-
-HostList.prototype._hostPurge = function() {
-  var now = Date.now()
-
-  Object.keys(this._hostData).forEach(function(key) {
-    if(this._hostData[key].status == 'connecting') {
-      return
-    }
-
-    if(now - this._hostData[key].lastUpdated > this._config.hostPurge.cutoff) {
-      this._logger.info("HostList", key, "has gone away")
-      delete this._hostData[key]
-    }
-  }.bind(this))
 }
 
 HostList.prototype.getHosts = function() {
