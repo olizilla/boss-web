@@ -64,7 +64,7 @@ module.exports = View.extend({
       },
       selector: '[data-hook=restartbutton]'
     },
-    'model.isRestarting': {
+    'model.isStopping': {
       type: function (el, value) {
         el.disabled = value
 
