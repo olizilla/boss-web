@@ -3,7 +3,7 @@ var View = require('ampersand-view'),
   dom = require('ampersand-dom')
 
 module.exports = View.extend({
-  template: templates.includes.process.details,
+  template: templates.includes.process.overview.details,
   bindings: {
     'model.pid': '[data-hook=pid]',
     'model.user': '[data-hook=user]',

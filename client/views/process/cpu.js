@@ -2,7 +2,7 @@ var View = require('ampersand-view'),
   templates = require('../../templates')
 
 module.exports = View.extend({
-  template: templates.includes.process.cpu,
+  template: templates.includes.process.overview.cpu,
   render: function () {
     this.renderWithTemplate(this);
 

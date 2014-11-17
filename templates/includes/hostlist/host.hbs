@@ -1,7 +1,12 @@
 <li class="host-name">
-  <span>{{model.name}}</span>
   <ul>
-    <li><a href="/host/{{model.name}}/system"><i class="fa fa-area-chart"></i> System</a></li>
-    <li><a href="/host/{{model.name}}/processes"><i class="fa fa-tasks"></i> Processes</a></li>
+    <li><a href="/host/{{model.name}}"><i class="fa fa-desktop"></i> {{model.name}}</a></li>
+    <li class="processes"><a href="/host/{{model.name}}/processes"><i class="fa fa-tasks"></i> Processes</a></li>
+
+    {{#each model.processes.models}}
+      <li class="process"><a href="/host/{{../model.name}}/process/{{id}}"><i class="fa fa-code"></i> {{name}}</a></li>
+      <li class="processLogs"><a href="/host/{{../model.name}}/process/{{id}}/logs"><i class="fa fa-book"></i> Logs</a></li>
+      <li class="processExceptions"><a href="/host/{{../model.name}}/process/{{id}}/exceptions"><i class="fa fa-exclamation-triangle"></i> Exceptions</a></li>
+    {{/each}}
   </ul>
 </li>

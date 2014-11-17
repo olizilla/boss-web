@@ -8842,6 +8842,76 @@ Copyright (c) 2014 Daniel Eden
     transform: translateY(-100%);
   }
 }
+.navbar {
+  border-color: #181818;
+}
+.navbar-brand {
+  display: block;
+  padding-left: 55px;
+  background-repeat: no-repeat;
+  background-image: url("/images/boss.png");
+  background-size: 50px 50px;
+  color: #777;
+}
+.navbar-brand:hover {
+  color: #777;
+}
+.navbar-header small {
+  display: inline-block;
+  float: right;
+  font-size: 100%;
+  padding: 15px;
+}
+.nav > li.host-name {
+  padding: 0;
+}
+.nav > li.host-name span {
+  display: block;
+  padding: 15px 20px;
+  background-color: #2c2c2c;
+}
+#nav-shadow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.8);
+  z-index: 100;
+  display: none;
+}
+#nav-shadow.shadow {
+  display: block;
+}
+@media (min-width: 768px) {
+  #nav-shadow.shadow {
+    display: none;
+  }
+}
+.host-list .host-name {
+  padding: 15px;
+  width: 100%;
+  background-color: #181818;
+  border-bottom: 10px solid #222;
+}
+.host-list .host-name li {
+  border-left: 14px solid #333;
+  border-bottom: 2px solid #222;
+}
+.host-list .host-name li.processes {
+  border-left-width: 28px;
+}
+.host-list .host-name li.process {
+  border-left-width: 42px;
+}
+.host-list .host-name li.processLogs,
+.host-list .host-name li.processExceptions {
+  border-left-width: 56px;
+}
+.host-list .host-name li.active {
+  border-color: #273f5f;
+  background-color: #050505;
+}
 .system .panel-body {
   padding: 0;
 }
@@ -8927,7 +8997,7 @@ ul.logs {
   background: #000;
   color: #fff;
   font-family: 'Lucida Console', Monaco, monospace;
-  height: 400px;
+  height: 600px;
   margin: 0;
   overflow: auto;
   padding: 5px 0;
@@ -8955,6 +9025,10 @@ ul.logs:after {
   -ms-animation: blinker 1s linear 0s infinite;
   -animation: blinker 1s linear 0s infinite;
 }
+.exceptions p {
+  padding: 5px 0;
+  margin: 0;
+}
 .process .details button {
   margin-bottom: 5px;
 }
@@ -8967,67 +9041,12 @@ h1 {
 #page-wrapper {
   padding: 0 15px 15px 15px;
 }
-li.active {
-  border-left: 7px solid #273f5f;
-  border-right: 7px solid #273f5f;
-}
 .panel-primary {
   border-color: #273f5f;
 }
 .panel-primary > .panel-heading {
   background-color: #273f5f;
   border-color: #273f5f;
-}
-.navbar {
-  border-color: #181818;
-}
-.navbar-brand {
-  display: block;
-  padding-left: 55px;
-  background-repeat: no-repeat;
-  background-image: url("/images/boss.png");
-  background-size: 50px 50px;
-  color: #777;
-}
-.navbar-brand:hover {
-  color: #777;
-}
-.navbar-header small {
-  display: inline-block;
-  float: right;
-  font-size: 100%;
-  padding: 15px;
-}
-.nav > li.host-name {
-  padding: 0;
-}
-.nav > li.host-name span {
-  display: block;
-  padding: 15px 20px;
-  background-color: #050505;
-}
-#nav-shadow {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0,0,0,0.8);
-  z-index: 100;
-  display: none;
-}
-#nav-shadow.shadow {
-  display: block;
-}
-@media (min-width: 768px) {
-  #nav-shadow.shadow {
-    display: none;
-  }
-}
-.host-list .host-name {
-  padding: 15px;
-  width: 100%;
-  background-color: #181818;
 }
 .growl-animated {
   max-width: 370px;

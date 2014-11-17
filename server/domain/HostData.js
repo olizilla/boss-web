@@ -36,6 +36,14 @@ var HostData = function(name, data) {
 }
 
 HostData.prototype.afterPropertiesSet = function() {
+  setInterval(function() {
+    if(this.status == 'connected') {
+      return
+    }
+
+    this._webSocketResponder.broadcast('server:status', this.name, this)
+  }.bind(this), this._config.frequency)
+
   this.status = 'connecting'
 
   this._connectToDaemon()
@@ -48,22 +56,38 @@ HostData.prototype._connectToDaemon = function() {
 }
 
 HostData.prototype._connectedToDaemon = function(error, boss) {
-  boss.on('disconnected', function() {
+  if(error) {
+    if(error.code == 'CONNECTIONREFUSED') {
+      this.status = 'connectionrefused'
+    } else if(error.code == 'CONNECTIONRESET') {
+      this.status = 'connectionreset'
+    } else if(error.code == 'HOSTNOTFOUND') {
+      this.status = 'hostnotfound'
+    } else if(error.code == 'TIMEDOUT') {
+      this.status = 'connectiontimedout'
+    } else {
+      this._logger.error('Error connecting to boss', error.code)
+
+      this.status = 'error'
+    }
+
+    return
+  }
+
+  // remove previous listener
+  boss.off('disconnected')
+
+  // listen for disconnection
+  boss.once('disconnected', function() {
     boss.off('*')
     boss.off('process:log:*')
+    boss.off('process:uncaughtexception')
 
     clearTimeout(this._updateServerStatusTimeout)
     clearTimeout(this._updateProcessesTimeout)
 
     this.status = 'connecting'
   }.bind(this))
-
-  if(error) {
-    this._logger.error('Error connecting to boss', error)
-    this.status = 'error'
-
-    return
-  }
 
   this._remote = boss
 
@@ -98,7 +122,7 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
     this._updateServerStatus()
     this._updateProcesses()
 
-    this._remote.on('process:log:*', function (type, process, event) {
+    this._remote.on('process:log:*', function(type, process, event) {
       var process = this.findProcessById(process.id)
 
       if (!process) {
@@ -107,6 +131,16 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
 
       process.log(type.split(':')[2], event.date, event.message)
     }.bind(this))
+
+    this._remote.on('process:uncaughtexception', function(process, event) {
+      var process = this.findProcessById(process.id)
+
+      if (!process) {
+        return
+      }
+
+      process.exception(event.date, event.message, event.code, event.stack)
+    })
 
     this._remote.on('*', function() {
       var args = Array.prototype.slice.call(arguments)

@@ -9,6 +9,7 @@ var ProcessData = function(data) {
   this.heapUsed = []
   this.residentSize = []
   this.cpu = []
+  this.exceptions = []
 
   Object.defineProperties(this, {
     'logs': {
@@ -53,6 +54,20 @@ ProcessData.prototype.log = function(type, date, message) {
   // rotate logs if necessary
   if(this.logs.length > this._config.logs.max) {
     this.logs.splice(0, this.logs.length - this._config.logs.max)
+  }
+}
+
+ProcessData.prototype.exception = function(date, message, code, stack) {
+  this.exceptions.push({
+    date: date,
+    message: message,
+    code: code,
+    stack: stack
+  })
+
+  // rotate logs if necessary
+  if(this.exceptions.length > this._config.exceptions.max) {
+    this.exceptions.splice(0, this.exceptions.length - this._config.exceptions.max)
   }
 }
 

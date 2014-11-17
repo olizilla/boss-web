@@ -11,7 +11,9 @@ module.exports = AmpersandModel.extend({
     lastUpdated: 'date',
     status: {
       type: 'string',
-      values: ['connecting', 'connected', 'error', 'incompatible', 'timeout', 'badsignature']
+      values: ['connecting', 'connected',
+        'connectionrefused', 'connectionreset', 'hostnotfound', 'connectiontimedout',
+        'error', 'incompatible', 'timeout', 'badsignature']
     },
     host: 'string', // this is set from config
     hostname: 'string', // this is set from os.hostname()
@@ -52,7 +54,8 @@ module.exports = AmpersandModel.extend({
     }]
   },
   session: {
-    selected: ['boolean', true, false]
+    selected: ['boolean', true, false],
+    selectedProcess: ['any', false, null]
   },
   derived: {
     timeFormatted: {

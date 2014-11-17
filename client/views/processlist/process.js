@@ -5,6 +5,7 @@ module.exports = View.extend({
   template: templates.includes.processlist.process,
   bindings: {
     'model.pid': '[data-hook=pid]',
+    'model.name': '[data-hook=name]',
     'model.user': '[data-hook=user]',
     'model.group': '[data-hook=group]',
     'model.uptimeFormatted': '[data-hook=uptime]',

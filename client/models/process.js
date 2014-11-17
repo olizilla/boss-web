@@ -1,7 +1,8 @@
 var AmpersandModel = require('ampersand-model'),
   moment = require('moment'),
   prettysize = require('prettysize'),
-  Logs = require('./logs')
+  Logs = require('./logs'),
+  Exceptions = require('./exceptions')
 
 module.exports = AmpersandModel.extend({
   props: {
@@ -100,6 +101,7 @@ module.exports = AmpersandModel.extend({
     }
   },
   collections: {
-    logs: Logs
+    logs: Logs,
+    exceptions: Exceptions
   }
 })

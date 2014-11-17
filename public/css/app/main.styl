@@ -7,6 +7,7 @@ highlight = #273F5F
 background = #181818
 border = #444
 
+@import 'hosts.styl'
 @import 'host.styl'
 @import 'processes.styl'
 @import 'process.styl'
@@ -20,67 +21,12 @@ h1
 #page-wrapper
   padding: 0 15px 15px 15px
 
-li.active
-  border-left: 7px solid highlight
-  border-right: 7px solid highlight
-
 .panel-primary
   border-color: highlight
 
 .panel-primary > .panel-heading
   background-color: highlight
   border-color: highlight
-
-.navbar
-  border-color: background
-
-.navbar-brand
-  display: block
-  padding-left: 55px
-  background-repeat: no-repeat
-  background-image: url('/images/boss.png')
-  background-size: 50px 50px
-  color: #777
-
-.navbar-brand:hover
-  color: #777
-
-.navbar-header small
-  display: inline-block
-  float: right
-  font-size: 100%
-  padding: 15px
-
-.nav > li.host-name
-  padding: 0
-
-.nav > li.host-name span
-  display: block
-  padding: 15px 20px
-  background-color: #050505
-
-#nav-shadow
-  position: absolute
-  top: 0
-  right: 0
-  bottom: 0
-  left: 0
-  background-color: rgba(0, 0, 0, 0.8)
-  z-index: 100
-  display: none
-
-#nav-shadow.shadow
-  display: block
-
-@media (min-width: 768px)
-  #nav-shadow.shadow
-    display: none
-
-.host-list
-  .host-name
-    padding: 15px
-    width: 100%
-    background-color: #181818
 
 .growl-animated
   max-width: 370px

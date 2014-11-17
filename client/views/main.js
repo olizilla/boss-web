@@ -6,7 +6,7 @@ var View = require('ampersand-view'),
   dom = require('ampersand-dom'),
   templates = require('../templates'),
   setFavicon = require('favicon-setter'),
-  HostListView = require('./hostlist/host'),
+  HostListView = require('./hostlist/list'),
   pkg = require('../../package.json')
 
 module.exports = View.extend({
@@ -28,13 +28,13 @@ module.exports = View.extend({
     this.renderWithTemplate()
 
     // list of hosts on the left
-    this.renderCollection(app.hosts, HostListView, '[data-hook=host-list]')
+    this.renderSubview(new HostListView(), '[data-hook=nav-container]')
 
     // init and configure our page switcher
     this.pageSwitcher = new ViewSwitcher(this.queryByHook('page-container'), {
       show: function (newView, oldView) {
         // it's inserted and rendered for me
-        document.title = _.result(newView, 'pageTitle') || "boss-web"
+        document.title = _.result(newView, 'pageTitle') || "Boss"
         document.scrollTop = 0
 
         // add a class specifying it's active
@@ -48,7 +48,7 @@ module.exports = View.extend({
     // setting a favicon for fun (note, it's dynamic)
     setFavicon('/images/favicon.png')
 
-    this.query('[data-hook=version]').innerHTML = pkg.version
+    this.query('[data-hook=version]').textContent = pkg.version
 
     return this
   },
@@ -79,7 +79,7 @@ module.exports = View.extend({
     this.queryAll('.nav a[href]').forEach(function (aTag) {
       var aPath = aTag.pathname.slice(1)
 
-      if ((!aPath && !path) || (aPath && path.indexOf(aPath) === 0)) {
+      if ((!aPath && !path) || (aPath == path)) {
         dom.addClass(aTag.parentNode, 'active')
       } else {
         dom.removeClass(aTag.parentNode, 'active')

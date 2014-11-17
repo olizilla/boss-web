@@ -3,7 +3,7 @@ var View = require('ampersand-view'),
   prettysize = require('prettysize')
 
 module.exports = View.extend({
-  template: templates.includes.process.memory,
+  template: templates.includes.process.overview.memory,
   render: function () {
     this.renderWithTemplate(this);
 
