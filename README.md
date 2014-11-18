@@ -81,4 +81,4 @@ If the number of days is omitted it defaults to one year.
 ## More information
 
  * [Config files](CONFIG.md)
- * [User management](CONFIG.md)
+ * [User management](USERS.md)

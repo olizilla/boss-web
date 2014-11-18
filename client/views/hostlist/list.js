@@ -5,10 +5,6 @@ var View = require('ampersand-view'),
 
 module.exports = View.extend({
   template: templates.includes.hostlist.list,
-  initialize: function() {
-    this.listenTo(app.router, 'page', this.render.bind(this))
-    this.listenTo(app.socket, 'server:processes', this.render.bind(this))
-  },
   render: function () {
     this.renderWithTemplate()
 

@@ -3437,18 +3437,22 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .input-group-btn:last-child > .btn-group {
   margin-left: -1px;
 }
-.nav, .nav > li > ul {
+.nav,
+.nav > li > ul,
+.nav > li > ul > li > ul {
   margin-bottom: 0;
   padding-left: 0;
   list-style: none;
 }
 .nav > li,
-.nav > li > ul > li {
+.nav > li > ul > li,
+.nav > li > ul > li > ul > li {
   position: relative;
   display: block;
 }
 .nav > li > a,
-.nav > li > ul > li > a {
+.nav > li > ul > li > a,
+.nav > li > ul > li > ul > li > a{
   position: relative;
   display: block;
   padding: 10px 15px;
@@ -3456,18 +3460,23 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav > li > a:hover,
 .nav > li > a:focus,
 .nav > li > ul > li > a:hover,
-.nav > li > ul > li > a:focus {
+.nav > li > ul > li > a:focus,
+.nav > li > ul > li > ul > li > a:hover,
+.nav > li > ul > li > ul > li > a:focus{
   text-decoration: none;
   background-color: #222222;
 }
 .nav > li.disabled > a,
-.nav > li > ul > li.disabled > a {
+.nav > li > ul > li.disabled > a,
+.nav > li > ul > li > ul > li.disabled > a{
   color: #BDBDBD;
 }
 .nav > li.disabled > a:hover,
 .nav > li.disabled > a:focus,
 .nav > li > ul > li.disabled > a:hover,
-.nav > li > ul > li.disabled > a:focus{
+.nav > li > ul > li.disabled > a:focus,
+.nav > li > ul > li > ul > li.disabled > a:hover,
+.nav > li > ul > li > ul > li.disabled > a:focus{
   color: #BDBDBD;
   text-decoration: none;
   background-color: transparent;
@@ -3486,7 +3495,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   background-color: #e5e5e5;
 }
 .nav > li > a > img,
-.nav > li > ul > li > a > img{
+.nav > li > ul > li > a > img,
+.nav > li > ul > li > ul > li > a > img{
   max-width: none;
 }
 .nav-tabs {
@@ -3510,7 +3520,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-tabs > li.active > a:focus,
 .nav-tabs > li > ul > li.active > a,
 .nav-tabs > li > ul > li.active > a:hover,
-.nav-tabs > li > ul > li.active > a:focus {
+.nav-tabs > li > ul > li.active > a:focus,
+.nav-tabs > li > ul > li > ul > li.active > a,
+.nav-tabs > li > ul > li > ul > li.active > a:hover,
+.nav-tabs > li > ul > li > ul > li.active > a:focus{
   color: #ffffff;
   background-color: #2a9fd6;
   border: 1px solid #282828;
@@ -3815,11 +3828,13 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     margin: 0;
   }
   .navbar-nav > li,
-  .navbar-nav > li > ul > li {
+  .navbar-nav > li > ul > li,
+  .navbar-nav > li > ul > li > ul > li{
     float: left;
   }
   .navbar-nav > li > a,
-  .navbar-nav > li > ul > li > a{
+  .navbar-nav > li > ul > li > a,
+  .navbar-nav > li > ul > li > ul > li > a{
     padding-top: 15px;
     padding-bottom: 15px;
   }
@@ -4035,13 +4050,16 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   color: #BDBDBD;
 }
 .navbar-inverse .navbar-nav > li > a,
-.navbar-inverse .navbar-nav > li > ul > li > a{
+.navbar-inverse .navbar-nav > li > ul > li > a,
+.navbar-inverse .navbar-nav > li > ul > li > ul > li > a{
   color: #BDBDBD;
 }
 .navbar-inverse .navbar-nav > li > a:hover,
 .navbar-inverse .navbar-nav > li > a:focus,
 .navbar-inverse .navbar-nav > li > ul > li > a:hover,
-.navbar-inverse .navbar-nav > li > ul > li > a:focus{
+.navbar-inverse .navbar-nav > li > ul > li > a:focus,
+.navbar-inverse .navbar-nav > li > ul > li > ul > li > a:hover,
+.navbar-inverse .navbar-nav > li > ul > li > ul > li > a:focus{
   color: #ffffff;
   background-color: transparent;
 }
@@ -4050,7 +4068,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-inverse .navbar-nav > .active > a:focus,
 .navbar-inverse .navbar-nav > li > ul > .active > a,
 .navbar-inverse .navbar-nav > li > ul > .active > a:hover,
-.navbar-inverse .navbar-nav > li > ul > .active > a:focus {
+.navbar-inverse .navbar-nav > li > ul > .active > a:focus,
+.navbar-inverse .navbar-nav > li > ul > li > ul > .active > a,
+.navbar-inverse .navbar-nav > li > ul > li > ul > .active > a:hover,
+.navbar-inverse .navbar-nav > li > ul > li > ul > .active > a:focus{
   color: #ffffff;
   background-color: transparent;
 }
@@ -4059,7 +4080,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-inverse .navbar-nav > .disabled > a:focus,
 .navbar-inverse .navbar-nav > li > ul > .disabled > a,
 .navbar-inverse .navbar-nav > li > ul > .disabled > a:hover,
-.navbar-inverse .navbar-nav > li > ul > .disabled > a:focus{
+.navbar-inverse .navbar-nav > li > ul > .disabled > a:focus,
+.navbar-inverse .navbar-nav > li > ul > li > ul > .disabled > a,
+.navbar-inverse .navbar-nav > li > ul > li > ul > .disabled > a:hover,
+.navbar-inverse .navbar-nav > li > ul > li > ul > .disabled > a:focus{
   color: #aaaaaa;
   background-color: transparent;
 }

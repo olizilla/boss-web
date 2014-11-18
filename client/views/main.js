@@ -17,6 +17,8 @@ module.exports = View.extend({
   },
   events: {
     'click a[href]': 'handleLinkClick',
+    'click a[href] i': 'handleLinkClickParent',
+    'click a[href] span': 'handleLinkClickParent',
     'click [data-hook=toggle-nav]' : 'toggleNav',
     'click #nav-shadow': 'hideNavIfShowing'
   },
@@ -63,6 +65,18 @@ module.exports = View.extend({
 
   handleLinkClick: function(e) {
     var aTag = e.target
+    var local = aTag.host === window.location.host
+
+    // if it's a plain click (no modifier keys)
+    // and it's a local url, navigate internally
+    if (local && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
+      e.preventDefault()
+      app.navigate(aTag.pathname)
+    }
+  },
+
+  handleLinkClickParent: function(e) {
+    var aTag = e.target.parentNode
     var local = aTag.host === window.location.host
 
     // if it's a plain click (no modifier keys)

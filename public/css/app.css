@@ -8865,11 +8865,6 @@ Copyright (c) 2014 Daniel Eden
 .nav > li.host-name {
   padding: 0;
 }
-.nav > li.host-name span {
-  display: block;
-  padding: 15px 20px;
-  background-color: #2c2c2c;
-}
 #nav-shadow {
   position: absolute;
   top: 0;
@@ -8897,6 +8892,9 @@ Copyright (c) 2014 Daniel Eden
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.host-list {
+  padding-bottom: 40px;
+}
 .host-list .host-name {
   padding: 15px;
   background-color: #181818;
@@ -8910,11 +8908,11 @@ Copyright (c) 2014 Daniel Eden
   border-left-width: 28px;
 }
 .host-list .host-name li.process {
-  border-left-width: 42px;
+  border-left-width: 28px;
 }
 .host-list .host-name li.processLogs,
 .host-list .host-name li.processExceptions {
-  border-left-width: 56px;
+  border-left-width: 42px;
 }
 .host-list .host-name li.active {
   border-color: #03377c;

@@ -4,31 +4,6 @@ var PageView = require('./base'),
 
 module.exports = PageView.extend({
   template: templates.pages.process,
-  initialize: function() {
-    this.listenTo(window.app.socket, 'ws:stop:finished', function(hostName, processId) {
-      if(hostName == this.model.collection.parent.name && processId == this.model.id) {
-        window.app.router.redirectTo('/host/' + hostName + '/processes')
-      }
-    }.bind(this))
-
-    this.listenTo(window.app.socket, 'process:aborted', function(hostName, processId) {
-      if(hostName == this.model.collection.parent.name && processId == this.model.id) {
-        window.app.router.redirectTo('/host/' + hostName + '/processes')
-      }
-    }.bind(this))
-
-    this.listenTo(window.app.socket, 'process:stopped', function(hostName, processId) {
-      if(hostName == this.model.collection.parent.name && processId == this.model.id) {
-        window.app.router.redirectTo('/host/' + hostName + '/processes')
-      }
-    }.bind(this))
-
-    this.listenTo(window.app.socket, 'process:exit', function(hostName, processId) {
-      if(hostName == this.model.collection.parent.name && processId == this.model.id) {
-        window.app.router.redirectTo('/host/' + hostName + '/processes')
-      }
-    }.bind(this))
-  },
   render: function() {
     this.renderWithTemplate()
 
@@ -37,5 +12,23 @@ module.exports = PageView.extend({
   },
   chooseView: function() {
     this.pageSwitcher.set(this.mainTemplate())
+  },
+  bindings: {
+    'model.status': {
+      type: function(el, value) {
+        if(value != 'running' && value != 'paused') {
+          window.app.router.redirectTo('/host/' + this.model.collection.parent.name + '/processes')
+        }
+      },
+      selector: '[data-hook=view]'
+    },
+    'model.collection.parent.status': {
+      type: function(el, value) {
+        if(value != 'connected') {
+          window.app.router.redirectTo('/host/' + this.model.collection.parent.name)
+        }
+      },
+      selector: '[data-hook=view]'
+    }
   }
 })
