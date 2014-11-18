@@ -8900,19 +8900,27 @@ Copyright (c) 2014 Daniel Eden
   background-color: #181818;
   border-bottom: 10px solid #222;
 }
+.host-list .host-name ul.process.active li {
+  background-color: #0a0a0a;
+  display: block;
+}
 .host-list .host-name li {
-  border-left: 14px solid #333;
+  border-left: 10px solid #333;
   border-bottom: 2px solid #222;
 }
 .host-list .host-name li.processes {
-  border-left-width: 28px;
+  border-left-width: 20px;
 }
-.host-list .host-name li.process {
-  border-left-width: 28px;
+.host-list .host-name li.processName {
+  border-left-width: 20px;
+}
+.host-list .host-name li.processName .nodeIcon {
+  color: #7fbf00;
 }
 .host-list .host-name li.processLogs,
 .host-list .host-name li.processExceptions {
-  border-left-width: 42px;
+  border-left-width: 30px;
+  display: none;
 }
 .host-list .host-name li.active {
   border-color: #03377c;

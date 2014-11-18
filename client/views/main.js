@@ -88,7 +88,25 @@ module.exports = View.extend({
   },
 
   updateActiveNav: function() {
-    var path = window.location.pathname.slice(1)
+    var path = window.location.pathname
+
+    this.queryAll('.nav ul.active').forEach(function (aTag) {
+      var target = aTag.children[0].children[0].href
+      var parts = target.split(/^(.*:)\/\/([a-z\-.]+)(:[0-9]+)?(.*)$/)
+      var targetPath = parts[4]
+
+      if(
+        (path.length > targetPath.length && path.indexOf(targetPath) == -1)
+        ||
+        (path.length < targetPath.length && targetPath.indexOf(path) == -1)
+        ||
+        (path.length == targetPath.length && targetPath != path)
+      ) {
+        dom.removeClass(aTag, 'active')
+      }
+    })
+
+    path = path.slice(1)
 
     this.queryAll('.nav a[href]').forEach(function (aTag) {
       var aPath = aTag.pathname.slice(1)

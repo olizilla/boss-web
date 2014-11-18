@@ -55,18 +55,26 @@
     background-color: #181818
     border-bottom: 10px solid #222
 
+    ul.process.active li
+      background-color: #0A0A0A
+      display: block
+
     li
-      border-left: 14px solid #333
+      border-left: 10px solid #333
       border-bottom: 2px solid #222
 
     li.processes
-      border-left-width: 28px
+      border-left-width: 20px
 
-    li.process
-      border-left-width: 28px
+    li.processName
+      border-left-width: 20px
+
+    li.processName .nodeIcon
+      color: #7fbf00
 
     li.processLogs, li.processExceptions
-      border-left-width: 42px
+      border-left-width: 30px
+      display: none
 
     li.active
       border-color: highlight
