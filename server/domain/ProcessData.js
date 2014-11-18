@@ -106,6 +106,12 @@ ProcessData.prototype._map = function(data) {
 
     this.workers = workers
   }
+
+  if(data.logs) {
+    data.logs.forEach(function(log) {
+      this.log(log.type, log.date, log.message)
+    }.bind(this))
+  }
 }
 
 ProcessData.prototype._append = function(heapTotal, heapUsed, residentSize, cpu, time) {
@@ -209,35 +215,43 @@ ProcessData.prototype._compress = function(dataSet, maxSamples) {
   var sampleSize = Math.ceil(dataSet.length/maxSamples)
 
   var output = []
-  var offset = 0
+  var offset = 1
   var data = 0
   var date = 0
 
-  while(offset < dataSet.length) {
-    var processed = 0
+  // don't merge the first result
+  output.push(dataSet[0])
 
-    for(var i = 0; i < sampleSize; i++) {
-      if(offset + i == dataSet.length) {
-        break
+  if(maxSamples > 2) {
+    while(offset < (dataSet.length - 1)) {
+      var processed = 0
+
+      for(var i = 0; i < sampleSize; i++) {
+        if(offset + i == dataSet.length) {
+          break
+        }
+
+        // might at some point overflow MAX_INT here. won't that be fun.
+        date += dataSet[offset + i].x
+        data += dataSet[offset + i].y
+
+        processed++
       }
 
-      // might at some point overflow MAX_INT here. won't that be fun.
-      date += dataSet[offset + i].x
-      data += dataSet[offset + i].y
+      offset += processed
 
-      processed++
+      output.push({
+        x: date / processed,
+        y: data / processed
+      })
+
+      data = 0
+      date = 0
     }
-
-    offset += processed
-
-    output.push({
-      x: date / processed,
-      y: data / processed
-    })
-
-    data = 0
-    date = 0
   }
+
+  // don't merge the last result
+  output.push(dataSet[dataSet.length - 1])
 
   return output
 }

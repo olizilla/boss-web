@@ -14,6 +14,10 @@
     "bs-web": "bin/bs-web",
     "boss-web": "bin/bs-web"
   },
+  "scripts": {
+    "test": "istanbul cover _mocha",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
+  },
   "dependencies": {
     "ampersand-collection": "^1.0",
     "ampersand-collection-view": "^1.0",

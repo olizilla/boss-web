@@ -8920,7 +8920,12 @@ Copyright (c) 2014 Daniel Eden
 .host-list .host-name li.processLogs,
 .host-list .host-name li.processExceptions {
   border-left-width: 30px;
-  display: none;
+}
+@media (min-width: 768px) {
+  .host-list .host-name li.processLogs,
+  .host-list .host-name li.processExceptions {
+    display: none;
+  }
 }
 .host-list .host-name li.active {
   border-color: #03377c;

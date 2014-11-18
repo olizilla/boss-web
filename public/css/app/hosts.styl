@@ -74,7 +74,10 @@
 
     li.processLogs, li.processExceptions
       border-left-width: 30px
-      display: none
+
+    @media (min-width: 768px)
+      li.processLogs, li.processExceptions
+        display: none
 
     li.active
       border-color: highlight
