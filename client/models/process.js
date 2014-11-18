@@ -48,6 +48,7 @@ module.exports = AmpersandModel.extend({
         'stopped', 'errored', 'failed', 'aborted', 'paused', 'unresponsive'
       ]
     },
+    cluster: ['boolean', false, false],
     clusterManager: ['string', false, null]
   },
   session: {

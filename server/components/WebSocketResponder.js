@@ -82,6 +82,8 @@ WebSocketResponder.prototype.afterPropertiesSet = function() {
     client.on('process:debug', this._checkHost.bind(this, this.debugProcess.bind(this), client))
     client.on('process:gc', this._checkHost.bind(this, this.gcProcess.bind(this), client))
     client.on('process:heapdump', this._checkHost.bind(this, this.heapdumpProcess.bind(this), client))
+    client.on('cluster:addworker', this._checkHost.bind(this, this.addClusterWorker.bind(this), client))
+    client.on('cluster:removeworker', this._checkHost.bind(this, this.removeClusterWorker.bind(this), client))
   }.bind(this))
 
   setInterval(this._processEvents.bind(this), this._config.ws.frequency)
@@ -244,6 +246,72 @@ WebSocketResponder.prototype.heapdumpProcess = function(error, client, hostName,
       }
 
       callback()
+    })
+  })
+}
+
+WebSocketResponder.prototype.addClusterWorker = function(error, client, hostName, processId, boss, callback) {
+  client.emit('ws:addworker:started', hostName, processId)
+
+  boss.findProcessInfoById(processId, function(error, processInfo) {
+    boss.connectToProcess(processId, function(error, remoteProcess) {
+      if(error) {
+        if(error.code == 'TIMEOUT') {
+          client.emit('ws:addworker:timeout', hostName, processId, error.message)
+        }
+
+        return callback(error)
+      }
+
+      remoteProcess.setClusterWorkers(processInfo.instances + 1, function(error, path) {
+        if(error) {
+          if(error.code == 'TIMEOUT') {
+            client.emit('ws:addworker:timeout', hostName, processId, error.message)
+          } else {
+            client.emit('ws:addworker:error', hostName, processId, error.message)
+          }
+        } else {
+          client.emit('ws:addworker:finished', hostName, processId, path)
+        }
+
+        callback()
+      })
+    })
+  })
+}
+
+WebSocketResponder.prototype.removeClusterWorker = function(error, client, hostName, processId, boss, callback) {
+  client.emit('ws:removeworker:started', hostName, processId)
+
+  boss.findProcessInfoById(processId, function(error, processInfo) {
+    boss.connectToProcess(processId, function(error, remoteProcess) {
+      if(error) {
+        if(error.code == 'TIMEOUT') {
+          client.emit('ws:removeworker:timeout', hostName, processId, error.message)
+        }
+
+        return callback(error)
+      }
+
+      if(processInfo.instances == 0) {
+        client.emit('ws:removeworker:timeout', hostName, processId, 'There are already no cluster workers')
+
+        return callback()
+      }
+
+      remoteProcess.setClusterWorkers(processInfo.instances - 1, function(error, path) {
+        if(error) {
+          if(error.code == 'TIMEOUT') {
+            client.emit('ws:removeworker:timeout', hostName, processId, error.message)
+          } else {
+            client.emit('ws:removeworker:error', hostName, processId, error.message)
+          }
+        } else {
+          client.emit('ws:removeworker:finished', hostName, processId, path)
+        }
+
+        callback()
+      })
     })
   })
 }

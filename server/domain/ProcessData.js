@@ -78,6 +78,8 @@ ProcessData.prototype._map = function(data) {
   }.bind(this))
 
   if(data.workers) {
+    this.cluster = true
+
     if(!this.workers) {
       this.workers = []
     }

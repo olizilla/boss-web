@@ -88,7 +88,9 @@ module.exports = View.extend({
     'click button.process-heap': 'heapDump',
     'click button.process-debug': 'debug',
     'click button.process-restart': 'restart',
-    'click button.process-stop': 'stop'
+    'click button.process-stop': 'stop',
+    'click button.process-addworker': 'addWorker',
+    'click button.process-removeworker': 'removeWorker'
   },
   garbageCollect: function(event) {
     event.preventDefault()
@@ -132,5 +134,17 @@ module.exports = View.extend({
     this.model.isStopping = true
 
     window.app.socket.emit('process:stop', this.model.collection.parent.name, this.model.id)
+  },
+  addWorker: function(event) {
+    event.preventDefault()
+    event.target.blur()
+
+    window.app.socket.emit('cluster:addworker', this.model.collection.parent.name, this.model.id)
+  },
+  removeWorker: function(event) {
+    event.preventDefault()
+    event.target.blur()
+
+    window.app.socket.emit('cluster:removeworker', this.model.collection.parent.name, this.model.id)
   }
 })
