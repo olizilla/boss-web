@@ -14,6 +14,7 @@ module.exports = PageView.extend({
     this.pageSwitcher.set(this.mainTemplate())
   },
   bindings: {
+    'model.name': '[data-hook=process-name]',
     'model.status': {
       type: function(el, value) {
         if(value != 'running' && value != 'paused') {
