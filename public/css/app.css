@@ -8931,15 +8931,6 @@ Copyright (c) 2014 Daniel Eden
   border-color: #03377c;
   background-color: #050505;
 }
-.system .panel-body {
-  padding: 0;
-}
-.system-details {
-  margin: 0;
-}
-.system-details .hostname {
-  padding-left: 15px;
-}
 .system-details .type,
 .system-details .platform,
 .system-details .arch,
@@ -8964,27 +8955,6 @@ Copyright (c) 2014 Daniel Eden
 }
 .resource-data {
   text-align: center;
-}
-.processes .panel-body {
-  padding: 0;
-}
-.processes .panel-body p {
-  padding: 15px;
-  margin: 0;
-}
-.process-list {
-  margin: 0;
-  table-layout: fixed;
-  width: 100%;
-}
-.process-list tbody tr:hover {
-  cursor: pointer;
-}
-.process-list td small {
-  color: #999;
-}
-.process-list .title {
-  padding-left: 15px;
 }
 .process-list .pid,
 .process-list .uptime,
@@ -9051,6 +9021,63 @@ ul.logs:after {
 .process .details button {
   margin-bottom: 5px;
 }
+ul.exceptions {
+  background-color: #181818;
+}
+ul.exceptions,
+ul.exceptions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul.exceptions li {
+  padding: 10px 15px;
+  display: inline-block;
+}
+ul.exceptions > li {
+  font-weight: bold;
+  color: #fff;
+}
+ul.exceptions li.list {
+  padding: 0;
+  display: block;
+  border-bottom: none;
+  font-weight: normal;
+}
+ul.exceptions li.list ul {
+  clear: both;
+}
+ul.exceptions li.list ul {
+  border-bottom: 1px solid #282828;
+}
+ul.exceptions li.list ul li:hover {
+  cursor: pointer;
+}
+ul.exceptions li.list ul:first-child {
+  border-top: 2px solid #282828;
+}
+ul.exceptions li.list ul:nth-child(odd) {
+  background-color: #080808;
+}
+ul.exceptions li.list ul:hover {
+  background-color: #282828;
+}
+ul.exceptions li.message {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+}
+ul.exceptions li.date {
+  width: 250px;
+}
+ul.exceptions li.code {
+  width: 100px;
+}
+ul.exceptions li.stack {
+  display: none;
+}
+ul.exceptions li.stack.visible {
+  display: block;
+}
 body {
   background: #181818;
 }
@@ -9073,10 +9100,32 @@ h1 {
 .growl-animated h4 {
   margin-right: 20px;
 }
-.info td {
+.table-panel .panel-body {
+  padding: 0;
+}
+.table-panel .panel-body p {
+  padding: 15px;
+  margin: 0;
+}
+.table-panel table {
+  margin: 0;
+  table-layout: fixed;
+  width: 100%;
+}
+.table-panel table tbody tr:hover {
+  cursor: pointer;
+}
+.table-panel table td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.table-panel table td small {
+  color: #999;
+}
+.table-panel table tr th:first-child,
+.table-panel table tr td:first-child {
+  padding-left: 15px;
 }
 .fa {
   margin-right: 3px;

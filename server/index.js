@@ -14,6 +14,7 @@ var Container = require('wantsit').Container,
   SocketIO = require('socket.io')
 
 BossWeb = function() {
+  process.title = 'boss-web'
 
   // make errors a little more descriptive
   process.on("uncaughtException", function (exception) {

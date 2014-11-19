@@ -7,17 +7,8 @@ module.exports = ProcessPage.extend({
     return 'Boss - ' + this.model.name + ' - overview'
   },
   mainTemplate: function() {
-    if(!this._mainView) {
-      this._mainView = new ProcessOverviewView({
-        model: this.model
-      })
-    }
-
-    return this._mainView
-  },
-  remove: function() {
-    ProcessPage.prototype.remove.call(this)
-
-    this._mainView.remove()
+    return new ProcessOverviewView({
+      model: this.model
+    })
   }
 })

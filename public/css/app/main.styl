@@ -11,6 +11,7 @@ border = #444
 @import 'host.styl'
 @import 'processes.styl'
 @import 'process.styl'
+@import 'exceptions.styl'
 
 body
   background: background
@@ -34,10 +35,32 @@ h1
 .growl-animated h4
   margin-right: 20px
 
-.info td
+.table-panel .panel-body
+  padding: 0
+
+.table-panel .panel-body p
+  padding: 15px
+  margin: 0
+
+.table-panel table
+  margin: 0
+  table-layout: fixed
+  width: 100%
+
+.table-panel table tbody tr:hover
+  cursor: pointer
+
+.table-panel table td
   overflow: hidden
   text-overflow: ellipsis
   white-space: nowrap
+
+.table-panel table td small
+  color: #999
+
+.table-panel table tr th:first-child,
+.table-panel table tr td:first-child
+  padding-left: 15px;
 
 .fa
   margin-right: 3px

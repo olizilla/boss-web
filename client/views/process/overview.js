@@ -25,12 +25,5 @@ module.exports = View.extend({
     this.renderSubview(this._detailsView, '[data-hook=details]')
     this.renderSubview(this._memoryView, '[data-hook=memory]')
     this.renderSubview(this._cpuView, '[data-hook=cpu]')
-  },
-  remove: function() {
-    View.prototype.remove.call(this)
-
-    this._detailsView.remove()
-    this._memoryView.remove()
-    this._cpuView.remove()
   }
 })

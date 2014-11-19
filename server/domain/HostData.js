@@ -142,7 +142,7 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
       }
 
       process.exception(event.date, event.message, event.code, event.stack)
-    })
+    }.bind(this))
 
     this._remote.on('*', function() {
       var args = Array.prototype.slice.call(arguments)

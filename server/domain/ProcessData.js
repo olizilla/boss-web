@@ -1,4 +1,5 @@
-var Autowire = require('wantsit').Autowire
+var Autowire = require('wantsit').Autowire,
+  uuid = require('uuid')
 
 var MILLISECONDS_IN_A_DAY = 86400000
 
@@ -60,13 +61,14 @@ ProcessData.prototype.log = function(type, date, message) {
 
 ProcessData.prototype.exception = function(date, message, code, stack) {
   this.exceptions.push({
+    id: uuid.v4(),
     date: date,
     message: message,
     code: code,
     stack: stack
   })
 
-  // rotate logs if necessary
+  // rotate exceptions if necessary
   if(this.exceptions.length > this._config.exceptions.max) {
     this.exceptions.splice(0, this.exceptions.length - this._config.exceptions.max)
   }

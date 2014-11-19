@@ -30,20 +30,4 @@ HostProcess.prototype.retrieveAll = function(request, reply) {
   }
 }
 
-HostProcess.prototype.create = function() {
-  // generates POST
-}
-
-HostProcess.prototype.update = function() {
-  // generates PUT
-}
-
-HostProcess.prototype.patch = function() {
-  // generates PATCH
-}
-
-HostProcess.prototype.remove = function() {
-  // generates DELETE
-}
-
 module.exports = HostProcess

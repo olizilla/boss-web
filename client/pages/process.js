@@ -13,6 +13,11 @@ module.exports = PageView.extend({
   chooseView: function() {
     this.pageSwitcher.set(this.mainTemplate())
   },
+  remove: function() {
+    PageView.prototype.remove.call(this)
+
+    this.pageSwitcher.remove()
+  },
   bindings: {
     'model.name': '[data-hook=process-name]',
     'model.status': {

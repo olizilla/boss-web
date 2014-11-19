@@ -183,10 +183,10 @@ socket.on('process:log:error', function(hostName, process, log) {
   })
 })
 
-socket.on('*', function() {
+/*socket.on('*', function() {
   console.info('incoming!', arguments)
 })
-
+*/
 socket.on('server:status', function(hostName, data) {
   app.hosts.add(data, {
     merge: true
