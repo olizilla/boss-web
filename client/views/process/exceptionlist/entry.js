@@ -12,10 +12,13 @@ module.exports = View.extend({
     }
   },
   events: {
-    "click li": "showDetails"
+    "click ul": "showDetails"
   },
   showDetails: function(event) {
-    if(event.target.nodeName.toUpperCase() != 'LI') {
+    if(
+      event.target.nodeName.toUpperCase() != 'LI'
+        &&
+      event.target.nodeName.toUpperCase() != 'UL') {
       return
     }
 
