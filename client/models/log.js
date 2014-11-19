@@ -15,7 +15,10 @@ module.exports = AmpersandModel.extend({
     messageFormatted: {
       deps: ['message'],
       fn: function () {
-        return new AnsiToHtml().toHtml(this.message)
+        var message = this.message.replace(/</g, '&lt;')
+        message = message.replace(/>/g, '&gt;')
+
+        return new AnsiToHtml().toHtml(message)
       }
     }
   }
