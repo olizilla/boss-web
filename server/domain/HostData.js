@@ -165,7 +165,7 @@ HostData.prototype._updateServerStatus = function() {
         this.status = 'error'
       }
 
-      this._logger.error('Error getting boss status', error)
+      this._logger.error('Error getting boss status from', this.name, error)
     } else {
       this.status = 'connected'
 
@@ -193,7 +193,7 @@ HostData.prototype._updateProcesses = function() {
         this.status = 'error'
       }
 
-      this._logger.error('Error listing processes', error)
+      this._logger.error('Error listing processes on', this.name, error)
     } else {
       this.status = 'connected'
 
