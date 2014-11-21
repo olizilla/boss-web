@@ -33,7 +33,7 @@ BossWeb = function() {
   container.register("logger", logger)
 
   var moonbootsConfig = {
-    "isDev": true
+    "isDev": false
   }
 
   var tasks = []
