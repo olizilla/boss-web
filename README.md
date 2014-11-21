@@ -1,6 +1,22 @@
 # boss-web
 
-A web interface for the [boss](http://github.com/tableflip/boss) process manager.
+A web interface for the [boss](http://github.com/tableflip/boss) node.js process manager.
+
+Memory usage and per-core CPU load:
+
+![hosts](img/host.png)
+
+Process usage graphs including heap size, resident set size, CPU, etc.
+
+![process](img/process.png)
+
+See stack traces for the uncaught exceptions that took your app down
+
+![exceptions](img/exceptions.png)
+
+Live logs for your process
+
+![logs](img/logs.png)
 
 ## Prerequisites
 
