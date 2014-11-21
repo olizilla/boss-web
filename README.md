@@ -31,8 +31,6 @@ $ npm install -g boss-web
 
 ## Setup
 
-For the impatient.
-
 Here `$CONFIG_DIR` is `/etc/boss` if you are root or `$HOME/.config/boss` if you are not.  
 
 Unless you want it to listen on privileged ports (e.g. 80 or 443), you do not need to be root to run boss-web.
@@ -57,7 +55,7 @@ Add the following to your bossweb-hosts file:
   secret = ZD57XFx6sBz....
 ```
 
-Create a file at `$CONFIG_DIR/bossweb-hosts` with the output from the `hostconfig` command.
+Create a file named `$CONFIG_DIR/bossweb-hosts` with the output from the `hostconfig` command.
 
 ### Step 3. Still on the Boss machine, add a remote user
 
@@ -86,13 +84,15 @@ $ bs start /usr/local/lib/node_modules/boss-web
 
 ## Every time I restart boss-web I have to re-accept a self-signed certificate!
 
-Buy a proper SSL certificate or generate a 30 day certificate with:
+[Let's Encrypt](https://letsencrypt.org/) still future tech?  Generate a 30 day self-signed certificate with:
 
 ```sh
 $ bs-web genssl 30
 ```
 
 If the number of days is omitted it defaults to one year.
+
+Alternatively buy an SSL certificate and configure boss-web according to the comments in the `[https]` section of the [default configuration](./bossweb) file.
 
 ## More information
 
