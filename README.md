@@ -66,7 +66,17 @@ $ sudo bs useradd alex
   secret = LsYd5UaH...
 ```
 
-The file `$CONFIG_DIR/bossweb-users` should have been created during step 1 - open it and add the output from `useradd` .
+The file `$CONFIG_DIR/bossweb-users` should have been created during step 1 - open it and add the output from `useradd`.
+
+### Step 3a.  Optionally override which user you connect as
+
+If you wish to log in to boss-web as `alex`, but need to administer a process running on a remote host as `alan`, you can override the user you connect to a given server in `$CONFIG_DIR/bossweb-users`:
+
+```sh
+[alex.foo-bar-com]
+  user = alan
+  secret = LsYd5UaH...
+```
 
 ### Step 4. Start boss-web
 
@@ -92,7 +102,7 @@ $ bs-web genssl 30
 
 If the number of days is omitted it defaults to one year.
 
-Alternatively buy an SSL certificate and configure boss-web according to the comments in the `[https]` section of the [default configuration](./bossweb) file.
+Alternatively if you've bought an SSL certificate, configure boss-web according to the comments in the `[https]` section of the [default configuration](./bossweb) file.
 
 ## More information
 

@@ -33,20 +33,4 @@ HostList.prototype.getHostByName = function(name) {
   return this._hostData[name]
 }
 
-HostList.prototype.addLog = function(host, id, type, data) {
-  var host = this._hostData[host]
-
-  if(!host) {
-    return
-  }
-
-  var process = host.findProcessById(id)
-
-  if(!process) {
-    return
-  }
-
-  process.log(type, data)
-}
-
 module.exports = HostList

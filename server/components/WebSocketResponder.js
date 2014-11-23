@@ -105,16 +105,6 @@ WebSocketResponder.prototype.broadcast = function() {
   this._events.push(Array.prototype.slice.call(arguments))
 }
 
-WebSocketResponder.prototype._checkHost = function(callback, client, hostName) {
-  if(client.user.hosts.indexOf(hostName) == -1) {
-    // this user has no access to this host
-    return
-  }
-
-  var args = Array.prototype.slice.call(arguments, 1)
-  callback.apply(this, args)
-}
-
 WebSocketResponder.prototype._checkHost = function(callback, client, hostName, processId) {
   var host = this._hostList.getHostByName(hostName)
 
@@ -130,10 +120,12 @@ WebSocketResponder.prototype._checkHost = function(callback, client, hostName, p
     return
   }
 
+  var user = this._config.users[client.user.name][hostName].user || client.user.name
+
   remote(this._logger, {
     host: this._config.hosts[hostName].host,
     port:  this._config.hosts[hostName].port,
-    user: client.user.name,
+    user: user,
     secret: this._config.users[client.user.name][hostName].secret
   }, function(error, boss) {
     if(error) {
@@ -151,7 +143,7 @@ WebSocketResponder.prototype.startProcess = function(client, host, id) {
 }
 
 WebSocketResponder.prototype.stopProcess = function(error, client, hostName, processId, boss, callback) {
-  client.emit('ws:stop:started', hostName, processId)
+  client.emit('ws:stop:starting', hostName, processId)
 
   boss.connectToProcess(processId, function(error, remoteProcess) {
     if(error) {
@@ -161,6 +153,8 @@ WebSocketResponder.prototype.stopProcess = function(error, client, hostName, pro
 
       return callback(error)
     }
+
+    client.emit('ws:stop:started', hostName, processId)
 
     remoteProcess.kill(function(error) {
       if(error) {
@@ -175,16 +169,20 @@ WebSocketResponder.prototype.stopProcess = function(error, client, hostName, pro
 }
 
 WebSocketResponder.prototype.restartProcess = function(error, client, hostName, processId, boss, callback) {
-  client.emit('ws:restart:started', hostName, processId)
+  client.emit('ws:restart:starting', hostName, processId)
 
   boss.connectToProcess(processId, function(error, remoteProcess) {
     if(error) {
       if(error.code == 'TIMEOUT') {
         client.emit('ws:restart:timeout', hostName, processId, error.message)
+      } else {
+        client.emit('ws:restart:error', hostName, processId, error)
       }
 
       return callback(error)
     }
+
+    client.emit('ws:restart:started', hostName, processId)
 
     remoteProcess.restart(function(error) {
       if(error) {
@@ -203,7 +201,7 @@ WebSocketResponder.prototype.debugProcess = function(client, host, id) {
 }
 
 WebSocketResponder.prototype.gcProcess = function(error, client, hostName, processId, boss, callback) {
-  client.emit('ws:gc:started', hostName, processId)
+  client.emit('ws:gc:starting', hostName, processId)
 
   boss.connectToProcess(processId, function(error, remoteProcess) {
     if(error) {
@@ -213,6 +211,8 @@ WebSocketResponder.prototype.gcProcess = function(error, client, hostName, proce
 
       return callback(error)
     }
+
+    client.emit('ws:gc:started', hostName, processId)
 
     remoteProcess.forceGc(function(error) {
       if(error) {
@@ -227,7 +227,7 @@ WebSocketResponder.prototype.gcProcess = function(error, client, hostName, proce
 }
 
 WebSocketResponder.prototype.heapdumpProcess = function(error, client, hostName, processId, boss, callback) {
-  client.emit('ws:heap:started', hostName, processId)
+  client.emit('ws:heap:starting', hostName, processId)
 
   boss.connectToProcess(processId, function(error, remoteProcess) {
     if(error) {
@@ -237,6 +237,8 @@ WebSocketResponder.prototype.heapdumpProcess = function(error, client, hostName,
 
       return callback(error)
     }
+
+    client.emit('ws:heap:started', hostName, processId)
 
     remoteProcess.dumpHeap(function(error, path) {
       if(error) {
@@ -263,6 +265,8 @@ WebSocketResponder.prototype.addClusterWorker = function(error, client, hostName
         return callback(error)
       }
 
+      client.emit('ws:addworker:starting', hostName, processId)
+
       remoteProcess.setClusterWorkers(processInfo.instances + 1, function(error, path) {
         if(error) {
           if(error.code == 'TIMEOUT') {
@@ -281,7 +285,7 @@ WebSocketResponder.prototype.addClusterWorker = function(error, client, hostName
 }
 
 WebSocketResponder.prototype.removeClusterWorker = function(error, client, hostName, processId, boss, callback) {
-  client.emit('ws:removeworker:started', hostName, processId)
+  client.emit('ws:removeworker:starting', hostName, processId)
 
   boss.findProcessInfoById(processId, function(error, processInfo) {
     boss.connectToProcess(processId, function(error, remoteProcess) {
@@ -298,6 +302,8 @@ WebSocketResponder.prototype.removeClusterWorker = function(error, client, hostN
 
         return callback()
       }
+
+      client.emit('ws:removeworker:started', hostName, processId)
 
       remoteProcess.setClusterWorkers(processInfo.instances - 1, function(error, path) {
         if(error) {

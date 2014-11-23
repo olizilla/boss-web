@@ -53,16 +53,13 @@ function withHost(hostName, callback) {
 }
 
 var socket = SocketIO('//')
-socket.on('connect', function() {
-  console.info('connect')
-})
 socket.on('connect_error', function(error) {
   console.info('connect_error', error)
 })
 socket.on('connect_timeout', function() {
   notify({
     header: 'Connection timeout',
-    message: 'The fire hose websocket timed out while connecting',
+    message: 'The websocket timed out while connecting to boss-web',
     type: 'danger'
   })
 })
@@ -121,6 +118,19 @@ socket.on('ws:heap:finished', function(hostName, processId, path) {
       process: process.name,
       message: 'has dumped heap to ' + path.split('/').pop(),
       type: 'success'
+    })
+  })
+})
+socket.on('ws:restart:error', function(hostName, processId, error) {
+  withHostAndProcess(hostName, processId, function(host, process) {
+    process.isRestarting = false
+
+    notify({
+      header: 'Restart error',
+      host: host.name,
+      process: process.name,
+      message: 'failed to restart - ' + error.message,
+      type: 'danger'
     })
   })
 })
@@ -183,10 +193,15 @@ socket.on('process:log:error', function(hostName, process, log) {
   })
 })
 
-/*socket.on('*', function() {
-  console.info('incoming!', arguments)
+socket.on('*', function() {
+  if(arguments[0].substring(0, 'process:log'.length) != 'process:log' &&
+    arguments[0].substring(0, 'server:status'.length) != 'server:status' &&
+    arguments[0].substring(0, 'server:processes'.length) != 'server:processes'
+  ) {
+    console.info('incoming!', arguments)
+  }
 })
-*/
+
 socket.on('server:status', function(hostName, data) {
   app.hosts.add(data, {
     merge: true
@@ -195,6 +210,7 @@ socket.on('server:status', function(hostName, data) {
 socket.on('server:processes', function(hostName, processes) {
   withHost(hostName, function(host) {
     var incomingProcesses = []
+    var newProcesses = []
 
     processes.forEach(function(process) {
       incomingProcesses.push(process)
@@ -205,6 +221,10 @@ socket.on('server:processes', function(hostName, processes) {
 
           incomingProcesses.push(worker)
         })
+      }
+
+      if(!host.processes.get(process.id)) {
+        newProcesses.push(process.id)
       }
     })
 
@@ -224,6 +244,13 @@ socket.on('server:processes', function(hostName, processes) {
 
     host.processes.add(incomingProcesses, {
       merge: true
+    })
+
+    // fetch any existing logs/exceptions
+    newProcesses.forEach(function(id) {
+      var process = host.processes.get(id)
+      process.logs.fetch()
+      process.exceptions.fetch()
     })
   })
 })

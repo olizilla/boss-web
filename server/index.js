@@ -33,7 +33,11 @@ BossWeb = function() {
   container.register("logger", logger)
 
   var moonbootsConfig = {
-    "isDev": false
+    "isDev": process.env.NODE_ENV == 'development'
+  }
+
+  if(moonbootsConfig.isDev) {
+    logger.info('boss-web is running in DEVELOPMENT mode')
   }
 
   var tasks = []
