@@ -1,5 +1,6 @@
 var View = require('ampersand-view'),
   templates = require('../../../templates'),
+  dom = require('ampersand-dom')
   LogListView = require('./entry')
 
 module.exports = View.extend({
@@ -15,8 +16,23 @@ module.exports = View.extend({
     this.scrollLogs()
   },
   events: {
+    'click button.logs-time': 'toggleTimes',
     'click button.logs-pin': 'pinLogs',
     'click button.logs-clear': 'clearLogs'
+  },
+  toggleTimes: function(event) {
+    event.preventDefault()
+    event.target.blur()
+
+    var button = this.query('button.logs-time')
+
+    if(dom.hasClass(button, 'active')) {
+      dom.addClass(this.query('ul.logs'), 'hideTimes')
+      dom.removeClass(button, 'active')
+    } else {
+      dom.removeClass(this.query('ul.logs'), 'hideTimes')
+      dom.addClass(button, 'active')
+    }
   },
   pinLogs: function(event) {
     event.preventDefault()
