@@ -8931,6 +8931,23 @@ Copyright (c) 2014 Daniel Eden
   border-color: #03377c;
   background-color: #050505;
 }
+@media (max-width: 768px) {
+  .host-list {
+    position: fixed;
+    overflow-y: auto;
+    top: 50px;
+    left: 0;
+    right: 0;
+    height: 100%;
+    margin: 0;
+  }
+}
+.resource-data-graph {
+  width: 400px;
+  height: 160px;
+  margin: 0 auto 20px auto;
+  display: inline-block;
+}
 .system-details .type,
 .system-details .platform,
 .system-details .arch,
@@ -8939,12 +8956,26 @@ Copyright (c) 2014 Daniel Eden
 .system-details .uptime {
   width: 80px;
 }
-@media (max-width: 512px) {
+@media (max-width: 320px) {
   .system-details .type,
   .system-details .platform,
   .system-details .arch,
   .system-details .release {
     display: none;
+  }
+  .resource-data-graph {
+    width: 260px;
+  }
+}
+@media (min-width: 321px) and (max-width: 512px) {
+  .system-details .type,
+  .system-details .platform,
+  .system-details .arch,
+  .system-details .release {
+    display: none;
+  }
+  .resource-data-graph {
+    width: 300px;
   }
 }
 @media (max-width: 640px) {
