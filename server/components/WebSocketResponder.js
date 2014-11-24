@@ -149,6 +149,8 @@ WebSocketResponder.prototype.stopProcess = function(error, client, hostName, pro
     if(error) {
       if(error.code == 'TIMEOUT') {
         client.emit('ws:stop:timeout', hostName, processId, error.message)
+      } else {
+        client.emit('ws:stop:error', hostName, processId, error)
       }
 
       return callback(error)
@@ -207,6 +209,8 @@ WebSocketResponder.prototype.gcProcess = function(error, client, hostName, proce
     if(error) {
       if(error.code == 'TIMEOUT') {
         client.emit('ws:gc:timeout', hostName, processId, error.message)
+      } else {
+        client.emit('ws:gc:error', hostName, processId, error)
       }
 
       return callback(error)
@@ -233,6 +237,8 @@ WebSocketResponder.prototype.heapdumpProcess = function(error, client, hostName,
     if(error) {
       if(error.code == 'TIMEOUT') {
         client.emit('ws:heap:timeout', hostName, processId, error.message)
+      } else {
+        client.emit('ws:heap:error', hostName, processId, error)
       }
 
       return callback(error)
@@ -260,6 +266,8 @@ WebSocketResponder.prototype.addClusterWorker = function(error, client, hostName
       if(error) {
         if(error.code == 'TIMEOUT') {
           client.emit('ws:addworker:timeout', hostName, processId, error.message)
+        } else {
+          client.emit('ws:addworker:error', hostName, processId, error)
         }
 
         return callback(error)
@@ -292,13 +300,15 @@ WebSocketResponder.prototype.removeClusterWorker = function(error, client, hostN
       if(error) {
         if(error.code == 'TIMEOUT') {
           client.emit('ws:removeworker:timeout', hostName, processId, error.message)
+        } else {
+          client.emit('ws:removeworker:error', hostName, processId, error)
         }
 
         return callback(error)
       }
 
       if(processInfo.instances == 0) {
-        client.emit('ws:removeworker:timeout', hostName, processId, 'There are already no cluster workers')
+        client.emit('ws:removeworker:error', hostName, processId, 'There are already no cluster workers')
 
         return callback()
       }

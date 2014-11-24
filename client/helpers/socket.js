@@ -203,9 +203,26 @@ socket.on('*', function() {
 })
 
 socket.on('server:status', function(hostName, data) {
-  app.hosts.add(data, {
+  var newHost = !app.hosts.get(hostName)
+  var host = app.hosts.add(data, {
     merge: true
   })
+
+  if(newHost) {
+    host.on('change:status', function(host, value) {
+      console.info('status changed')
+
+      if(value != 'connected') {
+        host.processes.reset()
+
+        var sub = '/host/' + hostName + '/process'
+
+        if(window.location.pathname.substring(0, sub.length) == sub) {
+          window.app.router.redirectTo('/host/' + hostName)
+        }
+      }
+    })
+  }
 })
 socket.on('server:processes', function(hostName, processes) {
   withHost(hostName, function(host) {

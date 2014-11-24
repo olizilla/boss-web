@@ -16,7 +16,7 @@ module.exports = AmpersandModel.extend({
     dateFormatted: {
       deps: ['date'],
       fn: function(value) {
-        return moment(value).format('MMMM Do YYYY, h:mm:ss a')
+        return moment(value).format('YYYY-MM-DD HH:mm:ss Z')
       }
     },
     messageOrStackSummary: {

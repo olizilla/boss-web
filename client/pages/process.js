@@ -22,16 +22,15 @@ module.exports = PageView.extend({
     'model.name': '[data-hook=process-name]',
     'model.status': {
       type: function(el, value) {
-        if(value != 'running' && value != 'paused') {
-          window.app.router.redirectTo('/host/' + this.model.collection.parent.name + '/processes')
+        if(!this.pageSwitcher) {
+          // these updates can happen during the renderWithTemplate invocation above - at that point
+          // we haven't finished rendering and this.pageSwitcher will not be set which causes and
+          // error in the remove method so ignore it.  May need to revisit this.
+          return
         }
-      },
-      selector: '[data-hook=view]'
-    },
-    'model.collection.parent.status': {
-      type: function(el, value) {
-        if(value != 'connected') {
-          window.app.router.redirectTo('/host/' + this.model.collection.parent.name)
+
+        if(value == 'stopped') {
+          window.app.router.redirectTo('/host/' + this.model.collection.parent.name + '/processes')
         }
       },
       selector: '[data-hook=view]'

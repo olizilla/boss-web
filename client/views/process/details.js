@@ -99,14 +99,6 @@ module.exports = View.extend({
     this.model.isGc = true
 
     window.app.socket.emit('process:gc', this.model.collection.parent.name, this.model.id)
-
-    setTimeout(function() {
-      if(!this.model.isGc) {
-        return
-      }
-
-      this.model.isGc = false
-    }.bind(this), 5000)
   },
   heapDump: function(event) {
     event.preventDefault()
@@ -115,14 +107,6 @@ module.exports = View.extend({
     this.model.isHeapDump = true
 
     window.app.socket.emit('process:heapdump', this.model.collection.parent.name, this.model.id)
-
-    setTimeout(function() {
-      if(!this.model.isHeapDump) {
-        return
-      }
-
-      this.model.isHeapDump = false
-    }.bind(this), 5000)
   },
   debug: function(event) {
     event.preventDefault()
@@ -133,7 +117,8 @@ module.exports = View.extend({
       ':' +
       this.model.collection.parent.debuggerPort +
       '/debug?port=' +
-      this.model.debugPort)
+      this.model.debugPort
+    )
   },
   restart: function(event) {
     event.preventDefault()

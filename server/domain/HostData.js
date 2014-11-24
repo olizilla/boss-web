@@ -76,8 +76,10 @@ HostData.prototype._connectedToDaemon = function(error, boss) {
     return
   }
 
-  // remove previous listener
-  boss.off('disconnected')
+  if(this._remote) {
+    // remove previous listener
+    this._remote.off('disconnected')
+  }
 
   // listen for disconnection
   boss.once('disconnected', function() {

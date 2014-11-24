@@ -11,6 +11,8 @@ module.exports = View.extend({
     this.renderCollection(app.hosts, HostListView, '[data-hook=host-list]')
 
     this.updateActiveNav()
+
+    this.listenTo(app.hosts, 'add remove', this.updateActiveNav.bind(this))
   },
   updateActiveNav: function() {
     var path = window.location.pathname.slice(1)
