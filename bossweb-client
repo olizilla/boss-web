@@ -1,2 +1,3 @@
-debugMode = true
+
+; how often to update the UI
 frequency = 5000

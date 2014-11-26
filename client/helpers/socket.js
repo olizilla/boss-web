@@ -28,7 +28,8 @@ Emitter.prototype.emit = function(event) {
 }
 
 var notify = require('./notification'),
-  SocketIO = require('socket.io-client')
+  SocketIO = require('socket.io-client'),
+  config = require('clientconfig')
 
 function withHostAndProcess(hostName, processId, callback) {
   withHost(hostName, function(host) {
@@ -193,14 +194,16 @@ socket.on('process:log:error', function(hostName, process, log) {
   })
 })
 
-socket.on('*', function() {
-  if(arguments[0].substring(0, 'process:log'.length) != 'process:log' &&
-    arguments[0].substring(0, 'server:status'.length) != 'server:status' &&
-    arguments[0].substring(0, 'server:processes'.length) != 'server:processes'
-  ) {
-    console.info('incoming!', arguments)
-  }
-})
+if(config.debugMode) {
+  socket.on('*', function() {
+    if(arguments[0].substring(0, 'process:log'.length) != 'process:log' &&
+      arguments[0].substring(0, 'server:status'.length) != 'server:status' &&
+      arguments[0].substring(0, 'server:processes'.length) != 'server:processes'
+    ) {
+      console.info('incoming!', arguments)
+    }
+  })
+}
 
 socket.on('server:status', function(hostName, data) {
   var newHost = !app.hosts.get(hostName)

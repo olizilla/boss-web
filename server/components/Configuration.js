@@ -19,7 +19,9 @@ Configuration = function() {
   var userUsersConfig = coerce(rc('boss/bossweb-users', {}, {}))
   var userHostsConfig = coerce(rc('boss/bossweb-hosts', {}, {}))
 
-  this.client = {}
+  this.client = {
+    debugMode: process.env.NODE_ENV == 'development'
+  }
 
   // copy all properties to this
   this._copy(userConfig, this)

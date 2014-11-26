@@ -63,13 +63,13 @@
     "templatizer-hbs": "^0.0",
     "underscore": "^1.0",
     "wantsit": "^1.0",
-    "component-emitter": "1.1.2",
+    "component-emitter": "^1.0",
     "uuid": "^2.0"
   },
   "devDependencies": {
     "coveralls": "^2.8",
     "istanbul": "^0.3.0",
-    "mocha": "^1.0",
+    "mocha": "^2.0",
     "proxyquire": "^1.0",
     "chai": "^1.0",
     "sinon": "^1.8",
