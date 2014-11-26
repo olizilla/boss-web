@@ -44,7 +44,7 @@ $ bs-web useradd alex
 ### Step 2. On the machine Boss is running on, obtain the host config
 
 ```sh
-$ sudo bs hostconfig
+$ sudo bs remoteconfig
 
 Add the following to your bossweb-hosts file:
 
@@ -55,7 +55,7 @@ Add the following to your bossweb-hosts file:
   secret = ZD57XFx6sBz....
 ```
 
-Create a file named `$CONFIG_DIR/bossweb-hosts` with the output from the `hostconfig` command.
+Create a file named `$CONFIG_DIR/bossweb-hosts` with the output from the `remoteconfig` command.
 
 ### Step 3. Still on the Boss machine, add a remote user
 
