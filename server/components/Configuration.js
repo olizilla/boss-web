@@ -4,7 +4,8 @@ var rc = require('boss-rc'),
   path = require('path'),
   ini = require('ini'),
   fs = require('fs'),
-  coerce = require('coercer')
+  coerce = require('coercer'),
+  Autowire = require('wantsit').Autowire
 
 Configuration = function() {
   // load defaults
@@ -30,6 +31,8 @@ Configuration = function() {
   this.users = userUsersConfig
 
   this.client.minVersion = this.minVersion
+
+  this._passwdUser = Autowire
 }
 
 Configuration.prototype._copy = function(source, dest) {
@@ -51,6 +54,16 @@ Configuration.prototype._copy = function(source, dest) {
 }
 
 Configuration.prototype.afterPropertiesSet = function() {
+  this._checkLength(this.hosts, 'Could not read any remote hosts from the configuration file.', 'bossweb-hosts')
+  this._checkLength(this.users, 'Could not read any users from the configuration file.', 'bossweb-users')
+
+  if(!this.salt) {
+    console.error('No password salt was found in the bossweb config file!'.red)
+    console.error('Please run'.red, 'bs-web gensalt', 'and follow the instructions'.red)
+
+    process.exit(1)
+  }
+
   Object.keys(this.users).forEach(function(userName) {
     for(var key in this.users[userName]) {
       if(key == 'password') {
@@ -63,25 +76,24 @@ Configuration.prototype.afterPropertiesSet = function() {
       }
     }
   }.bind(this))
+}
 
-  this._checkLength(this.hosts, 'Please define some host names')
-  this._checkLength(this.users, 'Please define some users')
-
-  if(!this.salt) {
-    console.error('No password salt was found in the bossweb config file!'.red)
-    console.error('Please run'.red, 'bs-web gensalt', 'and follow the instructions'.red)
+Configuration.prototype._checkLength = function(obj, message, file) {
+  if(Object.keys(obj).length == 0) {
+    this._emitConfigFileError(message, file)
 
     process.exit(1)
   }
 }
 
-Configuration.prototype._checkLength = function(obj, message) {
-  if(Object.keys(obj).length == 0) {
-    console.error(message.red)
-    process.exit(1)
-  }
+Configuration.prototype._emitConfigFileError = function(message, file) {
+  var user = this._passwdUser.sync(process.getuid())
+  var path = user.username == 'root' ? '/etc/boss/' + file : user.homedir + '/.config/boss/' + file
 
-  return obj
+  console.error(message.red)
+  console.error('Either the configuration file was empty or you defined it in the wrong place.'.red)
+  console.error('It should be at'.red, path)
+  console.error('Please follow the setup instructions in the README'.red)
 }
 
 module.exports = Configuration

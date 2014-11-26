@@ -64,7 +64,8 @@
     "underscore": "^1.0",
     "wantsit": "^1.0",
     "component-emitter": "^1.0",
-    "uuid": "^2.0"
+    "uuid": "^2.0",
+    "passwd-user": "^1.0"
   },
   "devDependencies": {
     "coveralls": "^2.8",
