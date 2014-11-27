@@ -1,7 +1,7 @@
 {
   "name": "boss-web",
   "author": "Alex Potsides",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "prefer-global": true,
   "repository": {
     "type": "git",
