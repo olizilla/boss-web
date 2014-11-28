@@ -32,7 +32,7 @@ Configuration = function() {
 
   this.client.minVersion = this.minVersion
 
-  this._passwdUser = Autowire
+  this._posix = Autowire
 }
 
 Configuration.prototype._copy = function(source, dest) {
@@ -87,8 +87,8 @@ Configuration.prototype._checkLength = function(obj, message, file) {
 }
 
 Configuration.prototype._emitConfigFileError = function(message, file) {
-  var user = this._passwdUser.sync(process.getuid())
-  var path = user.username == 'root' ? '/etc/boss/' + file : user.homedir + '/.config/boss/' + file
+  var user = this._posix.getpwnam(process.getuid())
+  var path = user.username == 'root' ? '/etc/boss/' + file : user.dir + '/.config/boss/' + file
 
   console.error(message.red)
   console.error('Either the configuration file was empty or you defined it in the wrong place.'.red)

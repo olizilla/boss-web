@@ -32,7 +32,7 @@ BossWeb = function() {
   // set up logging
   container.register("logger", logger)
 
-  container.register("passwdUser", require('passwd-user'))
+  container.register("posix", require('posix'))
 
   var moonbootsConfig = {
     "isDev": process.env.NODE_ENV == 'development'
