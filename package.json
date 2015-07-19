@@ -34,7 +34,7 @@
     "ansi-to-html": "^0.2",
     "async": "^0.9",
     "bcrypt": "^0.8",
-    "bootstrap-growl": "^2.0",
+    "bootstrap-growl-legacy": "^2.0",
     "boss-rc": "^0.5",
     "boss-remote": "^1.0",
     "clientconfig": "^1.0",
